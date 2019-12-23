@@ -104,7 +104,7 @@ public class Login extends HttpServlet {
 
                     dp = Operaciones.insertar(dp);
                     Operaciones.commit();
-                    request.getRequestDispatcher("pnlPrincipal.jsp").forward(request, response);
+                    response.sendRedirect("Principal");
                 } catch (Exception ex) {
                     try {
                         Operaciones.rollback();
