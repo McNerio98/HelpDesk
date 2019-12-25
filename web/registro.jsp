@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/estilo1.css">
         <link rel="stylesheet" href="css/estilo1.css">
+
     </head>
     <body>
         <nav class="navbar1 d-none d-md-block">
@@ -50,8 +51,9 @@
                         </div>                      
                         <div class="form-group mt-3">
                             <label for="exampleInputEmail1">Nombre del Usuario</label>
-                            <input type="text" class="form-control" id="" style="text-transform:uppercase;" name="txtUser" required>
+                            <input type="text" class="form-control" id="txtUser" style="text-transform:uppercase;" name="txtUser" required>
                             <small id="emailHelp" class="form-text text-muted">Para iniciar sesion tambien podras utilizar tu correo electronico</small>
+                            <p class="text-danger d-none" id="userExist">El Usuario ya existe</p>
                         </div>
                         <div class="form-group">
                             <label for="exampleFormControlSelect1">Departamento Asignado</label>
@@ -75,13 +77,14 @@
                         </div>                     
                         <div class="form-group mt-3">
                             <label for="exampleFormControlInput1">Correo Electronico</label>
-                            <input type="email" class="form-control" id="" placeholder="name@example.com" name="txtEmail" required>
+                            <input type="email" class="form-control" id="txtEmail" placeholder="name@example.com" name="txtEmail" required>
+                            <p class="text-danger d-none" id="emailExist">El correo ya esta en uso!</p>                         
                         </div>                    
                         <div class="form-group mt-3">
                             <label for="exampleFormControlInput1">Numero de Contacto</label>
                             <input type="text" class="form-control" id="" name="txtTelephone" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Aceptar</button>
                         <a href="${pageContext.servletContext.contextPath}/Login" class="btn btn-secondary">Cancelar</a> 
                     </div>                
                 </div>
@@ -92,22 +95,57 @@
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        
         <script>
-            function validar(){
-                var clave1 = document.getElementById("txtPassword");
-                var clave2 = document.getElementById("txtPassword2");
-                var depto = document.getElementById("depto");
-                if(clave1.value != clave2.value){
-                    alert("Las Contraseñas no coinciden");
-                    return false;
-                }else if(parseInt(depto.value) == 0){
-                    alert("No ha Seleciona el Departamento");
-                    return false;
+                function validar() {
+                    var clave1 = document.getElementById("txtPassword");
+                    var clave2 = document.getElementById("txtPassword2");
+                    var depto = document.getElementById("depto");
+                    if (clave1.value != clave2.value) {
+                        alert("Las Contraseñas no coinciden");
+                        return false;
+                    } else if (parseInt(depto.value) == 0) {
+                        alert("No ha Seleciona el Departamento");
+                        return false;
+                    }
+
+                    return true;
                 }
-             
-             return true;
-            }
-        </script>
+                
+                $(document).ready(function () {
+                    $('#txtUser').change(function(){
+                       $.ajax({
+                           type: 'POST',
+                           data: {usName: $(this).val()},
+                           url: '${pageContext.servletContext.contextPath}/Login?accion=consultar_usuario',
+                           success: function(result){
+                               if(result=='true'){
+                                   $('#userExist').removeClass('d-none');
+                                   $("#btnSubmit").prop('disabled', true);
+                               }else{
+                                   $('#userExist').addClass('d-none');
+                                   $("#btnSubmit").prop('disabled', false);
+                               }
+                           }
+                       });
+                    });
+                    
+                    $('#txtEmail').change(function(){
+                       $.ajax({
+                           type: 'POST',
+                           data: {usEmail: $(this).val()},
+                           url: '${pageContext.servletContext.contextPath}/Login?accion=consultar_correo',
+                           success: function(result){
+                               if(result=='true'){
+                                   $('#emailExist').removeClass('d-none');
+                                   $("#btnSubmit").prop('disabled', true);
+                               }else{
+                                   $('#emailExist').addClass('d-none');
+                                   $("#btnSubmit").prop('disabled', false);
+                               }
+                           }
+                       });
+                    });                    
+                });
+        </script>         
     </body>
 </html>

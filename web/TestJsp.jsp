@@ -2,6 +2,6 @@
 
 <%@include file="_startPanel.jsp" %>
 
-<p>Este es mi copntenido</p>
+<p>Este es mi copntenidop</p>
 
 <%@include file="_endPanel.jsp" %>

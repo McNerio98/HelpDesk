@@ -26,24 +26,25 @@
             <div class=" bg-color1 text-center">
                 <img src="img/Logo.png" alt="">
             </div>    
-            <form class="form-sigin">
+            <form class="form-sigin" action="${pageContext.servletContext.contextPath}/Login?accion=entrar" method="post">
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">Mesa de Ayuda</h1>
                     <p>Ofrecemos nuestros servicios para<code> gestionar y solucionar</code> toda posible incidencia, si aun no posee una cuenta puede <a href="${pageContext.servletContext.contextPath}/Login?accion=registro">Crear una</a></p>
                 </div>
 
                 <div class="form-label-group">
-                    <input type="text" id="inputEmail" class="form-control" placeholder="Usuario o Correo" required autofocus>
+                    <input type="text" id="inputEmail" class="form-control" name="txtCuenta" placeholder="Usuario o Correo" required autofocus>
                     <label for="inputEmail">Usuario o Correo</label>
                 </div>
 
                 <div class="form-label-group">
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+                    <input type="password" id="inputPassword" class="form-control" name="txtClave" placeholder="Contraseña" required>
                     <label for="inputPassword">Contraseña</label>
                 </div>
-                <div class="alert alert-danger d-none" role="alert">
-                    Contraseña o Usuario Incorrectos!
-                </div>    
+
+                <c:if test="${error != null && error == 1}">
+                            <p class="text-danger">Usuario o contraseña incorrectos!</p>
+                </c:if>
                 <div class="checkbox mb-3">
                     <label>
                         <input type="checkbox" value="remember-me"> Remember me

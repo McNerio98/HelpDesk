@@ -113,7 +113,9 @@ Cuando de click sobre una incidencia lo lleva al area de definicion.
 
 
 
-
+NOTAS:
+Quitar costo total, eso va a ir en control o en gestion.
+en su lugar poner fecha de finalizacion
 
 
 

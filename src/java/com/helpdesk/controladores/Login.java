@@ -16,12 +16,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -67,8 +69,6 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //PrintWriter out = response.getWriter();
-        //out.print("Entre en el Post");
         String accion = request.getParameter("accion");
 
         switch (accion) {
@@ -82,7 +82,7 @@ public class Login extends HttpServlet {
                 String telefono = request.getParameter("txtTelephone");
 
                 Usuario u = new Usuario();
-                u.setUserName(userName);
+                u.setUserName(userName.toUpperCase());
                 u.setFirsName(nom);
                 u.setLastName(ape);
                 u.setEmail(correo);
@@ -106,6 +106,7 @@ public class Login extends HttpServlet {
                     Operaciones.commit();
                     response.sendRedirect("Principal");
                 } catch (Exception ex) {
+
                     try {
                         Operaciones.rollback();
                     } catch (SQLException ex1) {
@@ -122,22 +123,129 @@ public class Login extends HttpServlet {
                 break;
             }
             case "entrar": {
+                iniciarSesion(request, response);
                 break;
+            }
+            case "consultar_usuario": {
+                response.setContentType("text/plain");
+                String userName = request.getParameter("usName");
+                PrintWriter out = response.getWriter();
+                if (verificarUsuario(userName.toUpperCase())) {
+                    out.print("true");
+                } else {
+                    out.print("false");
+                }
+                break;
+            }
+            case "consultar_correo":{
+                response.setContentType("text/plain");
+                String em = request.getParameter("usEmail");
+                PrintWriter out = response.getWriter();
+                if (verificarCorreo(em)) {
+                    out.print("true");
+                } else {
+                    out.print("false");
+                }
+                break;            
             }
         }
 
     }
 
     private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) {
-        String nom = request.getParameter("txtNombres");
-        String ape = request.getParameter("txtApellidos");
-        String userName = request.getParameter("txtUser");
-        String idDepto = request.getParameter("depto");
-        String clave = request.getParameter("txtPassword");
-        //String clave2 = request.getParameter("txtPassword2");
-        String correo = request.getParameter("txtEmail");
-        String telefono = request.getParameter("txtTelephone");
-        //Validar desde aqui que las claves sean iguales 
+
+        String cuenta = request.getParameter("txtCuenta");
+        String clave = request.getParameter("txtClave");
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            if (cuenta == null) {
+                cuenta = "";
+            }
+
+            if (clave == null) {
+                clave = "";
+            }
+
+            String sql = "select iduser from users where username = ? or email = ?";
+            List<Object> params = new ArrayList<>();
+            params.add(cuenta);
+            params.add(cuenta);
+            String[][] iden = Operaciones.consultar(sql, params);
+
+            if (iden != null) {
+                HttpSession s = request.getSession();
+                Usuario u = Operaciones.get(Integer.parseInt(iden[0][0]), new Usuario());
+                if (u.getPassword().equals(Hash.generarHash(clave, Hash.SHA256))) {
+                    s.setAttribute("Usuario", u.getUserName());
+                    //PENDIENTE: Aqui se establecen los permisos usando filtro, 
+                    
+                    response.sendRedirect("Principal");
+                } else {
+                    //La clave es incorrecta
+                    request.setAttribute("error", 1);
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }
+            } else {
+                //El usuario no existe 
+                request.setAttribute("error", 1);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
+
+        } catch (Exception ex) {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+    }
+
+    private boolean verificarUsuario(String dato) {
+        boolean es = false;
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            String sql = "select iduser from users where username = ?";
+            List<Object> params = new ArrayList<>();
+            params.add(dato);
+            String[][] result = Operaciones.consultar(sql, params);
+            if (result != null) {
+                es = true;
+            }
+        } catch (Exception e) {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return es;
+    }
+
+    private boolean verificarCorreo(String dato) {
+        boolean es = false;
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            String sql = "select iduser from users where email = ?";
+            List<Object> params = new ArrayList<>();
+            params.add(dato);
+            String[][] result = Operaciones.consultar(sql, params);
+            if (result != null) {
+                es = true;
+            }
+        } catch (Exception e) {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return es;
     }
 
     @Override

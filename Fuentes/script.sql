@@ -43,6 +43,7 @@ CREATE TABLE USERS(
 );
 --Se crea indice ya que el campo username sera frecuentemente utilizado
 create index indexUser on users(username);
+create index index_Email on users(email);
 
 CREATE TABLE DEPARTMENTS(
 	IDDEPTO SERIAL  NOT NULL,
@@ -131,9 +132,17 @@ insert into roles(rolename,description) values ('Lider','Tendra a cargo un grupo
 insert into roles(rolename,description) values ('Receptor','Son personas tecnicos o capacitados para resolver algun tipo de incidencia o fallo');
 insert into roles(rolename,description) values ('Empleado','Este es el rol por defecto que se le asigna a un nuevo usuario despues de registrarse');
 
+-- Usuario SuperAdmin, dato quemado 
+delete from deptobyusers;
+delete from users;
 
 select * from users;
 
+update users 
+
+
+
+ 
 
 
 
