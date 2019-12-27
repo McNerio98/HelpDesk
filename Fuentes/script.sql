@@ -45,6 +45,7 @@ CREATE TABLE USERS(
 create index indexUser on users(username);
 create index index_Email on users(email);
 
+
 CREATE TABLE DEPARTMENTS(
 	IDDEPTO SERIAL  NOT NULL,
 	DEPTONAME VARCHAR(75)  NOT NULL,
@@ -132,14 +133,42 @@ insert into roles(rolename,description) values ('Lider','Tendra a cargo un grupo
 insert into roles(rolename,description) values ('Receptor','Son personas tecnicos o capacitados para resolver algun tipo de incidencia o fallo');
 insert into roles(rolename,description) values ('Empleado','Este es el rol por defecto que se le asigna a un nuevo usuario despues de registrarse');
 
--- Usuario SuperAdmin, dato quemado 
-delete from deptobyusers;
-delete from users;
+-- Correciones de la base de datos, quitar si se corrigen en las propias definciones
+alter table incidences add column idDepto int;
+alter table incidences add constraint fk_Depto foreign key(idDepto) references departments(iddepto);
 
+-- Creacionde Menus 
+insert into menus values(1,'Panel Principal',null,'/Principal',null);
+insert into menus values(2,'Grupo',null,'/Grupo',null);
+insert into menus values(3,'Empleados',null,'/Empleados',null);
+insert into menus values(4,'Departamentos',null,'/Departamentos',null);
+insert into menus values(5,'Clasificaciones',null,'/Clasificaciones',null);
+insert into menus values(6,'Reportes',null,'/Reportes',null);
+insert into menus values(7,'Todas',null,'/Incidencias',1);
+insert into menus values(8,'En proceso',null,'/Incidencias',1);
+insert into menus values(9,'Urgentes',null,'/Incidencias',1);
+insert into menus values(10,'Finalizadas',null,'/Incidencias',1);
+
+-- Asignado Permisos sobre roles por menus 
+-- Menus sobre el Gerente idrol 1
+insert into permissions(idmenu,idrole) select idMenu, 1 from menus
+where idmenu in (1,3,4,5,6,7,8,9,10);
+-- Menus sobre el Lider idrol 2 
+insert into permissions(idmenu,idrole) select idMenu, 2 from menus
+where idmenu in (1,2,6,8,9,10,11);
+-- Menus sobre el Receptor idrol 3 
+insert into permissions(idmenu,idrole) select idMenu, 3 from menus
+where idmenu in (1,2,6,8,10,11);
+-- Menus sobre el Empleado idrol 4 
+insert into permissions(idmenu,idrole) values (1,4);
+
+select * from permissions;
 select * from users;
 
-update users 
+-- Consultar permisos de Menus por roles 
+select * from menus where idMenu in (select idmenu from permissions where idrole = 4);
 
+update users set idrole = 2 where username = 'MCNERIO98';
 
 
  

@@ -5,8 +5,11 @@
  */
 package com.helpdesk.controladores;
 
+import com.helpdesk.entidades.Menu;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +27,15 @@ public class Principal extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
         if(accion == null){
+            HttpSession s = request.getSession();
+            List<Menu> permisosLst = (List<Menu>)s.getAttribute("Permisos");
+            String op = request.getParameter("op");
+
+            if(op!=null){
+                List<Menu> PermisosAsignados = permisosLst.stream().filter(field -> field.getIdParent()==Integer.parseInt(op)).collect(Collectors.toList());
+                request.setAttribute("PermisosAsignados",PermisosAsignados);
+            }
+            
             request.getRequestDispatcher("pnlPrincipal.jsp").forward(request, response);
         }else if(accion.equals("logout")){
             cerrarSesion(request, response);

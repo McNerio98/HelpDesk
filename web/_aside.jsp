@@ -22,30 +22,14 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
-                    <a href="/Helpdesk/pnlPrincipal.jsp" class="nav-link">
+                <c:forEach var="iterador" items="${MenuPrincipal}">
+                    <li class="nav-item">
+                        <a href="${pageContext.servletContext.contextPath}${iterador.controller}?op=${iterador.idMenu}" class="nav-link">
                         <i class="fas fa-circle nav-icon"></i>
-                        <p>
-                            Incidencias
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="pages/gallery.html" class="nav-link">
-                        <i class="fas fa-circle nav-icon"></i>
-                        <p>
-                            Agregar Departamento
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/Helpdesk/asignarRol.jsp" class="nav-link">
-                        <i class="fas fa-circle nav-icon"></i>
-                        <p>
-                            Asignar rol a usuario
-                        </p>
-                    </a>
-                </li>
+                        <p>${iterador.menu}</p>
+                        </a>
+                    </li>
+                </c:forEach>
             </ul>
         </nav>
     </div>

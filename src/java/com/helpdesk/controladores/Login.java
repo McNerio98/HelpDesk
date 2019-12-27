@@ -2,6 +2,7 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+package com.helpdesk.controladores;
  */
 package com.helpdesk.controladores;
 
@@ -10,6 +11,7 @@ import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.DeptoPorUsuario;
+import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -154,7 +157,7 @@ public class Login extends HttpServlet {
 
     private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) {
 
-        String cuenta = request.getParameter("txtCuenta");
+        String cuenta = request.getParameter("txtCuenta").toUpperCase();
         String clave = request.getParameter("txtClave");
         try {
             Conexion conn = new ConexionPool();
@@ -180,8 +183,11 @@ public class Login extends HttpServlet {
                 if (u.getPassword().equals(Hash.generarHash(clave, Hash.SHA256))) {
                     s.setAttribute("Usuario", u.getUserName());
                     //PENDIENTE: Aqui se establecen los permisos usando filtro, 
-                    
-                    response.sendRedirect("Principal");
+                    List<Menu> permisos = getPermisos(u.getIdRole());
+                    List<Menu> MenuPrincipal = permisos.stream().filter(field->field.getIdParent()==0).collect(Collectors.toList());
+                    s.setAttribute("MenuPrincipal", MenuPrincipal);
+                    s.setAttribute("Permisos", permisos);
+                    response.sendRedirect("Principal?op=1");
                 } else {
                     //La clave es incorrecta
                     request.setAttribute("error", 1);
@@ -248,6 +254,29 @@ public class Login extends HttpServlet {
         return es;
     }
 
+    private List<Menu> getPermisos(Integer idRol){
+        List<Menu> permisos = new ArrayList();
+        try{
+            String sql = "select * from menus where idMenu in (select idmenu from permissions where idrole = ?)";
+            List<Object> parametros = new ArrayList();
+            parametros.add(idRol);
+            String[][] result = Operaciones.consultar(sql, parametros);
+            //Array[Columna][Fila]
+            for(int i=0; i<result[0].length; i++){
+                Menu m = new Menu();
+                m.setIdMenu(Integer.parseInt(result[0][i]));
+                m.setMenu(result[1][i]);
+                m.setDescription(result[2][i]==null?"0":result[2][i]);
+                m.setController(result[3][i]);
+                m.setIdParent(Integer.parseInt(result[4][i] == null ? "0":result[4][i]));
+                permisos.add(m);
+            }
+        }catch(Exception ex){
+            //permisos = null;
+        }
+        return permisos;
+    }
+    
     @Override
     public String getServletInfo() {
         return "Short description";
