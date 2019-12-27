@@ -34,11 +34,13 @@ public class Incidencia {
     private int idClassification;
     @NotNull
     private int idCreator;
+    @NotNull
+    private int idDepto;
 
     public Incidencia() {
     }
 
-    public Incidencia(int idIncidence, String title, String description, Timestamp creationDay, Timestamp finalDate, BigDecimal totalCost, String priority, int idClassification, int idCreator) {
+    public Incidencia(int idIncidence, String title, String description, Timestamp creationDay, Timestamp finalDate, BigDecimal totalCost, String priority, int idClassification, int idCreator, int idDepto) {
         this.idIncidence = idIncidence;
         this.title = title;
         this.description = description;
@@ -48,6 +50,7 @@ public class Incidencia {
         this.priority = priority;
         this.idClassification = idClassification;
         this.idCreator = idCreator;
+        this.idDepto = idDepto;
     }
 
     public int getIdIncidence() {
@@ -74,11 +77,11 @@ public class Incidencia {
         this.description = description;
     }
 
-    public Timestamp getCreateIonDay() {
+    public Timestamp getCreationDay() {
         return creationDay;
     }
 
-    public void setCreateIonDay(Timestamp creationDay) {
+    public void setCreationDay(Timestamp creationDay) {
         this.creationDay = creationDay;
     }
 
@@ -121,7 +124,17 @@ public class Incidencia {
     public void setIdCreator(int idCreator) {
         this.idCreator = idCreator;
     }
-        
+
+    public int getIdDepto() {
+        return idDepto;
+    }
+
+    public void setIdDepto(int idDepto) {
+        this.idDepto = idDepto;
+    }
+    
+    
+    
     
 }
 
