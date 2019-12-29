@@ -19,20 +19,11 @@ public class Menu {
     private int idMenu;
     @NotNull
     private String menu;
-    private String description;
     @NotNull
     private String controller;
     private int idParent;
 
     public Menu() {
-    }
-
-    public Menu(int idMenu, String menu, String description, String controller, int idParent) {
-        this.idMenu = idMenu;
-        this.menu = menu;
-        this.description = description;
-        this.controller = controller;
-        this.idParent = idParent;
     }
 
     public int getIdMenu() {
@@ -51,14 +42,6 @@ public class Menu {
         this.menu = menu;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getController() {
         return controller;
     }
@@ -74,7 +57,6 @@ public class Menu {
     public void setIdParent(int idParent) {
         this.idParent = idParent;
     }
-    
     
     
 }

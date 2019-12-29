@@ -15,11 +15,12 @@ import java.sql.Timestamp;
 @Entity(table="INCIDENCEBYRECEPTOR")
 public class IncidenciaPorEncargado {
     @PrimaryKey
+    @AutoIncrement
     private int idIBR;
     private Timestamp startDate;
     private Timestamp finalDate;
     @NotNull
-    private String status;
+    private int status;
     @NotNull
     private int idreceptor;
     @NotNull
@@ -28,7 +29,7 @@ public class IncidenciaPorEncargado {
     public IncidenciaPorEncargado() {
     }
 
-    public IncidenciaPorEncargado(int idIBR, Timestamp startDate, Timestamp finalDate, String status, int idreceptor, int idIncidence) {
+    public IncidenciaPorEncargado(int idIBR, Timestamp startDate, Timestamp finalDate, int status, int idreceptor, int idIncidence) {
         this.idIBR = idIBR;
         this.startDate = startDate;
         this.finalDate = finalDate;
@@ -61,11 +62,11 @@ public class IncidenciaPorEncargado {
         this.finalDate = finalDate;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -84,6 +85,5 @@ public class IncidenciaPorEncargado {
     public void setIdIncidence(int idIncidence) {
         this.idIncidence = idIncidence;
     }
-    
     
 }
