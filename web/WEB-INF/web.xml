@@ -4,13 +4,42 @@
         <servlet-name>Principal</servlet-name>
         <servlet-class>com.helpdesk.controladores.Principal</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Login</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Incidencias</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Incidencias</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Informacion</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Informacion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Incidencias</servlet-name>
+        <url-pattern>/Incidencias</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Informacion</servlet-name>
+        <url-pattern>/Informacion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+    <welcome-file-list>
+        <welcome-file>
+            Login
+        </welcome-file>
+    </welcome-file-list>
 </web-app>
