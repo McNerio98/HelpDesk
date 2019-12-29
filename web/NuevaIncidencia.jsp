@@ -51,8 +51,9 @@
                                     <div class="form-group">
                                         <label>Clasificacion</label>
                                         <select class="form-control" name="slcClasificacion">
-                                            <option value="10">ROBO</option>
-                                            <option value="20">FALLA DE RED POR FALTA DE AGUA POTABLE</option>
+                                            <c:forEach var="Iterador" items="${ClasfList}">
+                                                <option value="${Iterador.idClassification}">${Iterador.classification}</option>
+                                            </c:forEach>                                                
                                         </select>
                                     </div>
                                 </div>
@@ -75,13 +76,14 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"><a href="">Asignar a:</a></label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Ninguno Selecionado" disabled="">
+                                        <input type="hidden" value="12" name="txtReceptor" id="txtReceptor">
+                                        <input type="text" class="form-control" id="" placeholder="Ninguno Selecionado" disabled="">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Fecha Final</label><br>
-                                        <input type="date" class="form-control" name="dateFechaFinal">
+                                        <input type="date" class="form-control" name="dateFechaFinal" id="dateFechaFinal">
                                     </div>                                
                                 </div>
                             </div>                                                
@@ -105,59 +107,44 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="customRadio1" name="customRadio">
-                                        <label for="customRadio1" class="custom-control-label">Depto a cargo</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="customRadio2" name="customRadio" checked="">
-                                        <label for="customRadio2" class="custom-control-label">Otros Deptos</label>
-                                    </div>
-                                </div>                                
+                                <c:choose>
+                                    <c:when test="${Rol!= null && Rol==2}">
+                                        <div class="form-group">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" id="customRadio1" name="customRadio">
+                                                <label for="customRadio1" class="custom-control-label">Depto a cargo</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" id="customRadio2" name="customRadio" checked="">
+                                                <label for="customRadio2" class="custom-control-label">Otros Deptos</label>
+                                            </div>
+                                        </div>                                                                    
+                                    </c:when>
+                                    <c:when test="${Rol!=null && Rol==1}">
+                                        <div class="form-group">
+                                            <label>Filtrar por Roles</label>
+                                            <select class="custom-select">
+                                                <option>option 1</option>
+                                                <option>option 2</option>
+                                                <option>option 3</option>
+                                                <option>option 4</option>
+                                                <option>option 5</option>
+                                            </select>
+                                        </div>                                    
+                                    </c:when>
+                                </c:choose>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Filtrar por Departamentos</label>
                                     <select class="custom-select">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
+                                        <c:forEach var="Iterador" items="${DeptosList}">
+                                            <option value="${Iterador.idDepto}">${Iterador.deptoName}</option>
+                                        </c:forEach>                                        
                                     </select>
                                 </div>                                
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <!-- select -->
-                                <div class="form-group">
-                                    <label>Filtrar por Roles</label>
-                                    <select class="custom-select">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Filtrar por Departamentos</label>
-                                    <select class="custom-select">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
                     <!-- /.card-body -->
                 </div>                

@@ -182,12 +182,14 @@ public class Login extends HttpServlet {
                 Usuario u = Operaciones.get(Integer.parseInt(iden[0][0]), new Usuario());
                 if (u.getPassword().equals(Hash.generarHash(clave, Hash.SHA256))) {
                     s.setAttribute("Usuario", u.getUserName());
-                    //PENDIENTE: Aqui se establecen los permisos usando filtro, 
+                    s.setAttribute("Rol", u.getIdRole());
+                    s.setAttribute("idUsuario", u.getIdUser());
+                    
                     List<Menu> permisos = getPermisos(u.getIdRole());
                     List<Menu> MenuPrincipal = permisos.stream().filter(field->field.getIdParent()==0).collect(Collectors.toList());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);
-                    s.setAttribute("Permisos", permisos);
-                    response.sendRedirect("Principal?op=1");
+
+                    response.sendRedirect("Principal");
                 } else {
                     //La clave es incorrecta
                     request.setAttribute("error", 1);

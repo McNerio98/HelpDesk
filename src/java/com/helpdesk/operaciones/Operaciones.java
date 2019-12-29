@@ -6,15 +6,18 @@
 package com.helpdesk.operaciones;
 
 import com.helpdesk.conexion.Conexion;
+import com.helpdesk.conexion.ConexionPool;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,7 +105,7 @@ public class Operaciones {
     public static String[][] consultar(String sqlQuery, List<Object> params) throws Exception {
         String[][] resultados = null;
         try {
-            PreparedStatement stmt = conexion.getConexion().prepareStatement(sqlQuery, ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            PreparedStatement stmt = conexion.getConexion().prepareStatement(sqlQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             if (params != null && params.size() > 0) {
                 List<Object> cleanParams = params;
                 for (int i = 1; i <= params.size(); i++) {
@@ -137,7 +140,7 @@ public class Operaciones {
                 }
             }
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 rs.last();
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int numCols = rsmd.getColumnCount();
@@ -153,11 +156,12 @@ public class Operaciones {
                 }
                 return resultados;
             }
-            
+
             return resultados;
         } catch (Exception ex) {
             Logger.getLogger(Persistencia.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
     }
+
 }

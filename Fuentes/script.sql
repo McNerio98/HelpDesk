@@ -152,6 +152,9 @@ alter table incidences alter column creationday set default current_timestamp;
 --* Ampleando longitud, preguntar por remplazar serial en lugar de int
 alter table classifications alter column classification type varchar(50);
 
+--* Modificando estilo de entrada de fechas 
+set DATESTYLE TO 'European';
+
 -- Creacionde Menus 
 insert into menus values(1,'Panel Principal',null,'/Principal',null);
 insert into menus values(2,'Grupo',null,'/Grupo',null);
@@ -183,8 +186,7 @@ select * from users;
 -- Consultar permisos de Menus por roles 
 select * from menus where idMenu in (select idmenu from permissions where idrole = 4);
 
-update users set idrole = 2 where username = 'MCNERIO98';
-
+update users set idrole = 3 where username = 'MCNERIO98';
 
  
 

@@ -61,6 +61,8 @@ select count(*) from incidences where priority = 'BAJA';
 select * from users where idrole = 4;
 
 
+select * from incidences;
 
+delete from incidences;
 
-
+SET DATESTYLE TO DEFAULT;

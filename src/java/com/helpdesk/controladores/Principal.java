@@ -26,17 +26,11 @@ public class Principal extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
+        
         if(accion == null){
-            HttpSession s = request.getSession();
-            List<Menu> permisosLst = (List<Menu>)s.getAttribute("Permisos");
-            String op = request.getParameter("op");
-
-            if(op!=null){
-                List<Menu> PermisosAsignados = permisosLst.stream().filter(field -> field.getIdParent()==Integer.parseInt(op)).collect(Collectors.toList());
-                request.setAttribute("PermisosAsignados",PermisosAsignados);
-            }
             
-            request.getRequestDispatcher("pnlPrincipal.jsp").forward(request, response);
+            //request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
+            response.sendRedirect("Incidencias");
         }else if(accion.equals("logout")){
             cerrarSesion(request, response);
         }
