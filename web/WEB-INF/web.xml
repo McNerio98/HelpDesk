@@ -12,6 +12,10 @@
         <servlet-name>Incidencias</servlet-name>
         <servlet-class>com.helpdesk.controladores.Incidencias</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Informacion</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Informacion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>Incidencias</servlet-name>
         <url-pattern>/Incidencias</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Informacion</servlet-name>
+        <url-pattern>/Informacion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
