@@ -1,0 +1,129 @@
+
+1. Investigar, como convertir o guardar un campo de tipo texto, siempre en mayuscula
+
+Ejemplo: 
+Ingresado por el user -> Datos Guardado en la Base de datos 
+
+FUNCION TOUPPERCASE DE JAVA STRING
+
+mcnerio -> MCNERIO
+McNerio -> MCNERIO
+MCNERIO -> MCNERIO
+
+2. Buscar un Caso practica y de ha partir de ahi, diseñar las clasificaciones que se tendran 
+FALTA DE LUZ
+LIMPIEZA Y VESTUARIOS
+MANTENIMIENTO
+ATENCION Y PAGOS
+CAMBIOS DE HORARIOS
+ROBOS
+TEMPERATURA
+ATAQUE DEL SISTEMA
+CODIGO DAÑINO
+DENEGACION DE SERVICIO(DoS)
+ACCESSO NO AUTORIZADO, ROBO O PERDIDAS DE Datos
+DAÑOS FISICOS
+ABUSOS DE PROVILEGIOS Y USOS INADECUADOS
+INFRAESTRUCTURA
+COMUNICACIONES
+HARDWARE
+
+
+3. Trabajar en las vistas y menus describir que se mostrara en los diferentes roles, en los cuales ya estan:
+
+
+Menus(/, donde un menu o submenu corresponde a un controlador, y son estos los que soltaran los recursos "Vistas")
+
+/Registrarse (Todos)
+/Login (Todos)
+
+/Panel Principal  (Todos) 
+/Crear Departamento (SuperAdmin)
+/Indicencias (Todos)
+/Reportes (Todos)
+
+
+Vistas(**): 
+
+**Definicion
+- Describe la incidencia y sus datos generales
+
+**Grupo
+ - Describe los integrantes que pertenecen a su grupo en caso del lider
+ - En caso de los SuperAdmin muestra todos los lider
+
+**Control
+- Muestra datos de control de la incidencia, en general, esta relacionada a la tabla incidenceBYreceptor 
+
+**Gestion
+- Relacionada a la tabla Management 
+
+
+
+
+
+
+CUANDO SE LOGEE EL ADMIN // Tendra todas las opciones
+
+Menu | Panel Principal 
+Contenido de presentacion 
+->Mostrar 4 Estadisticas (Cuadros con numeros)
+-(Cada uno de los siguientes son submenus, realiza peticiones ajax y lo devuelve en el contenedor principal)
+1. Total de Solicitudes(Este es el que estara activo)        
+2. Incidencias En Cursos (Ejecutandose en todos los departamentos)
+cuando le de click le mostrar clasificadas por departamentos 
+3. Incidencias Rechazadas (Y que deben ser asignada a otro lider, de prioridad alta)
+Cuando me click muestra la lista de estas, con informacion del lider y los motivos
+del rechazo en una especia de acordeon. 
+4. Departamento con mas incidencias (Que muestre el nombre) 
+
+
+-> Se mostraran las solicitudes de union (en una tabla)
+---El podra aceptarlas o eliminarlas,
+-> Se mostrar sus auto tareas que el se asigno. 
+
+Menu | Departamentos 
+
+1. Total Departamentos 
+2. Departamentos sin Lider (y que debe de asignar)
+3. 
+
+Contenido 1 Para 
+
+Crear una vista en general que muestre las incidencias, esta vista sera utilizada por los diferentes servlet que crearan filtros para mostrar contenido en ella, ejemplo
+incidencias en curso 
+incidencias rechazadas
+departamentos con mas incidencias
+etc.
+todas estas muestran una lista de incidencias pero aplicando filtros.... y asi se reutiliza y se generaliza la vista....   
+
+Menu | Incidencias
+Muestra un CRUD
+primeramente muestra una lista de los ultimos 10 registros en la tabla incidencia, con su respectivo estado (Se pueden usar texto y colores para indicar su estado)...
+
+Ademas de la lista, podra crear una nueva, el eliminar no existe, el actualizar funciona para asignarle esa incidencia a otro tecnico o c ambiarle la prioridad o la descripcion de tal incidencia. despues de crear la nueva la lleva al area de definciion .
+
+En la lista solo se muestra los primeros 10 incidencias, y se asigna una paginacion, se utiliza ajax para la peticion.
+ 
+
+Se deja mejor para los filtros 
+Podra aplicar filtro de busqueda dentro de la primera tabla que se le muestran, como mostrar indicencias en ejecucion, buscar incidencia por receptor, las que creo el el mismo, mostrar incidencias por departamentos ya sea en uno o varios, mostrar por prioridad etc.
+
+Cuando de click sobre una incidencia lo lleva al area de definicion.       
+
+
+
+NOTAS:
+Quitar costo total, eso va a ir en control o en gestion.
+en su lugar poner fecha de finalizacion
+
+
+
+
+
+ 
+
+
+
+
+ 
