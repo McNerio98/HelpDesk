@@ -41,9 +41,7 @@ CREATE TABLE USERS(
 	CONSTRAINT PK_IDUSER PRIMARY KEY(IDUSER),
 	CONSTRAINT FK_IDROL FOREIGN KEY(IDROLE) REFERENCES ROLES(IDROL)
 );
---Se crea indice ya que el campo username sera frecuentemente utilizado
-create index indexUser on users(username);
-create index index_Email on users(email);
+
 
 
 CREATE TABLE DEPARTMENTS(
@@ -69,6 +67,9 @@ CREATE TABLE CLASSIFICATIONS(
 	DESCRIPTION VARCHAR(500),
 	CONSTRAINT PK_IDCLASSFICATION PRIMARY KEY(IDCLASSIFICATION)
 );
+
+
+
 CREATE TYPE PRIORYTY AS ENUM('BAJA', 'MEDIA', 'ALTA');
 CREATE TABLE INCIDENCES(
 	IDINCIDENCE SERIAL NOT NULL,
@@ -84,6 +85,8 @@ CREATE TABLE INCIDENCES(
 	CONSTRAINT FK_IDCLASSIFICATION FOREIGN KEY(IDCLASSIFICATION) REFERENCES CLASSIFICATIONS(IDCLASSIFICATION),
 	CONSTRAINT FK_IDCREATOR FOREIGN KEY(IDCREATOR) REFERENCES USERS(IDUSER)
 );
+
+
 CREATE TYPE NOTETYPE AS ENUM('Observacion', 'Rechazo');
 CREATE TABLE NOTES(
 	IDNOTA SERIAL  NOT NULL,
@@ -133,9 +136,24 @@ insert into roles(rolename,description) values ('Lider','Tendra a cargo un grupo
 insert into roles(rolename,description) values ('Receptor','Son personas tecnicos o capacitados para resolver algun tipo de incidencia o fallo');
 insert into roles(rolename,description) values ('Empleado','Este es el rol por defecto que se le asigna a un nuevo usuario despues de registrarse');
 
--- Correciones de la base de datos, quitar si se corrigen en las propias definciones
+-- Correciones de la base de datos, QUITAR SI SE CORRIGEN EN LA PROPIA DB
+--**Agregar id del depto a tabla incidencias 
 alter table incidences add column idDepto int;
 alter table incidences add constraint fk_Depto foreign key(idDepto) references departments(iddepto);
+
+-- **Creacion de indices en la tabla users
+create index indexUser on users(username);
+create index index_Email on users(email);
+
+--** asignando valor por default en tabla incidencias 
+alter table incidences alter column creationday set not null;
+alter table incidences alter column creationday set default current_timestamp;
+
+--* Ampleando longitud, preguntar por remplazar serial en lugar de int
+alter table classifications alter column classification type varchar(50);
+
+--* Modificando estilo de entrada de fechas 
+set DATESTYLE TO 'European';
 
 -- Creacionde Menus 
 insert into menus values(1,'Panel Principal',null,'/Principal',null);
@@ -168,8 +186,7 @@ select * from users;
 -- Consultar permisos de Menus por roles 
 select * from menus where idMenu in (select idmenu from permissions where idrole = 4);
 
-update users set idrole = 2 where username = 'MCNERIO98';
-
+update users set idrole = 3 where username = 'MCNERIO98';
 
  
 
