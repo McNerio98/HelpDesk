@@ -33,7 +33,7 @@ public class Informacion extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
-            out.println("<html>");
+            out.println("<NUEVO CAMBIO>");
             out.println("<head>");
             out.println("<title>Servlet Informacion</title>");            
             out.println("</head>");
