@@ -70,7 +70,7 @@ CREATE TABLE INCIDENCES(
 	IDINCIDENCE SERIAL NOT NULL,
 	TITLE VARCHAR(50) NOT NULL,
 	DESCRIPTION VARCHAR(500)  NOT NULL,
-	CREATIONDAY TIMESTAMP  NOT NULLss,
+	CREATIONDAY TIMESTAMP  NOT NULL,
 	FINALDATE TIMESTAMP  NOT NULL,
 	TOTALCOST DECIMAL(16,2)  NOT NULL,
 	PRIORITY INT NOT NULL,
@@ -158,13 +158,49 @@ where idmenu in (1,3,7);
 insert into permissions(idmenu,idrole) values (1,4);
 
 
+--incidencebyrecepto and incidesces table 
 
-select * from menus where idMenu in (select idmenu from permissions where idrole = 1);
-alter table incidences alter column creationday set not null;
-alter table incidences alter column totalcost set default 0.0;
-select * from incidencebyreceptor;
-
+select * from incidences;
  
+
+--funcion para actualizar  registro en la tabla deptobyusers
+CREATE OR REPLACE FUNCTION public.updatedepto(
+	fiduser integer,
+	fiddepto integer)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+AS $BODY$
+BEGIN
+update deptobyusers set iddepto = fiddepto where iduser = fiduser;
+RETURN 1;
+END; $BODY$;
+
+ALTER FUNCTION public.updatedepto(integer, integer)
+    OWNER TO postgres;
+	
+--funcion para eliminar el registro en la tabla deptobyusers en relacion al usuario 
+
+CREATE OR REPLACE FUNCTION public.deletedeptobyusers(
+	fiduser integer)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+AS $BODY$
+BEGIN
+delete from deptobyusers where iduser = fiduser;
+delete from users where iduser = fiduser;
+RETURN 1;
+END; $BODY$;
+
+ALTER FUNCTION public.deletedeptobyusers(integer)
+    OWNER TO postgres;
+
+
 
 
 

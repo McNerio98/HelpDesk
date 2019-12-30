@@ -79,7 +79,7 @@ select count(*) from incidences where priority = 'BAJA';
 select * from users where idrole = 4;
 
 
-select * from incidences;
+
 
 delete from incidencebyreceptor;
 delete from incidences;
@@ -94,8 +94,26 @@ update users set idrole = 2 where username = 'FORC36';
 update users set idrole = 3 where username = 'LINN45';
 update users set idrole = 3 where username = 'CHARLY3';
 
-select * from deptobyusers;
+select iduser from users where username = 'LINN45';
 
+select * from departments;
+select * from incidences;
+
+select * from deptobyusers where iddepto = (select iddepto from deptobyusers where iduser = 5) and iduser = 7;
+
+select * from incidences;
+
+
+
+
+
+select d.deptoname,i.title,i.description, inc.status, i.creationday, i.priority,
+u.username, cl.classification, i.totalcost
+from incidencebyreceptor inc, incidences i, departments d, users u, classifications cl
+where inc.idincidence = i.idincidence and 
+i.iddepto = d.iddepto and u.iduser = i.idcreator
+and cl.idclassification = i.idclassification
+and i.idincidence = 17;
 
 
 
