@@ -101,7 +101,7 @@ select * from incidences;
 
 select * from deptobyusers where iddepto = (select iddepto from deptobyusers where iduser = 5) and iduser = 7;
 
-select * from incidences;
+select * from        incidences;
 
 
 
@@ -113,8 +113,11 @@ from incidencebyreceptor inc, incidences i, departments d, users u, classificati
 where inc.idincidence = i.idincidence and 
 i.iddepto = d.iddepto and u.iduser = i.idcreator
 and cl.idclassification = i.idclassification
-and i.idincidence = 17;
+and i.idincidence = 1 and inc.status <> 5;
 
 
+select * from incidences;
+
+update users set idrole = 3 where username = 'ROGER85';
 
 
