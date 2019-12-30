@@ -28,9 +28,7 @@ public class Principal extends HttpServlet {
         String accion = request.getParameter("accion");
         
         if(accion == null){
-            
-            //request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
-            response.sendRedirect("Incidencias");
+           request.getRequestDispatcher("pnlPrincipal.jsp").forward(request, response);
         }else if(accion.equals("logout")){
             cerrarSesion(request, response);
         }
@@ -47,6 +45,8 @@ public class Principal extends HttpServlet {
     private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession s = request.getSession();
         s.removeAttribute("Usuario");
+        s.removeAttribute("idUsuario");
+        s.removeAttribute("Rol");
         s.invalidate();
         response.sendRedirect("Login");
     }

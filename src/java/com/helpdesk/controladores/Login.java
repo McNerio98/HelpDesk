@@ -185,8 +185,8 @@ public class Login extends HttpServlet {
                     s.setAttribute("Rol", u.getIdRole());
                     s.setAttribute("idUsuario", u.getIdUser());
                     
-                    List<Menu> permisos = getPermisos(u.getIdRole());
-                    List<Menu> MenuPrincipal = permisos.stream().filter(field->field.getIdParent()==0).collect(Collectors.toList());
+                    
+                    List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);
 
                     response.sendRedirect("Principal");
@@ -268,9 +268,8 @@ public class Login extends HttpServlet {
                 Menu m = new Menu();
                 m.setIdMenu(Integer.parseInt(result[0][i]));
                 m.setMenu(result[1][i]);
-                m.setDescription(result[2][i]==null?"0":result[2][i]);
-                m.setController(result[3][i]);
-                m.setIdParent(Integer.parseInt(result[4][i] == null ? "0":result[4][i]));
+                m.setController(result[2][i]);
+                m.setIdParent(Integer.parseInt(result[3][i] == null ? "0":result[4][i]));
                 permisos.add(m);
             }
         }catch(Exception ex){

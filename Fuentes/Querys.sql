@@ -8,8 +8,9 @@
 update users set idrole = 1 where username = 'ROGER85'; --Gerente 
 update users set idrole = 2 where username = 'ALUX75'; -- Lider 
 update users set idrole = 3 where username = 'NOVA94'; -- Receptor 
-update users set idrole = 4 where username = 'MCNERIO98'; --Empleado
+update users set idrole = 4 where username = 'MCNERIO98'; --Receptor 
 
+select * from departments;
 --ARREGLAR ESTAS INSERCIONES AL AGREGAR SERIAL Y OMITIR ID EXPLICITO 
 --Creando algunas Clasificaciones, arrelgar y poner el serial y quitar las primarys de aqui 
 insert into classifications values(1,'FALLA DE RED','intercambio de datos');
@@ -17,6 +18,8 @@ insert into classifications values(2,'ROBO','Perdida de patrimonio que afecta el
 insert into classifications values(3,'VULNERABILIDAD','Acceso vulnerable a datos');
 insert into classifications values(4,'ENERGIA','Falla en suministro de electricidad');
 
+alter table incidences alter column creationday set not null;
+alter table incidences alter column creationday set default current_timestamp;
 
 -- Esto ya estubo, ignorar 
 alter table incidences add column idDepto int;
@@ -35,10 +38,10 @@ insert into incidences(title,description,creationday,finaldate,totalcost,priorit
 
 
 
-insert into incidences(title,description,finaldate,totalcost,priority,idclassification,idcreator,iddepto)values 
-('AC Caido','le callo agua','2019-12-30',0.0,'BAJA',3,12,4);
+insert into incidences(title,description,creationday,finaldate,priority,idclassification,idcreator,iddepto)values 
+('AC Caido','le callo agua',null,'2019-12-30',1,1,3,2);
 
-select * from incidences;
+select * from users;
 -- Creando asignaciones para la parte del control 
 insert into incidencebyreceptor(startdate,status,idreceptor,idincidence) values 
 (current_timestamp,'Asignada',1,15);
@@ -53,16 +56,65 @@ select status from incidencebyreceptor where idincidence = 15 and status <> 'Rec
 
 
 
+--Como saber si son del mismo departamento 
+select * from deptobyusers;
+select * from users;
 
-select * from incidences;
+select count(iddepto) from deptobyusers where iddepto =
+(select iddepto from deptobyusers where iduser = 1);
+
+select count(iddepto) from deptobyusers where iduser =  or iduser = 2;
+
+
+select * from deptobyusers where iddepto = 
+(select iddepto from deptobyusers where iduser = 2) and iduser = 1;
+
+select iddepto from deptobyusers where iduser = 2;
+select count(iddepto) from deptobyusers where iddepto  = 
+(select iddepto where iduser = 1 or iduser = 3);
+
 select * from incidences where creationday between '2019-06-01' and '2019-08-20';
 select count(*) from incidences where priority = 'BAJA';
 
 select * from users where idrole = 4;
 
 
+
+
+delete from incidencebyreceptor;
+delete from incidences;
+select * from users;
+
+update users set idrole = 1 where username = 'MCNERIO98';
+update users set idrole = 2 where username = 'ROGER85';
+update users set idrole = 3 where username = 'ALUX75';
+update users set idrole = 3 where username = 'NOVA94';
+
+update users set idrole = 2 where username = 'FORC36';
+update users set idrole = 3 where username = 'LINN45';
+update users set idrole = 3 where username = 'CHARLY3';
+
+select iduser from users where username = 'LINN45';
+
+select * from departments;
 select * from incidences;
 
-delete from incidences;
+select * from deptobyusers where iddepto = (select iddepto from deptobyusers where iduser = 5) and iduser = 7;
 
-SET DATESTYLE TO DEFAULT;
+select * from incidences;
+
+
+
+
+
+select d.deptoname,i.title,i.description, inc.status, i.creationday, i.priority,
+u.username, cl.classification, i.totalcost
+from incidencebyreceptor inc, incidences i, departments d, users u, classifications cl
+where inc.idincidence = i.idincidence and 
+i.iddepto = d.iddepto and u.iduser = i.idcreator
+and cl.idclassification = i.idclassification
+and i.idincidence = 17;
+
+
+
+

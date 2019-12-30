@@ -22,14 +22,12 @@ public class Incidencia {
     private String title;
     @NotNull
     private String description;
-    @NotNull
     private Timestamp creationDay;
     @NotNull
     private Timestamp finalDate;
-    @NotNull
     private BigDecimal totalCost;
     @NotNull
-    private String priority;
+    private int priority;
     @NotNull
     private int idClassification;
     @NotNull
@@ -40,7 +38,7 @@ public class Incidencia {
     public Incidencia() {
     }
 
-    public Incidencia(int idIncidence, String title, String description, Timestamp creationDay, Timestamp finalDate, BigDecimal totalCost, String priority, int idClassification, int idCreator, int idDepto) {
+    public Incidencia(int idIncidence, String title, String description, Timestamp creationDay, Timestamp finalDate, BigDecimal totalCost, int priority, int idClassification, int idCreator, int idDepto) {
         this.idIncidence = idIncidence;
         this.title = title;
         this.description = description;
@@ -101,11 +99,11 @@ public class Incidencia {
         this.totalCost = totalCost;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 
@@ -132,7 +130,6 @@ public class Incidencia {
     public void setIdDepto(int idDepto) {
         this.idDepto = idDepto;
     }
-    
     
     
     

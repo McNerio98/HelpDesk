@@ -9,6 +9,14 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0 text-dark">Crear Incidencia</h1>
+                <c:if test="${resultado!=null}">
+                    <c:if test="${resultado==1}">
+                        <p class="text-danger m-0" ><strong>Problemas al registrar!</strong></p>
+                    </c:if>
+                    <c:if test="${resultado==2}">
+                        <p class="text-success m-0"><strong>Se ha registro con exito</strong></p>
+                    </c:if>
+                </c:if>                
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -61,14 +69,25 @@
                                     <div class="form-group">
                                         <label>Prioridad</label>
                                         <select class="form-control" name="slcPrioridad">
-                                            <option value="BAJA">BAJA</option>
-                                            <option value="MEDIA">MEDIA</option>
-                                            <option value="ALTA">ALTA</option>
+                                            <option value="1">BAJA</option>
+                                            <option value="2">MEDIA</option>
+                                            <option value="3">ALTA</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <c:if test="${Rol!= null && Rol==1}">
+                                <div class="form-group row">
+                                    <label>Departamento</label>
+                                    <select class="form-control" name="slcDeptoIncidence">
+                                        <c:forEach var="idp" items="${DeptosList}">
+                                            <option value="${idp.idDepto}">${idp.deptoName}</option>
+                                        </c:forEach>
+                                    </select>                                    
+                                </div>                                                            
+                            </c:if>
+
+                            <div class="form-group row">
                                 <label>Descripcion</label>
                                 <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion"></textarea>
                             </div>
@@ -76,7 +95,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"><a href="">Asignar a:</a></label>
-                                        <input type="hidden" value="12" name="txtReceptor" id="txtReceptor">
+                                        <input type="hidden" value="9" name="txtReceptor" id="txtReceptor">
                                         <input type="text" class="form-control" id="" placeholder="Ninguno Selecionado" disabled="">
                                     </div>
                                 </div>
@@ -111,11 +130,11 @@
                                     <c:when test="${Rol!= null && Rol==2}">
                                         <div class="form-group">
                                             <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" type="radio" id="customRadio1" name="customRadio">
+                                                <input class="custom-control-input" type="radio" id="customRadio1" name="radioDepto" checked="">
                                                 <label for="customRadio1" class="custom-control-label">Depto a cargo</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" type="radio" id="customRadio2" name="customRadio" checked="">
+                                                <input class="custom-control-input" type="radio" id="customRadio2" name="radioDepto" >
                                                 <label for="customRadio2" class="custom-control-label">Otros Deptos</label>
                                             </div>
                                         </div>                                                                    

@@ -8,14 +8,19 @@ package com.helpdesk.controladores;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Incidencia;
+import com.helpdesk.entidades.IncidenciaPorEncargado;
+import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +45,10 @@ public class Incidencias extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
         if (accion == null) {
+            if (request.getSession().getAttribute("resultado") != null) {
+                request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
+                request.getSession().removeAttribute("resultado");
+            }            
             request.setAttribute("DeptosList", DataList.getAllDeptos());
             request.setAttribute("ClasfList", DataList.getAllClassifications());
             request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
@@ -55,24 +64,12 @@ public class Incidencias extends HttpServlet {
 
         switch (accion) {
             case "nueva": {
-                String titulo = request.getParameter("txtTitle");
-                int clasf = Integer.parseInt(request.getParameter("slcClasificacion"));
-                String prioridad = request.getParameter("slcPrioridad");
-                String desc = request.getParameter("txtDescripcion");
-                int idReceptor = Integer.parseInt(request.getParameter("txtReceptor")); //esta quemado con id 12 
-                String fechafinal = request.getParameter("dateFechaFinal");
-                int idCreador = (int) request.getSession().getAttribute("idUsuario");
-
-                Conexion conn = new ConexionPool();
-                conn.conectar();
-                Connection con = conn.getConexion();
-
-                if(insertarIncidencia(con,titulo, clasf, prioridad, desc, idReceptor, fechafinal, idCreador)){
-                    out.print("Se inserto");
+                if(insertarIncidencia(request, response)){
+                    request.getSession().setAttribute("resultado", 2); //Se inserto 
                 }else{
-                    out.print("No se inserto");
+                    request.getSession().setAttribute("resultado", 1); //No se inserto 
                 }
-
+                response.sendRedirect("Incidencias");
                 break;
             }
 
@@ -80,49 +77,121 @@ public class Incidencias extends HttpServlet {
 
     }
 
-    private boolean insertarIncidencia(Connection cnn, String titulo, int clasf, String prioridad, String desc, int receptor, String fechaFinal, int idCreador) {
-        boolean estado = false;
-        try {
-            //Iniciando transaccion 
-            cnn.setAutoCommit(false);
-            //Date date = new SimpleDateFormat("yyyy-MM-dd").parse(fechaFinal);
-            String pattern = "yyyy-MM-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-            Date date = simpleDateFormat.parse(fechaFinal);            
+    private boolean insertarIncidencia(HttpServletRequest request, HttpServletResponse response) {
+        boolean estado = true;
+        
+        String titulo = request.getParameter("txtTitle");
+        String idclasf = request.getParameter("slcClasificacion");
+        String prioridad = request.getParameter("slcPrioridad");
+        String desc = request.getParameter("txtDescripcion");
+        String idReceptor = request.getParameter("txtReceptor"); //esta quemado con id 3 que corresponde a NOVA 
+        String fechafinal = request.getParameter("dateFechaFinal");
+        int idCreador = (int) request.getSession().getAttribute("idUsuario");
+        int idDepto = 0;
+        
+        int status = 2; //2 - Asignada 
+        int idRol = (int)request.getSession().getAttribute("Rol");
+        
+        if( idRol == 2){ //Si es un lider verificar si el receptor pertenece al mismo depto
+            if(!SameDepto(idCreador,Integer.parseInt(idReceptor))){
+                status = 1; //Se agrega como una solicitud             
+            }
+        }
+        
+        //Fecha Actual
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String ahora = hourdateFormat.format(new Date());
+        
+        try{
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
             
-            String sql = "insert into incidences\n"
-                    + "(title,description,finaldate,totalcost,priority,idclassification,idcreator,iddepto)\n"
-                    + "values(?,?,?,?,?::PRIORYTY,?,?,?)";
-            PreparedStatement ps = cnn.prepareStatement(sql);
-            ps.setObject(1, titulo);
-            ps.setObject(2, desc);
-            ps.setObject(3, new Timestamp(date.getTime()));
-            ps.setObject(4, 0.0);
-            ps.setObject(5, prioridad);
-            ps.setObject(6, clasf);
-            ps.setObject(7, idCreador);
-            ps.setObject(8, 1); //Modificar este valor para que sea dinamico
-
-            ps.executeUpdate(); //Se crea la incidencia y se procede a crear a quien se le dara tratamiento
-            cnn.commit();
-            estado = true;
-        } catch (Exception ex) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = simpleDateFormat.parse(fechafinal);
+            
+            if(idRol == 2){
+                String sql = "select iddepto from deptobyusers where iduser = ?";
+                List<Object> params = new ArrayList();
+                params.add(idCreador);
+                String[][] rs = Operaciones.consultar(sql, params);
+                idDepto = Integer.parseInt(rs[0][0]);
+                
+            }else if(idRol == 1){ //Para gerente sera el que halla selecionado 
+                idDepto = Integer.parseInt(request.getParameter("slcDeptoIncidence"));
+            }
+            
+            Incidencia icn = new Incidencia();
+            icn.setTitle(titulo);
+            icn.setDescription(desc);
+            icn.setCreationDay(new Timestamp(System.currentTimeMillis()));
+            icn.setFinalDate(new Timestamp(date.getTime()));
+            icn.setTotalCost(BigDecimal.valueOf(0.0));
+            icn.setPriority(Integer.parseInt(prioridad));
+            icn.setIdClassification(Integer.parseInt(idclasf));
+            icn.setIdCreator(idCreador);
+            icn.setIdDepto(idDepto); //Multimedia cambiar de forma dinamica
+            
+            icn = Operaciones.insertar(icn);
+            
+            IncidenciaPorEncargado ixp = new IncidenciaPorEncargado();
+            ixp.setStatus(status);
+            ixp.setIdreceptor(Integer.parseInt(idReceptor));
+            ixp.setIdIncidence(icn.getIdIncidence());
+            
+            
+            ixp = Operaciones.insertar(ixp);
+            
+            Operaciones.commit();
+        }catch(Exception ex){
+            estado = false;
             try {
-                cnn.rollback();
+                Operaciones.rollback();
             } catch (SQLException ex1) {
                 Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }finally{
             try {
-                cnn.close();
+                Operaciones.cerrarConexion();
             } catch (SQLException ex) {
                 Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
         return estado;
     }
 
+
+    private boolean SameDepto(int a, int b){ //id de Creador e id de receptor 
+        boolean sm = false;
+        
+        try{
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            String sql = "select * from deptobyusers where iddepto = \n" +
+                        "(select iddepto from deptobyusers where iduser = ?) and iduser = ?";
+            List<Object> params = new ArrayList();
+            params.add(a);
+            params.add(b);
+            
+            String[][] rs = Operaciones.consultar(sql, params);
+            
+            if(rs!=null){
+                sm = true; //Si estan en el mismo depto
+            }
+        }catch(Exception ex){
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+            
+        return sm;
+    }
+    
     @Override
     public String getServletInfo() {
         return "Short description";

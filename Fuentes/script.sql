@@ -1,7 +1,4 @@
-DROP DATABASE IF EXISTS HELPDESK;
 CREATE DATABASE HELPDESK;
-
-
 
 CREATE TABLE ROLES(
 	IDROL SERIAL NOT NULL,
@@ -13,7 +10,6 @@ CREATE TABLE ROLES(
 CREATE TABLE MENUS(
 	IDMENU INT NOT NULL,
 	MENU VARCHAR(20) NOT NULL,
-	DESCRIPTION VARCHAR(500),
 	CONTROLLER VARCHAR(20) NOT NULL,
 	IDPARENT INT,
 	CONSTRAINT PK_IDMENU PRIMARY KEY(IDMENU),
@@ -42,7 +38,9 @@ CREATE TABLE USERS(
 	CONSTRAINT FK_IDROL FOREIGN KEY(IDROLE) REFERENCES ROLES(IDROL)
 );
 
-
+-- **Creacion de indices en la tabla users
+CREATE INDEX INDEX_USER on USERS(USERNAME);
+CREATE INDEX INDEX_EMAIL on USERS(EMAIL);
 
 CREATE TABLE DEPARTMENTS(
 	IDDEPTO SERIAL  NOT NULL,
@@ -50,7 +48,6 @@ CREATE TABLE DEPARTMENTS(
 	DESCRIPTION VARCHAR(500),
 	CONSTRAINT PK_IDDEPTO PRIMARY KEY(IDDEPTO)
 );
-
 
 
 CREATE TABLE DEPTOBYUSERS(
@@ -62,15 +59,13 @@ CREATE TABLE DEPTOBYUSERS(
 );
 
 CREATE TABLE CLASSIFICATIONS(
-	IDCLASSIFICATION INT  NOT NULL,
-	CLASSIFICATION VARCHAR(20)  NOT NULL,
+	IDCLASSIFICATION SERIAL  NOT NULL,
+	CLASSIFICATION VARCHAR(50)  NOT NULL,
 	DESCRIPTION VARCHAR(500),
 	CONSTRAINT PK_IDCLASSFICATION PRIMARY KEY(IDCLASSIFICATION)
 );
 
 
-
-CREATE TYPE PRIORYTY AS ENUM('BAJA', 'MEDIA', 'ALTA');
 CREATE TABLE INCIDENCES(
 	IDINCIDENCE SERIAL NOT NULL,
 	TITLE VARCHAR(50) NOT NULL,
@@ -78,47 +73,50 @@ CREATE TABLE INCIDENCES(
 	CREATIONDAY TIMESTAMP  NOT NULL,
 	FINALDATE TIMESTAMP  NOT NULL,
 	TOTALCOST DECIMAL(16,2)  NOT NULL,
-	PRIORITY PRIORYTY,
+	PRIORITY INT NOT NULL,
 	IDCLASSIFICATION INT  NOT NULL,
 	IDCREATOR INT  NOT NULL,
+	IDDEPTO INT NOT NULL,
 	CONSTRAINT PK_IDINCIDENCE PRIMARY KEY(IDINCIDENCE),
 	CONSTRAINT FK_IDCLASSIFICATION FOREIGN KEY(IDCLASSIFICATION) REFERENCES CLASSIFICATIONS(IDCLASSIFICATION),
-	CONSTRAINT FK_IDCREATOR FOREIGN KEY(IDCREATOR) REFERENCES USERS(IDUSER)
+	CONSTRAINT FK_IDCREATOR FOREIGN KEY(IDCREATOR) REFERENCES USERS(IDUSER),
+	CONSTRAINT FK_DEPTO FOREIGN KEY(IDDEPTO) REFERENCES DEPARTMENTS(IDDEPTO)
 );
 
+alter table incidences alter column TOTALCOST set default 0.0;
+alter table incidences alter column CREATIONDAY set default current_timestamp;
 
-CREATE TYPE NOTETYPE AS ENUM('Observacion', 'Rechazo');
 CREATE TABLE NOTES(
 	IDNOTA SERIAL  NOT NULL,
 	DESCRIPTION VARCHAR(500)  NOT NULL,
-	TYPE NOTETYPE NOT NULL,
+	NOTETYPE INT NOT NULL,
 	IDHOLDER INT  NOT NULL,
 	IDINCIDENCE INT  NOT NULL,
 	CONSTRAINT PK_IDNOTA PRIMARY KEY(IDNOTA),
 	CONSTRAINT FK_IDHOLDER FOREIGN KEY(IDHOLDER) REFERENCES USERS(IDUSER),
 	CONSTRAINT FK_INCIDENCE FOREIGN KEY(IDINCIDENCE) REFERENCES INCIDENCES(IDINCIDENCE)
 ); 
-CREATE TYPE STATUS AS ENUM('Asignada','Aceptada','Rechazada','Finalizada');
+
 CREATE TABLE INCIDENCEBYRECEPTOR(
 	IDIBR SERIAL  NOT NULL,
 	STARTDATE TIMESTAMP,
 	FINALDATE TIMESTAMP,
-	STATUS STATUS   NOT NULL,
+	STATUS INT   NOT NULL,
 	IDRECEPTOR INT  NOT NULL,
 	IDINCIDENCE INT  NOT NULL,
 	CONSTRAINT PK_IDIBR PRIMARY KEY(IDIBR),
 	CONSTRAINT FK_IDRECEPTOR FOREIGN KEY(IDRECEPTOR) REFERENCES USERS(IDUSER),
 	CONSTRAINT FK_INCIDENCE FOREIGN KEY(IDINCIDENCE) REFERENCES INCIDENCES(IDINCIDENCE)
 );
-CREATE TYPE MANAGEMENTTYPE AS ENUM('Correo','Adjunto','Procedimiento');
-CREATE TABLE MANAGEMENT(
+
+CREATE TABLE MANAGEMENTS(
 	IDMANAGEMENT SERIAL  NOT NULL,
 	TITLE VARCHAR(50)  NOT NULL,
 	DESCRIPTION VARCHAR(500)  NOT NULL,
 	CORRECTIONDAY TIMESTAMP  NOT NULL,
-	TYPE MANAGEMENTTYPE  NOT NULL,
-	ATTACH VARCHAR(500),
-	COST DECIMAL(16,2),
+	TYPEMANAGEMENT INT  NOT NULL,
+	ATTACHFILE VARCHAR(500),
+	COSTMSG DECIMAL(16,2) NOT NULL DEFAULT 0.0,
 	IDIBR INT  NOT NULL,
 	CONSTRAINT PK_IDMANAGEMENT PRIMARY KEY(IDMANAGEMENT),
 	CONSTRAINT FK_IDIBR FOREIGN KEY(IDIBR) REFERENCES INCIDENCEBYRECEPTOR(IDIBR)
@@ -136,59 +134,73 @@ insert into roles(rolename,description) values ('Lider','Tendra a cargo un grupo
 insert into roles(rolename,description) values ('Receptor','Son personas tecnicos o capacitados para resolver algun tipo de incidencia o fallo');
 insert into roles(rolename,description) values ('Empleado','Este es el rol por defecto que se le asigna a un nuevo usuario despues de registrarse');
 
--- Correciones de la base de datos, QUITAR SI SE CORRIGEN EN LA PROPIA DB
---**Agregar id del depto a tabla incidencias 
-alter table incidences add column idDepto int;
-alter table incidences add constraint fk_Depto foreign key(idDepto) references departments(iddepto);
-
--- **Creacion de indices en la tabla users
-create index indexUser on users(username);
-create index index_Email on users(email);
-
---** asignando valor por default en tabla incidencias 
-alter table incidences alter column creationday set not null;
-alter table incidences alter column creationday set default current_timestamp;
-
---* Ampleando longitud, preguntar por remplazar serial en lugar de int
-alter table classifications alter column classification type varchar(50);
-
---* Modificando estilo de entrada de fechas 
-set DATESTYLE TO 'European';
 
 -- Creacionde Menus 
-insert into menus values(1,'Panel Principal',null,'/Principal',null);
-insert into menus values(2,'Grupo',null,'/Grupo',null);
-insert into menus values(3,'Empleados',null,'/Empleados',null);
-insert into menus values(4,'Departamentos',null,'/Departamentos',null);
-insert into menus values(5,'Clasificaciones',null,'/Clasificaciones',null);
-insert into menus values(6,'Reportes',null,'/Reportes',null);
-insert into menus values(7,'Todas',null,'/Incidencias',1);
-insert into menus values(8,'En proceso',null,'/Incidencias',1);
-insert into menus values(9,'Urgentes',null,'/Incidencias',1);
-insert into menus values(10,'Finalizadas',null,'/Incidencias',1);
+insert into menus values(1,'Panel Principal','/Principal',null);
+insert into menus values(2,'Nueva','/Incidencias',null);
+insert into menus values(3,'Grupo','/Grupo',null);
+insert into menus values(4,'Empleados','/Empleados',null);
+insert into menus values(5,'Departamentos','/Departamentos',null);
+insert into menus values(6,'Clasificaciones','/Clasificaciones',null);
+insert into menus values(7,'Reportes','/Reportes',null);
 
 -- Asignado Permisos sobre roles por menus 
 -- Menus sobre el Gerente idrol 1
 insert into permissions(idmenu,idrole) select idMenu, 1 from menus
-where idmenu in (1,3,4,5,6,7,8,9,10);
+where idmenu in (1,2,4,5,6,7);
 -- Menus sobre el Lider idrol 2 
 insert into permissions(idmenu,idrole) select idMenu, 2 from menus
-where idmenu in (1,2,6,8,9,10,11);
+where idmenu in (1,2,3,7);
 -- Menus sobre el Receptor idrol 3 
 insert into permissions(idmenu,idrole) select idMenu, 3 from menus
-where idmenu in (1,2,6,8,10,11);
+where idmenu in (1,3,7);
 -- Menus sobre el Empleado idrol 4 
 insert into permissions(idmenu,idrole) values (1,4);
 
-select * from permissions;
-select * from users;
 
--- Consultar permisos de Menus por roles 
-select * from menus where idMenu in (select idmenu from permissions where idrole = 4);
+--incidencebyrecepto and incidesces table 
 
-update users set idrole = 3 where username = 'MCNERIO98';
-
+select * from incidences;
  
+
+--funcion para actualizar  registro en la tabla deptobyusers
+CREATE OR REPLACE FUNCTION public.updatedepto(
+	fiduser integer,
+	fiddepto integer)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+AS $BODY$
+BEGIN
+update deptobyusers set iddepto = fiddepto where iduser = fiduser;
+RETURN 1;
+END; $BODY$;
+
+ALTER FUNCTION public.updatedepto(integer, integer)
+    OWNER TO postgres;
+	
+--funcion para eliminar el registro en la tabla deptobyusers en relacion al usuario 
+
+CREATE OR REPLACE FUNCTION public.deletedeptobyusers(
+	fiduser integer)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+AS $BODY$
+BEGIN
+delete from deptobyusers where iduser = fiduser;
+delete from users where iduser = fiduser;
+RETURN 1;
+END; $BODY$;
+
+ALTER FUNCTION public.deletedeptobyusers(integer)
+    OWNER TO postgres;
+
+
 
 
 

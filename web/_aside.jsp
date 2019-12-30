@@ -24,7 +24,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <c:forEach var="iterador" items="${MenuPrincipal}">
                     <li class="nav-item">
-                        <a href="${pageContext.servletContext.contextPath}${iterador.controller}?op=${iterador.idMenu}" class="nav-link">
+                        <a href="${pageContext.servletContext.contextPath}${iterador.controller}" class="nav-link">
                         <i class="fas fa-circle nav-icon"></i>
                         <p>${iterador.menu}</p>
                         </a>
