@@ -14,6 +14,7 @@ import com.helpdesk.anotaciones.*;
 @Entity(table="CLASSIFICATIONS")
 public class Clasificacion {
     @PrimaryKey
+    @AutoIncrement
     private int idClassification;
     @NotNull
     private String classification;
