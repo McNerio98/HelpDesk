@@ -14,6 +14,7 @@ import com.helpdesk.entidades.DeptoPorUsuario;
 import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -140,7 +141,7 @@ public class Login extends HttpServlet {
                 }
                 break;
             }
-            case "consultar_correo":{
+            case "consultar_correo": {
                 response.setContentType("text/plain");
                 String em = request.getParameter("usEmail");
                 PrintWriter out = response.getWriter();
@@ -149,7 +150,7 @@ public class Login extends HttpServlet {
                 } else {
                     out.print("false");
                 }
-                break;            
+                break;
             }
         }
 
@@ -180,12 +181,17 @@ public class Login extends HttpServlet {
             if (iden != null) {
                 HttpSession s = request.getSession();
                 Usuario u = Operaciones.get(Integer.parseInt(iden[0][0]), new Usuario());
+                
                 if (u.getPassword().equals(Hash.generarHash(clave, Hash.SHA256))) {
                     s.setAttribute("Usuario", u.getUserName());
                     s.setAttribute("Rol", u.getIdRole());
                     s.setAttribute("idUsuario", u.getIdUser());
-                    
-                    
+                    s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));
+
+                    /*if (u.getIdRole() == 2) { //Si es lider pertenece a un departamento 
+                        s.setAttribute("idDep", DataList.getIdDepto(u.getIdUser()));
+                    }*/
+
                     List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);
 
@@ -256,28 +262,28 @@ public class Login extends HttpServlet {
         return es;
     }
 
-    private List<Menu> getPermisos(Integer idRol){
+    private List<Menu> getPermisos(Integer idRol) {
         List<Menu> permisos = new ArrayList();
-        try{
+        try {
             String sql = "select * from menus where idMenu in (select idmenu from permissions where idrole = ?)";
             List<Object> parametros = new ArrayList();
             parametros.add(idRol);
             String[][] result = Operaciones.consultar(sql, parametros);
             //Array[Columna][Fila]
-            for(int i=0; i<result[0].length; i++){
+            for (int i = 0; i < result[0].length; i++) {
                 Menu m = new Menu();
                 m.setIdMenu(Integer.parseInt(result[0][i]));
                 m.setMenu(result[1][i]);
                 m.setController(result[2][i]);
-                m.setIdParent(Integer.parseInt(result[3][i] == null ? "0":result[4][i]));
+                m.setIdParent(Integer.parseInt(result[3][i] == null ? "0" : result[4][i]));
                 permisos.add(m);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             //permisos = null;
         }
         return permisos;
     }
-    
+
     @Override
     public String getServletInfo() {
         return "Short description";

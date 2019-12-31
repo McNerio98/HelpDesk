@@ -32,6 +32,10 @@
         <servlet-name>Grupo</servlet-name>
         <servlet-class>com.helpdesk.controladores.Grupo</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Procesos</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Procesos</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>Grupo</servlet-name>
         <url-pattern>/Grupo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Procesos</servlet-name>
+        <url-pattern>/Procesos</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

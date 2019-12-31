@@ -36,7 +36,7 @@
         <!-- Comienda el contenido principal -->
 
 
-        
+
 
         <div class="row">
             <div class="col-md-6">
@@ -80,7 +80,7 @@
                             <c:if test="${Rol!= null && Rol==1}">
                                 <div class="form-group row">
                                     <label>Departamento</label>
-                                    <select class="form-control" name="slcDeptoIncidence">
+                                    <select  class="form-control" name="slcDeptoIncidence">
                                         <c:forEach var="idp" items="${DeptosList}">
                                             <option value="${idp.idDepto}">${idp.deptoName}</option>
                                         </c:forEach>
@@ -96,8 +96,8 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"><a href="">Asignar a:</a></label>
-                                        <input type="hidden" value="9" name="txtReceptor" id="txtReceptor">
-                                        <input type="text" class="form-control" id="" placeholder="Ninguno Selecionado" disabled="">
+                                        <input type="hidden" value="9" name="txtReceptor" id="idReceptor">
+                                        <input type="text" class="form-control" id="Receptor" placeholder="Ninguno Selecionado" disabled="">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -131,33 +131,32 @@
                                     <c:when test="${Rol!= null && Rol==2}">
                                         <div class="form-group">
                                             <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" type="radio" id="customRadio1" name="radioDepto" checked="">
-                                                <label for="customRadio1" class="custom-control-label">Depto a cargo</label>
+                                                <input type="hidden" value="${idDepUser}" id="idDepDef">
+                                                <input  class="custom-control-input" id="radio1" type="radio"  name="radioDepto" >
+                                                <label for="radio1" class="custom-control-label">Depto a cargo</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" type="radio" id="customRadio2" name="radioDepto" >
-                                                <label for="customRadio2" class="custom-control-label">Otros Deptos</label>
+                                                <input value="" class="custom-control-input" id="radio2" type="radio"  name="radioDepto" >
+                                                <label for="radio2" class="custom-control-label">Otros Deptos</label>
                                             </div>
                                         </div>                                                                    
                                     </c:when>
                                     <c:when test="${Rol!=null && Rol==1}">
                                         <div class="form-group">
                                             <label>Filtrar por Roles</label>
-                                            <select class="custom-select">
-                                                <option>option 1</option>
-                                                <option>option 2</option>
-                                                <option>option 3</option>
-                                                <option>option 4</option>
-                                                <option>option 5</option>
+                                            <select id="fRol" class="custom-select">
+                                                <option value="1">Gerente</option>
+                                                <option value="2">Lider</option>
+                                                <option value="3">Receptor</option>
                                             </select>
                                         </div>                                    
                                     </c:when>
                                 </c:choose>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" id="deptoList">
                                 <div class="form-group">
                                     <label>Filtrar por Departamentos</label>
-                                    <select class="custom-select">
+                                    <select id="fDepto" class="custom-select">
                                         <c:forEach var="Iterador" items="${DeptosList}">
                                             <option value="${Iterador.idDepto}">${Iterador.deptoName}</option>
                                         </c:forEach>                                        
@@ -165,9 +164,41 @@
                                 </div>                                
                             </div>
                         </div>
+                        
                     </div>
                     <!-- /.card-body -->
-                </div>                
+                </div> 
+                
+                <div class="row">
+                            <!-- Table row -->
+                            <div class="col-md-12" id="nofound"></div>
+
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombres</th>
+                                            <th>Apellidos</th>
+                                            <th>Email</th>
+                                            <th>Seleccionar</th>
+                                        </tr>
+                                    </thead>
+                                    <input id="path" type="hidden" value="${pageContext.servletContext.contextPath}">
+                                    <tbody id="fUsers">
+                                    
+                                        
+                                        
+                                        
+                                    
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
             </div>
         </div>
@@ -179,4 +210,6 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+
+<script src="js/filtrarPorRol&Depto.js"></script>
 <%@include file="_endPanel.jsp" %>
