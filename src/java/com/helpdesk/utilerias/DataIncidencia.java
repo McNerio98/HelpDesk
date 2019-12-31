@@ -74,6 +74,9 @@ public class DataIncidencia {
             case 5: 
                 estado = "Rechazada";
                 break;
+            case 6:
+                estado = "Denegada";
+                break;
         }
         this.status = estado;
     }

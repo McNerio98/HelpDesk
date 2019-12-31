@@ -12,6 +12,7 @@ import com.helpdesk.entidades.IncidenciaPorEncargado;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
+import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -89,12 +90,12 @@ public class Incidencias extends HttpServlet {
         int idCreador = (int) request.getSession().getAttribute("idUsuario");
         int idDepto = 0;
         
-        int status = 2; //2 - Asignada 
+        int status = Enums.ESTADO.ASIGNADA;  
         int idRol = (int)request.getSession().getAttribute("Rol");
         
         if( idRol == 2){ //Si es un lider verificar si el receptor pertenece al mismo depto
             if(!SameDepto(idCreador,Integer.parseInt(idReceptor))){
-                status = 1; //Se agrega como una solicitud             
+                status = Enums.ESTADO.SOLICITADA; //Se agrega como una solicitud             
             }
         }
         

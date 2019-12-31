@@ -133,6 +133,7 @@ delete  from incidencebyreceptor;
 
 
 select * from incidences;
+select * from notes;
 select * from incidencebyreceptor;
 select * from users;
 select * from deptobyusers;

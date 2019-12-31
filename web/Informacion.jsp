@@ -58,10 +58,10 @@
                                                         </div>
 
                                                         <div class="modal-body">
-                                                            <form action="Procesos?accion=rechazar&id=${ibr}">
+                                                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=rechazar&idbr=${ibr}&ic=${idIncidence}" method="POST">
                                                                 <div class="form-group">
                                                                     <label for="exampleFormControlTextarea1">Especifique motivo de rechazo</label>
-                                                                    <textarea class="form-control" id="txtContenido" rows="3"></textarea>
+                                                                    <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required"></textarea>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -81,7 +81,7 @@
                                 <c:when test="${ObjectInfo.idDeptoTecnico == idDepUser && ObjectInfo.status == 'En Solicitud' && Rol == 2}">
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
-                                            <a class="btn btn-primary" href="Procesos?accion=con&idbr=${ibr}&iddc=${ObjectInfo.idDeptoTecnico}&ic=${idIncidence}">Conceder</a>
+                                            <a class="btn btn-primary" href="Procesos?accion=conceder&idbr=${ibr}&iddc=${ObjectInfo.idDeptoTecnico}&ic=${idIncidence}">Conceder</a>
                                             <a class="btn btn-danger mr-2" href="Procesos?accion=denegar&id=${ibr}">Denegar</a>
                                         </div>                                
                                     </div>                                     
@@ -275,7 +275,6 @@
                     <div class="direct-chat-msg">
                         <div class="direct-chat-infos clearfix">
                             <span class="direct-chat-name float-left">Alexander Pierce</span>
-                            <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
                         </div>
                         <!-- /.direct-chat-infos -->
                         <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
@@ -284,32 +283,22 @@
                             Is this template really for free? That's unbelievable!
                         </div>
                         <!-- /.direct-chat-text -->
-                    </div>  
-                    <div class="direct-chat-msg">
-                        <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-left">Alexander Pierce</span>
-                            <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                        </div>
-                        <!-- /.direct-chat-infos -->
-                        <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                        <!-- /.direct-chat-img -->
-                        <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                        </div>
-                        <!-- /.direct-chat-text -->
-                    </div>                                       
+                    </div>                                        
                 </div>
                 <!-- /.card-body -->
-                <div class="card-footer p-2">
-                    <form action="#" method="post">
-                        <div class="input-group">
-                            <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                            <span class="input-group-append">
-                                <button type="button" class="btn btn-primary">Send</button>
-                            </span>
-                        </div>
-                    </form>
-                </div>                
+                <c:if test="${(ObjectInfo.idTecnico == idUsuario || idRol != 3)&& ObjectInfo.status == 'Finalizada'}">
+                    <div class="card-footer p-2">
+                        <form action="${pageContext.servletContext.contextPath}/Procesos?accion=observacion" method="POST">
+                            <div class="input-group">
+                                <input type="text" name="message" placeholder="Observacion..." class="form-control">
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-primary">Enviar</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>                    
+                </c:if>
+
             </div>
             <!-- /.card -->
         </div>
