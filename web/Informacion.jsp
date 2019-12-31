@@ -78,7 +78,7 @@
                                         </div>                                
                                     </div>                                    
                                 </c:when>
-                                <c:when test="${ObjectInfo.idDeptoTecnico == idDep && ObjectInfo.status == 'En Solicitud' && Rol == 2}">
+                                <c:when test="${ObjectInfo.idDeptoTecnico == idDepUser && ObjectInfo.status == 'En Solicitud' && Rol == 2}">
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
                                             <a class="btn btn-primary" href="Procesos?accion=con&idbr=${ibr}&iddc=${ObjectInfo.idDeptoTecnico}&ic=${idIncidence}">Conceder</a>

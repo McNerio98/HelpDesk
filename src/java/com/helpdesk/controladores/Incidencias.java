@@ -180,8 +180,5 @@ public class Incidencias extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private Conexion ConexionPool() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 }

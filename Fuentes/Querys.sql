@@ -140,4 +140,7 @@ select iddepto from deptobyusers where iduser = 5;
 select * from classifications;
 select * from departments;
 
+update incidencebyreceptor set status = 1 where idibr = 20;
+
+
 
