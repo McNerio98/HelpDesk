@@ -47,10 +47,7 @@ public class Principal extends HttpServlet {
         s.removeAttribute("Usuario");
         s.removeAttribute("idUsuario");
         s.removeAttribute("Rol");
-        
-        if(s.getAttribute("idDep")!=null){
-            s.removeAttribute("idDep");
-        }
+        s.removeAttribute("idDepUser");
         
         s.invalidate();
         response.sendRedirect("Login");
