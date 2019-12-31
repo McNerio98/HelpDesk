@@ -39,14 +39,34 @@
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <div class="row">
-                            <div class="col-12">
-                                <div class=" float-sm-right mt-2">
-                                    <a class="btn btn-primary" href="">Aceptar</a>
-                                    <a class="btn btn-danger mr-2" href="">Rechazar</a>
-                                </div>                                
-                            </div>
-                        </div>
+                            <c:choose>
+                                <c:when test="${ObjectInfo.idTecnico == idUsuario && ObjectInfo.status == 'Asignada'}">
+                                    <div class="col-12">
+                                        <div class=" float-sm-right mt-2">
+                                            <a class="btn btn-primary" href="Procesos?accion=aceptar&idbr=${ibr}&ic=${idIncidence}">Aceptar</a>
+                                            <a class="btn btn-danger mr-2" href="Procesos?accion=rechazar&id=${ibr}">Rechazar</a>
+                                        </div>                                
+                                    </div>                                    
+                                </c:when>
+                                <c:when test="${ObjectInfo.idDeptoTecnico == idDep && ObjectInfo.status == 'En Solicitud' && Rol == 2}">
+                                    <div class="col-12">
+                                        <div class=" float-sm-right mt-2">
+                                            <a class="btn btn-primary" href="Procesos?accion=con&idbr=${ibr}&iddc=${ObjectInfo.idDeptoTecnico}&ic=${idIncidence}">Conceder</a>
+                                            <a class="btn btn-danger mr-2" href="Procesos?accion=denegar&id=${ibr}">Denegar</a>
+                                        </div>                                
+                                    </div>                                     
+                                </c:when>
+                                <c:when test="${ObjectInfo.creador == Usuario && ObjectInfo.status == 'Rechazada'}">
+                                    <div class="col-12">
+                                        <div class=" float-sm-right mt-2">
+                                            <a class="btn btn-primary" href="Procesos?accion=rasig&id=${ibr}">Reasignar</a>
+                                        </div>                                
+                                    </div>                                     
+                                </c:when>                                
 
+                            </c:choose>
+
+                        </div>
                         <table class="table table-no-b mt-4">
                             <tbody>
                                 <tr class="border-none">
@@ -67,14 +87,14 @@
                                     <div class="info-box-content">
                                         <span class="info-box-text">Estado</span>
                                         <c:choose>
-                                            <c:when test="${ObjectInfo.getStatus() == "En Ejecucion"}">
-                                                <span class="info-box-number text-success">${ObjectInfo.getStatus()}</span>
+                                            <c:when test="${ObjectInfo.status == 'En Ejecucion'}">
+                                                <span class="info-box-number text-success">${ObjectInfo.status}</span>
                                             </c:when>
-                                            <c:when test="${ObjectInfo.getStatus() == "Rechazada"}">
-                                                <span class="info-box-number text-danger">${ObjectInfo.getStatus()}</span>
+                                            <c:when test="${ObjectInfo.status == 'Rechazada'}">
+                                                <span class="info-box-number text-danger">${ObjectInfo.status}</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="info-box-number">${ObjectInfo.getStatus()}</span>
+                                                <span class="info-box-number">${ObjectInfo.status}</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -144,30 +164,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Mario Nerio</td>
-                                        <td>Ejecucion</td>
-                                        <td>12/05/06</td>
-                                        <td>30/04/07</td>
-                                        <td>31/41/12</td>
-                                        <td>31/47/96</td>
-                                    </tr>
-                                    <tr class="table-danger">
-                                        <td>Marco</td>
-                                        <td>Ejecucion</td>
-                                        <td>12/05/06</td>
-                                        <td>--</td>
-                                        <td>31/41/12</td>
-                                        <td>--</td>
-                                    </tr>
-                                    <tr class="table-success">
-                                        <td>Marco</td>
-                                        <td>Ejecucion</td>
-                                        <td>12/05/06</td>
-                                        <td>30/04/07</td>
-                                        <td>31/41/12</td>
-                                        <td>31/47/96</td>
-                                    </tr>                                                                    
+                                    <c:forEach var="ic" items="${LstControl}">
+                                        <tr>
+                                            <td>${ic.receptor}</td>
+                                            <td>${ic.status}</td>
+                                            <td>${ic.inicioPrev}</td>
+                                            <td>${ic.inicioReal}</td>
+                                            <td>${ic.finPrev}</td>
+                                            <td>${ic.finReal}</td>                                            
+                                        </tr>
+                                    </c:forEach>
+
                                 </tbody>
                             </table>
                         </div>                  

@@ -12,30 +12,21 @@ import java.math.BigDecimal;
  * @author ZEUS
  */
 public class DataIncidencia {
-    String departamento;
-    String titulo;
-    String descripcion;
-    String status;
-    String fechaCreacion;
-    String prioridad;
-    String creador;
-    String clasificacion;
-    String costoTotal;
+    private String departamento;
+    private String titulo;
+    private String descripcion;
+    private String status;
+    private String fechaCreacion;
+    private String prioridad;
+    private String creador;
+    private String clasificacion;
+    private String costoTotal;
+    private int idDeptoTecnico;
+    private int idTecnico;
 
     public DataIncidencia() {
     }
 
-    public DataIncidencia(String departamento, String title, String descripcion, String status, String fechaCreacion, String prioridad, String creador, String clasificacion, String costoTotal) {
-        this.departamento = departamento;
-        this.titulo = title;
-        this.descripcion = descripcion;
-        this.status = status;
-        this.fechaCreacion = fechaCreacion;
-        this.prioridad = prioridad;
-        this.creador = creador;
-        this.clasificacion = clasificacion;
-        this.costoTotal = costoTotal;
-    }
 
     public String getDepartamento() {
         return departamento;
@@ -139,7 +130,22 @@ public class DataIncidencia {
     public void setCostoTotal(String costoTotal) {
         this.costoTotal = costoTotal;
     }
-    
+
+    public int getIdDeptoTecnico() {
+        return idDeptoTecnico;
+    }
+
+    public void setIdDeptoTecnico(int idDepto) {
+        this.idDeptoTecnico = idDepto;
+    }
+
+    public int getIdTecnico() {
+        return idTecnico;
+    }
+
+    public void setIdTecnico(int idTecnico) {
+        this.idTecnico = idTecnico;
+    }
     
     
 }

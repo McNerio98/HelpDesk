@@ -106,18 +106,38 @@ select * from        incidences;
 
 
 
+-- Verificar esta cuando hallan muchos datos 
+
 
 select d.deptoname,i.title,i.description, inc.status, i.creationday, i.priority,
-u.username, cl.classification, i.totalcost
-from incidencebyreceptor inc, incidences i, departments d, users u, classifications cl
-where inc.idincidence = i.idincidence and 
-i.iddepto = d.iddepto and u.iduser = i.idcreator
-and cl.idclassification = i.idclassification
-and i.idincidence = 1 and inc.status <> 5;
+u.username, cl.classification, i.totalcost, dp.iddepto, inc.idreceptor from 
+incidencebyreceptor inc, incidences i, departments d, users u, classifications cl, 
+deptobyusers dp where inc.idincidence = i.idincidence and i.iddepto = d.iddepto 
+and u.iduser = i.idcreator and cl.idclassification = i.idclassification and 
+dp.iduser = inc.idreceptor and i.idincidence = 18 and inc.idibr = 7;
+
 
 
 select * from incidences;
 
-update users set idrole = 3 where username = 'ROGER85';
+select * from incidencebyreceptor;
+
+select ibr.idibr, u.username, ibr.status, i.creationday, ibr.startdate, 
+i.finaldate, ibr.finaldate  
+from users u, incidencebyreceptor ibr, incidences i
+where ibr.idreceptor = u.iduser and 
+ibr.idincidence = i.idincidence and ibr.idincidence = 18;
+
+delete  from incidences;
+delete  from incidencebyreceptor;
+
+
+select * from incidences;
+select * from incidencebyreceptor;
+select * from users;
+select * from deptobyusers;
+select iddepto from deptobyusers where iduser = 5;
+select * from classifications;
+select * from departments;
 
 

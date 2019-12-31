@@ -14,6 +14,7 @@ import com.helpdesk.entidades.DeptoPorUsuario;
 import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -185,6 +186,9 @@ public class Login extends HttpServlet {
                     s.setAttribute("Rol", u.getIdRole());
                     s.setAttribute("idUsuario", u.getIdUser());
                     
+                    if(u.getIdRole() == 2){ //Si es lider pertenece a un departamento 
+                        s.setAttribute("idDep", DataList.getIdDepto(u.getIdUser()));
+                    }
                     
                     List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);

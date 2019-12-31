@@ -166,29 +166,12 @@ public class Incidencias extends HttpServlet {
     private boolean SameDepto(int a, int b){ //id de Creador e id de receptor 
         boolean sm = false;
         
-        try{
-            Conexion conn = new ConexionPool();
-            conn.conectar();
-            Operaciones.abrirConexion(conn);
-            String sql = "select * from deptobyusers where iddepto = \n" +
-                        "(select iddepto from deptobyusers where iduser = ?) and iduser = ?";
-            List<Object> params = new ArrayList();
-            params.add(a);
-            params.add(b);
-            
-            String[][] rs = Operaciones.consultar(sql, params);
-            
-            if(rs!=null){
-                sm = true; //Si estan en el mismo depto
-            }
-        }catch(Exception ex){
-            try {
-                Operaciones.cerrarConexion();
-            } catch (SQLException ex1) {
-                Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+        Integer da = DataList.getIdDepto(a);
+        Integer db = DataList.getIdDepto(b);
+        
+        if(da == db){
+            sm = true;
         }
-            
         return sm;
     }
     
