@@ -186,9 +186,9 @@ public class Login extends HttpServlet {
                     s.setAttribute("Rol", u.getIdRole());
                     s.setAttribute("idUsuario", u.getIdUser());
                     
-                    if(u.getIdRole() == 2){ //Si es lider pertenece a un departamento 
+                     
                         s.setAttribute("idDep", DataList.getIdDepto(u.getIdUser()));
-                    }
+                    
                     
                     List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);

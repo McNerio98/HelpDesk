@@ -44,7 +44,37 @@
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
                                             <a class="btn btn-primary" href="Procesos?accion=aceptar&idbr=${ibr}&ic=${idIncidence}">Aceptar</a>
-                                            <a class="btn btn-danger mr-2" href="Procesos?accion=rechazar&id=${ibr}">Rechazar</a>
+                                            <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#modalrechazo">Rechazar</button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="modalrechazo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">NOTA DE RECHAZO</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <form action="Procesos?accion=rechazar&id=${ibr}">
+                                                                <div class="form-group">
+                                                                    <label for="exampleFormControlTextarea1">Especifique motivo de rechazo</label>
+                                                                    <textarea class="form-control" id="txtContenido" rows="3"></textarea>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                                    <input class="btn btn-primary" type="submit" value="Enviar">
+                                                                </div>                                                
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- / Modal -->
+
                                         </div>                                
                                     </div>                                    
                                 </c:when>
