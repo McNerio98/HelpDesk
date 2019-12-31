@@ -60,7 +60,7 @@ public class Procesos extends HttpServlet {
         Integer idIBR = Integer.parseInt(request.getParameter("idbr"));
         
         if (myRol == 2) {
-            Integer myDepto = (Integer) s.getAttribute("idDep");
+            Integer myDepto = (Integer) s.getAttribute("idDepUser");
             
             if(myDepto == deptoReceptor){ //Es un lider y puede conceder
                 
