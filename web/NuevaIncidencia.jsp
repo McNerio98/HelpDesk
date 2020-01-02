@@ -96,7 +96,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"><a href="">Asignar a:</a></label>
-                                        <input type="hidden" value="9" name="txtReceptor" id="idReceptor">
+                                        <input type="hidden" value="" name="txtReceptor" id="idReceptor">
                                         <input type="text" class="form-control" id="Receptor" placeholder="Ninguno Selecionado" disabled="">
                                     </div>
                                 </div>
