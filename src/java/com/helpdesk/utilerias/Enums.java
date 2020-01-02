@@ -25,6 +25,7 @@ public class Enums {
 
         public static final int OBSERVACION = 1;
         public static final int RECHAZO = 2;
+        public static final int DENEGACION = 3;
     }
 
     public static final class GESTION {

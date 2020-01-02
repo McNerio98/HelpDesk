@@ -1,5 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
+
 <%@include file="_startPanel.jsp" %>
 
 
@@ -43,7 +45,7 @@
                                 <c:when test="${ObjectInfo.idTecnico == idUsuario && ObjectInfo.status == 'Asignada'}">
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
-                                            <a class="btn btn-primary" href="Procesos?accion=aceptar&idbr=${ibr}&ic=${idIncidence}">Aceptar</a>
+                                            <a class="btn btn-primary" id="linkAceptar" href="Procesos?accion=aceptar&idbr=${ibr}&ic=${idIncidence}">Aceptar</a>
                                             <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#modalrechazo">Rechazar</button>
 
                                             <!-- Modal -->
@@ -82,7 +84,37 @@
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
                                             <a class="btn btn-primary" href="Procesos?accion=conceder&idbr=${ibr}&iddc=${ObjectInfo.idDeptoTecnico}&ic=${idIncidence}">Conceder</a>
-                                            <a class="btn btn-danger mr-2" href="Procesos?accion=denegar&id=${ibr}">Denegar</a>
+                                            <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#modaldenegar">Denegar</button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="modaldenegar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">DENEGACION DE PERMISO</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=denegar&idbr=${ibr}&ic=${idIncidence}" method="POST">
+                                                                <div class="form-group">
+                                                                    <label for="exampleFormControlTextarea1">Especifique motivo de la denegacion</label>
+                                                                    <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required"></textarea>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                                    <input class="btn btn-primary" type="submit" value="Enviar">
+                                                                </div>                                                
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- / Modal -->
+
                                         </div>                                
                                     </div>                                     
                                 </c:when>
@@ -272,18 +304,35 @@
                 <!-- /.card-header -->
                 <div class="card-body p-2">
 
-                    <div class="direct-chat-msg">
-                        <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-left">Alexander Pierce</span>
-                        </div>
-                        <!-- /.direct-chat-infos -->
-                        <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                        <!-- /.direct-chat-img -->
-                        <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                        </div>
-                        <!-- /.direct-chat-text -->
-                    </div>                                        
+                    <c:choose>
+                        <c:when test="${LstNotes!= null}">
+                            <c:forEach var="itr" items="${LstNotes}">
+                                <div class="direct-chat-msg">
+                                    <div class="direct-chat-infos clearfix">
+                                        <span class="direct-chat-name float-left">${itr.fullname}</span>
+                                        <span class="direct-chat-timestamp float-right">${itr.roleName}</span>
+                                    </div>
+                                    <!-- /.direct-chat-infos -->
+                                    <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
+                                    <!-- /.direct-chat-img -->
+                                    <c:choose>
+                                        <c:when test="${itr.noteType == 'Rechazo' || itr.noteType == 'Denegacion'}">
+                                            <div class="direct-chat-text bg-danger">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="direct-chat-text">
+                                        </c:otherwise>
+                                    </c:choose>
+                                            ${itr.description}
+                                            </div>
+                                    <!-- /.direct-chat-text -->
+                                </div>                                 
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <h6 class="text-muted text-center m-3">Actualmente no se ha registrado ninguna nota o observacion de esta incidencia</h6>
+                        </c:otherwise>
+                    </c:choose>                                       
                 </div>
                 <!-- /.card-body -->
                 <c:if test="${(ObjectInfo.idTecnico == idUsuario || idRol != 3)&& ObjectInfo.status == 'Finalizada'}">
@@ -309,4 +358,29 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+<!-- Acoordion personalizado -->
+
+
+<div class="modal fade" id="errorModalActivas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">SIN PODER ACEPTAR</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>          
+        <div class="modal-body text-center">
+            <h2 class=" text-danger display-2"><i class="fas fa-times"></i></h2>
+            <p class="">Actualmente posee una Incidencia en proceso, para poder aceptar finaliza la actual.</p>
+        </div> 
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Entendido</button>
+        </div>               
+      </div>
+    </div>
+</div>
+<input type="hidden" id="rutaPath" value="${pageContext.servletContext.contextPath}">
+
 <%@include file="_endPanel.jsp" %>        
+<script src="js/accordionMc.js"></script>

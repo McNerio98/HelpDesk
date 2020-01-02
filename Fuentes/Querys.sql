@@ -118,18 +118,22 @@ dp.iduser = inc.idreceptor and i.idincidence = 18 and inc.idibr = 7;
 
 
 
-select * from incidences;
-
-select * from incidencebyreceptor;
-
 select ibr.idibr, u.username, ibr.status, i.creationday, ibr.startdate, 
 i.finaldate, ibr.finaldate  
 from users u, incidencebyreceptor ibr, incidences i
 where ibr.idreceptor = u.iduser and 
 ibr.idincidence = i.idincidence and ibr.idincidence = 18;
 
-delete  from incidences;
-delete  from incidencebyreceptor;
+
+--Extraer notas de una unica incidencia 
+select * from notes;
+select * from users;
+
+select CONCAT(u.firstname,' ',u.lastname) as fullname,
+r.rolename, n.description, n.notetype
+from roles r, users u, notes n
+where n.idholder = u.iduser and u.idrole = r.idrol and 
+n.idincidence = 23;
 
 
 select * from incidences;
