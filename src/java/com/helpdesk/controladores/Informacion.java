@@ -7,13 +7,17 @@ package com.helpdesk.controladores;
 
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.Gestion;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataControl;
+import com.helpdesk.utilerias.DataGestion;
 import com.helpdesk.utilerias.DataIncidencia;
 import com.helpdesk.utilerias.DataNotes;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -69,6 +73,14 @@ public class Informacion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html"); 
+        String accion = request.getParameter("accion");
+        String idIBR = request.getParameter("idibr");
+        
+        if(accion.equals("listGestiones")){
+            request.setAttribute("LstGestiones", getAllGestiones(Integer.parseInt(idIBR)));
+            request.getRequestDispatcher("Gestiones.jsp").forward(request, response);
+        }
 
     }
 
@@ -199,6 +211,46 @@ public class Informacion extends HttpServlet {
         }
 
         return ListNotes;
+    }
+    
+    private ArrayList<DataGestion> getAllGestiones(Integer idIBR){
+        ArrayList<DataGestion> LstGestiones = new ArrayList<>();
+        
+        try{
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            
+            String sql = "select typemanagement,title,description,correctionday,attachfile,costmsg from managements where idibr = "+idIBR;
+            String[][] rs = Operaciones.consultar(sql, null);
+            
+            if(rs!=null){
+                for(int i = 0; i<rs[0].length; i++){
+                    DataGestion dg = new DataGestion();
+                    dg.setType(Integer.parseInt(rs[0][i]));
+                    dg.setTitle(rs[1][0]);
+                    dg.setDescription(rs[2][i]);
+                    dg.setFecha(rs[3][i]);
+                    dg.setAttach(rs[4][i]);
+                    dg.setCosto(rs[5][i]);
+                    
+                    LstGestiones.add(dg);
+                }
+            }else{
+                LstGestiones = null; //No gay gestiones
+            }
+            
+        }catch(Exception ex){
+            Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return LstGestiones;
     }
 
     @Override

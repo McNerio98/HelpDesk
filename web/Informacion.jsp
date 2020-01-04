@@ -118,10 +118,10 @@
                                         </div>                                
                                     </div>                                     
                                 </c:when>
-                                <c:when test="${ObjectInfo.creador == Usuario && ObjectInfo.status == 'Rechazada'}">
+                                <c:when test="${ObjectInfo.creador == Usuario && (ObjectInfo.status == 'Rechazada' || ObjectInfo.status == 'Denegada')}">
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
-                                            <a class="btn btn-primary" href="Procesos?accion=rasig&id=${ibr}">Reasignar</a>
+                                            <a class="btn btn-primary" href="Informacion?accion=update&ic=${idIncidence}">Reasignar</a>
                                         </div>                                
                                     </div>                                     
                                 </c:when>                                
@@ -242,54 +242,21 @@
                         </div>                  
                     </div>
                     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                        <div class="border border-primary rounded  overflow-hidden mt-2">
-                            <div class="p-2 text-primary titleGestion" id="titleGestion">
-                                <div class="row showHide" >
-                                    <div class="col-7">
-                                        <span class="bg-primary p-1 rounded">Procedimiento</span> Informe de Cierre de incidencia
-                                    </div>
-                                    <div class="col-5">
-                                        <span class="float-right">12/14/13</span>
-                                    </div>                                    
+                        <c:if test="${ObjectInfo.idTecnico == idUsuario && ObjectInfo.status == 'En Ejecucion'}">
+                            <div class="row p-2">
+                                <div class="col-12">
+                                    <button class="btn btn-primary float-sm-right" id="nuevaGestion" data-toggle="modal" data-target="#ModalNuevaGestion">+ Nueva Gestion</button>
                                 </div>
-                            </div>
-                            <div class="p-2 border-top descripInc" id="descripInc">
-                                <p><b>Descripcion: </b> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores recusandae culpa asperiores harum, omnis ipsum exercitationem voluptas earum quod, iusto ratione amet itaque corrupti eaque consequuntur obcaecati magnam facere molestias.</p>
-                                <p><i>Adjunto: </i><a href="">000124778.pdf</a> / <i>Costo: </i>$ 6.75</p>
                             </div>                            
+                        </c:if>
+                        <div id="contenidoGestiones">
+
+                            <div class="p-3 text-center" id="pnlLoad" style="display:none;">
+                                <img src="img/load.gif" style="width: 100px;height: auto;">
+                            </div>
+
                         </div>
-                        <div class="border border-success rounded  overflow-hidden mt-2">
-                            <div class="p-2 text-success titleGestion" id="titleGestion">
-                                <div class="row showHide">
-                                    <div class="col-7">
-                                        <span class="bg-success p-1 rounded">Solicitud</span> Informe de Cierre de incidencia
-                                    </div>
-                                    <div class="col-5">
-                                        <span class="float-right">12/14/13</span>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <div class="p-2 border-top descripInc" id="descripInc">
-                                <p><b>Descripcion: </b> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores recusandae culpa asperiores harum, omnis ipsum exercitationem voluptas earum quod, iusto ratione amet itaque corrupti eaque consequuntur obcaecati magnam facere molestias.</p>
-                                <p><i>Adjunto: </i><a href="">000124778.pdf</a> / <i>Costo: </i>$ 6.75</p>
-                            </div>                            
-                        </div>                        
-                        <div class="border border-dark rounded  overflow-hidden mt-2">
-                            <div class="p-2 text-dark titleGestion" id="titleGestion">
-                                <div class="row showHide">
-                                    <div class="col-7">
-                                        <span class="bg-dark p-1 rounded">Email</span> Informe de Cierre de incidencia
-                                    </div>
-                                    <div class="col-5">
-                                        <span class="float-right">12/14/13</span>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <div class="p-2 border-top descripInc" id="descripInc">
-                                <p><b>Descripcion: </b> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores recusandae culpa asperiores harum, omnis ipsum exercitationem voluptas earum quod, iusto ratione amet itaque corrupti eaque consequuntur obcaecati magnam facere molestias.</p>
-                                <p><i>Adjunto: </i><a href="">000124778.pdf</a> / <i>Costo: </i>$ 6.75</p>
-                            </div>                            
-                        </div>                                                
+
                     </div>
                 </div>  
             </div>
@@ -318,69 +285,129 @@
                                     <c:choose>
                                         <c:when test="${itr.noteType == 'Rechazo' || itr.noteType == 'Denegacion'}">
                                             <div class="direct-chat-text bg-danger">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="direct-chat-text">
-                                        </c:otherwise>
-                                    </c:choose>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="direct-chat-text">
+                                                </c:otherwise>
+                                            </c:choose>
                                             ${itr.description}
-                                            </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>                                 
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <h6 class="text-muted text-center m-3">Actualmente no se ha registrado ninguna nota o observacion de esta incidencia</h6>
-                        </c:otherwise>
-                    </c:choose>                                       
+                                        </div>
+                                        <!-- /.direct-chat-text -->
+                                    </div>                                 
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <h6 class="text-muted text-center m-3">Actualmente no se ha registrado ninguna nota o observacion de esta incidencia</h6>
+                            </c:otherwise>
+                        </c:choose>                                       
+                    </div>
+                    <!-- /.card-body -->
+                    <c:if test="${(ObjectInfo.idTecnico == idUsuario || idRol != 3)&& ObjectInfo.status == 'Finalizada'}">
+                        <div class="card-footer p-2">
+                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=observacion" method="POST">
+                                <div class="input-group">
+                                    <input type="text" name="message" placeholder="Observacion..." class="form-control">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary">Enviar</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>                    
+                    </c:if>
+
                 </div>
-                <!-- /.card-body -->
-                <c:if test="${(ObjectInfo.idTecnico == idUsuario || idRol != 3)&& ObjectInfo.status == 'Finalizada'}">
-                    <div class="card-footer p-2">
-                        <form action="${pageContext.servletContext.contextPath}/Procesos?accion=observacion" method="POST">
-                            <div class="input-group">
-                                <input type="text" name="message" placeholder="Observacion..." class="form-control">
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary">Enviar</button>
-                                </span>
-                            </div>
-                        </form>
-                    </div>                    
-                </c:if>
-
+                <!-- /.card -->
             </div>
-            <!-- /.card -->
+
+
+            <!-- /.No quitar esto, copiar en todos los demas -->          
         </div>
-
-
-        <!-- /.No quitar esto, copiar en todos los demas -->          
-    </div>
-    <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
 <!-- Acoordion personalizado -->
 
-
+<!-- Modal sobre Error de incidencias activas -->
 <div class="modal fade" id="errorModalActivas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title text-danger" id="exampleModalLabel">SIN PODER ACEPTAR</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>          
-        <div class="modal-body text-center">
-            <h2 class=" text-danger display-2"><i class="fas fa-times"></i></h2>
-            <p class="">Actualmente posee una Incidencia en proceso, para poder aceptar finaliza la actual.</p>
-        </div> 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Entendido</button>
-        </div>               
-      </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="exampleModalLabel">SIN PODER ACEPTAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>          
+            <div class="modal-body text-center">
+                <h2 class=" text-danger display-2"><i class="fas fa-times"></i></h2>
+                <p class="">Actualmente posee una Incidencia en proceso, para poder aceptar finaliza la actual.</p>
+            </div> 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Entendido</button>
+            </div>               
+        </div>
     </div>
 </div>
+<!-- / Modal sobre Error de incidencias activas -->
+
 <input type="hidden" id="rutaPath" value="${pageContext.servletContext.contextPath}">
+<input type="hidden" id="idenIBR" value="${ibr}">
+
+
+
+<!-- Modal para nueva Gestion -->
+<div class="modal fade" id="ModalNuevaGestion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nueva Gestion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="${pageContext.servletContext.contextPath}/Procesos?accion=nuevaGestion&idbr=${ibr}&ic=${idIncidence}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputtitle">Titulo</label>
+                            <input type="text" class="form-control" id="inputtitle" name="txtTitle" required="required">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputtype">Tipo</label>
+                            <select id="inputtype" class="form-control" name="slcTipo">
+                                <option value="1">Correo</option>
+                                <option value="2">Solicitud</option>
+                                <option value="3" selected>Procedimiento</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDescription">Descripcion</label>
+                        <textarea class="form-control" id="txtDescription" name="txtDescription" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-7">
+                            <label for="exampleFormControlFile1">Archivos Adjuntos</label>
+                            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        </div>                       
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="txtCost">Costo Adicionales</label>
+                                <input type="text" class="form-control" id="txtCost" name="txtCost" placeholder="$ 0.00">
+                            </div>                        
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <input type="submit" class="btn btn-primary" value="Confirmar">
+                    </div>                    
+                </form>          
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /Modal para nueva Gestion -->
+
 
 <%@include file="_endPanel.jsp" %>        
 <script src="js/accordionMc.js"></script>

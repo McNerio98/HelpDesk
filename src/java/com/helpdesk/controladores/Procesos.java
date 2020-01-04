@@ -7,13 +7,19 @@ package com.helpdesk.controladores;
 
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.Gestion;
 import com.helpdesk.entidades.IncidenciaPorEncargado;
 import com.helpdesk.entidades.Nota;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -79,10 +85,10 @@ public class Procesos extends HttpServlet {
         String accion = request.getParameter("accion");
         String idIncidence = request.getParameter("ic");
         String idIBR = request.getParameter("idbr");
-        String txtContenido = request.getParameter("txtContenido");
         HttpSession s = request.getSession();
 
         if (accion.equals("rechazar") || accion.equals("denegar")) {
+            String txtContenido = request.getParameter("txtContenido");
             Nota nt = new Nota();
             nt.setDescription(txtContenido);
             nt.setIdIncidence(Integer.parseInt(idIncidence));
@@ -109,6 +115,47 @@ public class Procesos extends HttpServlet {
             }else{
                 out.print("false");
             }
+        }else if(accion.equals("nuevaGestion")){
+            String titulo = request.getParameter("txtTitle");
+            String tipo = request.getParameter("slcTipo");
+            String descripcion = request.getParameter("txtDescription");
+            String costo = request.getParameter("txtCost");
+            
+            
+            try{
+                Conexion conn = new ConexionPool();
+                conn.conectar();
+                Operaciones.abrirConexion(conn);
+                Operaciones.iniciarTransaccion();
+                
+                Gestion gn = new Gestion();
+                gn.setTitle(titulo);
+                gn.setDescription(descripcion);
+                gn.setTypemanagement(Integer.parseInt(tipo));
+                gn.setCorrectionDay(new Timestamp(System.currentTimeMillis()));
+                gn.setCostmsg(BigDecimal.valueOf(Double.valueOf(costo)));
+                gn.setIdIBR(Integer.parseInt(idIBR));
+                
+                gn = Operaciones.insertar(gn);
+                
+                Operaciones.commit();
+                response.sendRedirect("Informacion?idIncidencia=" + idIncidence);
+            }catch(Exception ex){        
+                try {
+                    Operaciones.rollback();
+                } catch (SQLException ex1) {
+                    Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }finally{
+                try {
+                    Operaciones.cerrarConexion();
+                } catch (SQLException ex2) {
+                    Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
+                }
+            }
+
+            
+            
         }
 
     }

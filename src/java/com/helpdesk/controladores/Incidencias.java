@@ -53,6 +53,8 @@ public class Incidencias extends HttpServlet {
             request.setAttribute("DeptosList", DataList.getAllDeptos());
             request.setAttribute("ClasfList", DataList.getAllClassifications());
             request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
+        }else if(accion.equals("update")){
+            //Se procede a obtener la incidencia 
         }
 
     }
@@ -99,9 +101,6 @@ public class Incidencias extends HttpServlet {
             }
         }
         
-        //Fecha Actual
-        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String ahora = hourdateFormat.format(new Date());
         
         try{
             Conexion conn = new ConexionPool();

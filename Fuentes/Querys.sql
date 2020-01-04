@@ -136,16 +136,21 @@ where n.idholder = u.iduser and u.idrole = r.idrol and
 n.idincidence = 23;
 
 
+select count(*) from incidencebyreceptor where status = 3 and idreceptor = 29;
+
+
 select * from incidences;
-select * from notes;
 select * from incidencebyreceptor;
 select * from users;
 select * from deptobyusers;
 select iddepto from deptobyusers where iduser = 5;
 select * from classifications;
-select * from departments;
 
-update incidencebyreceptor set status = 1 where idibr = 20;
+select * from managements;
 
+
+
+
+select typemanagement,title,description,correctionday,attachfile,costmsg from managements where idibr = 11;
 
 

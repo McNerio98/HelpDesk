@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  *
  * @author ZEUS
  */
-@Entity(table="MANAGEMENT")
+@Entity(table="MANAGEMENTS")
 public class Gestion {
     @PrimaryKey
     @AutoIncrement
@@ -25,24 +25,13 @@ public class Gestion {
     @NotNull
     private Timestamp correctionDay;
     @NotNull
-    private String type;
-    private String attach;
-    private BigDecimal cost;
+    private int typemanagement;
+    private String attachfile;
+    private BigDecimal costmsg;
     @NotNull
     private int idIBR;
 
     public Gestion() {
-    }
-
-    public Gestion(int idManagement, String title, String description, Timestamp correctionDay, String type, String attach, BigDecimal cost, int idIBR) {
-        this.idManagement = idManagement;
-        this.title = title;
-        this.description = description;
-        this.correctionDay = correctionDay;
-        this.type = type;
-        this.attach = attach;
-        this.cost = cost;
-        this.idIBR = idIBR;
     }
 
     public int getIdManagement() {
@@ -77,28 +66,28 @@ public class Gestion {
         this.correctionDay = correctionDay;
     }
 
-    public String getType() {
-        return type;
+    public int getTypemanagement() {
+        return typemanagement;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypemanagement(int typemanagement) {
+        this.typemanagement = typemanagement;
     }
 
-    public String getAttach() {
-        return attach;
+    public String getAttachfile() {
+        return attachfile;
     }
 
-    public void setAttach(String attach) {
-        this.attach = attach;
+    public void setAttachfile(String attachfile) {
+        this.attachfile = attachfile;
     }
 
-    public BigDecimal getCost() {
-        return cost;
+    public BigDecimal getCostmsg() {
+        return costmsg;
     }
 
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
+    public void setCostmsg(BigDecimal costmsg) {
+        this.costmsg = costmsg;
     }
 
     public int getIdIBR() {
@@ -108,6 +97,6 @@ public class Gestion {
     public void setIdIBR(int idIBR) {
         this.idIBR = idIBR;
     }
-    
+
     
 }

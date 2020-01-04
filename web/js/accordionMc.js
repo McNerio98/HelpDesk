@@ -22,4 +22,23 @@ $(document).ready(function () {
         });
     });
     
+    
+    
+    $('#nav-contact-tab').click(function (event) {
+        $('#pnlLoad').show();
+        let ruta = $('#rutaPath').val();
+        let idIBR = $('#idenIBR').val();
+        $.ajax({
+            type: 'POST',
+            url: ruta+'/Informacion?accion=listGestiones'+'&idibr='+idIBR,
+            success: function (result) {
+                $('#pnlLoad').hide();
+                $('#contenidoGestiones').html(result);                
+            }
+        });
+    });    
+    
+    
+    
+    
 })
