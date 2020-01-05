@@ -208,11 +208,13 @@ public class Login extends HttpServlet {
             }
 
         } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
     }
 
@@ -230,11 +232,13 @@ public class Login extends HttpServlet {
                 es = true;
             }
         } catch (Exception e) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }        
         }
         return es;
     }
@@ -253,11 +257,13 @@ public class Login extends HttpServlet {
                 es = true;
             }
         } catch (Exception e) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }        
         }
         return es;
     }

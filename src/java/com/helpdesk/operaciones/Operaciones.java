@@ -47,9 +47,14 @@ public class Operaciones {
     }
 
     public static void cerrarConexion() throws SQLException {
-        if (!conexion.getConexion().isClosed()) {
-            conexion.getConexion().close();
+        if(conexion!=null){
+            if(conexion.getConexion()!=null){
+                if (!conexion.getConexion().isClosed()) {
+                    conexion.getConexion().close();
+                }            
+            }
         }
+
     }
 
     public static <T> T insertar(T entity) throws SQLException, Exception {

@@ -45,7 +45,7 @@
                                 <c:when test="${ObjectInfo.idTecnico == idUsuario && ObjectInfo.status == 'Asignada'}">
                                     <div class="col-12">
                                         <div class=" float-sm-right mt-2">
-                                            <a class="btn btn-primary" id="linkAceptar" href="Procesos?accion=aceptar&idbr=${ibr}&ic=${idIncidence}">Aceptar</a>
+                                            <a class="btn btn-primary" id="linkAceptar"  href="${pageContext.servletContext.contextPath}/Procesos?accion=aceptar&idbr=${ibr}&ic=${idIncidence}">Aceptar</a>
                                             <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#modalrechazo">Rechazar</button>
 
                                             <!-- Modal -->
@@ -101,7 +101,7 @@
                                                             <form action="${pageContext.servletContext.contextPath}/Procesos?accion=denegar&idbr=${ibr}&ic=${idIncidence}" method="POST">
                                                                 <div class="form-group">
                                                                     <label for="exampleFormControlTextarea1">Especifique motivo de la denegacion</label>
-                                                                    <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required"></textarea>
+                                                                    <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required" maxlength="500"></textarea>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -129,7 +129,7 @@
                             </c:choose>
 
                         </div>
-                        <table class="table table-no-b mt-4">
+                        <table class="table mt-4">
                             <tbody>
                                 <tr class="border-none">
                                     <td class="text-primary"><b>Departamento:</b></td>
@@ -245,7 +245,8 @@
                         <c:if test="${ObjectInfo.idTecnico == idUsuario && ObjectInfo.status == 'En Ejecucion'}">
                             <div class="row p-2">
                                 <div class="col-12">
-                                    <button class="btn btn-primary float-sm-right" id="nuevaGestion" data-toggle="modal" data-target="#ModalNuevaGestion">+ Nueva Gestion</button>
+                                    <a href="${pageContext.servletContext.contextPath}/Procesos?accion=finalizar&idbr=${ibr}&ic=${idIncidence}" class="btn btn-outline-primary float-sm-right ml-2" id="btnFinalizar">Finalizar</a>
+                                    <button class="btn btn-primary float-sm-right ml-2" id="nuevaGestion" data-toggle="modal" data-target="#ModalNuevaGestion">+ Nueva Gestion</button>
                                 </div>
                             </div>                            
                         </c:if>
@@ -269,7 +270,7 @@
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body p-2">
+                <div class="card-body p-2" style="max-height: 350px !important;overflow-y: auto;">
 
                     <c:choose>
                         <c:when test="${LstNotes!= null}">

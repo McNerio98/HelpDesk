@@ -1,14 +1,14 @@
+function MosOcultar() {
+    this.style.color = 'red';
+}
+
+
 $(document).ready(function () {
-
-    function MosOcultar() {
-        $(this).parent().next().slideToggle(500);
-    }
-    $('.showHide').click(MosOcultar);
-
 
     $('#linkAceptar').click(function (event) {
         event.preventDefault(); 
         let ruta = $('#rutaPath').val();
+        let enlace = this.href;
         $.ajax({
             type: 'POST',
             url: ruta+'/Procesos?accion=verificar',
@@ -16,13 +16,15 @@ $(document).ready(function () {
                 if (result == 'true') {
                     $('#errorModalActivas').modal('show');
                 } else {
-                    event.run();
+                    window.location = enlace;
                 }
             }
         });
     });
     
-    
+    function MosOcultar() {
+        $(this).parent().next().slideToggle(500);
+    }
     
     $('#nav-contact-tab').click(function (event) {
         $('#pnlLoad').show();
@@ -33,7 +35,8 @@ $(document).ready(function () {
             url: ruta+'/Informacion?accion=listGestiones'+'&idibr='+idIBR,
             success: function (result) {
                 $('#pnlLoad').hide();
-                $('#contenidoGestiones').html(result);                
+                $('#contenidoGestiones').html(result);
+                $('.showHide').click(MosOcultar);
             }
         });
     });    

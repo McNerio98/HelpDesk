@@ -1,5 +1,3 @@
-CREATE DATABASE HELPDESK;
-
 CREATE TABLE ROLES(
 	IDROL SERIAL NOT NULL,
 	ROLENAME VARCHAR(20) NOT NULL,
@@ -123,10 +121,10 @@ CREATE TABLE MANAGEMENTS(
 );
 
 -- Departamentos de por Default 
-insert into departments(deptoname,description) values('Multimedia','Departamento Especializado en la creacion de contenido digital creativo');
-insert into departments(deptoname,description) values('Redes','Area de alta importancia, se almacenan Servidores que contienen informacion de la empresa');
+insert into departments(deptoname,description) values('Multimedia','Departamento Especializado en la creacion de contenido digital creativo y dinamico');
+insert into departments(deptoname,description) values('Redes','Area de alta importancia, se almacenan dispositivos que contienen informacion importante de la empresa');
 insert into departments(deptoname,description) values('Tecnologia','Serie de dispositivos que se presentan al cliente para la venta o soporte tecnico');
-insert into departments(deptoname,description) values('Diseño','Se desarrollan labores relacionada al marketing en todas sus etapas');
+insert into departments(deptoname,description) values('Diseño','Se desarrollan labores relacionada al marketing digital en todas sus etapas');
 
 -- Roles por Default 
 insert into roles(rolename,description) values ('Gerente','Este rol posee acceso a todos los menus');
@@ -137,7 +135,7 @@ insert into roles(rolename,description) values ('Empleado','Este es el rol por d
 
 -- Creacionde Menus 
 insert into menus values(1,'Panel Principal','/Principal',null);
-insert into menus values(2,'Nueva','/Incidencias',null);
+insert into menus values(2,'Nueva Incidencia','/Incidencias',null);
 insert into menus values(3,'Grupo','/Grupo',null);
 insert into menus values(4,'Empleados','/Empleados',null);
 insert into menus values(5,'Departamentos','/Departamentos',null);
@@ -159,9 +157,6 @@ insert into permissions(idmenu,idrole) values (1,4);
 
 
 --incidencebyrecepto and incidesces table 
-
-select * from incidences;
- 
 
 --funcion para actualizar  registro en la tabla deptobyusers
 CREATE OR REPLACE FUNCTION public.updatedepto(
@@ -199,6 +194,8 @@ END; $BODY$;
 
 ALTER FUNCTION public.deletedeptobyusers(integer)
     OWNER TO postgres;
+	
+
 
 
 

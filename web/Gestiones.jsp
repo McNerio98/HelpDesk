@@ -19,7 +19,7 @@
 
         <div class="border border-${styleBoostrap} rounded  overflow-hidden mt-2">
             <div class="p-2 text-${styleBoostrap} titleGestion" id="titleGestion">
-                <div class="row showHide" >
+                <div class="row showHide" onclick="MosOcultar();">
                     <div class="col-7">
                         <span class="bg-${styleBoostrap} p-1 rounded">${it.type}</span> ${it.title}
                     </div>

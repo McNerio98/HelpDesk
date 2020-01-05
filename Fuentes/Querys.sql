@@ -1,29 +1,6 @@
---Insertar dos usuarios con los siguientes userName para luego acenderlos 
---MCNERIO98	ax.minck@gmail.com		Mario Nerio			Redes
---ROGER85 	jm.roger@gmail.com 		Jorge Mundo   		Redes
---ALUX75 	ale.75@hotmail.com 		Alejandro Eduardo 	Tecnologia
---NOVA94 	nov.rar@hotmail.com 	Santiago Smith 		Diseño
 
---Asendiendo 
-update users set idrole = 1 where username = 'ROGER85'; --Gerente 
-update users set idrole = 2 where username = 'ALUX75'; -- Lider 
-update users set idrole = 3 where username = 'NOVA94'; -- Receptor 
-update users set idrole = 4 where username = 'MCNERIO98'; --Receptor 
 
-select * from departments;
---ARREGLAR ESTAS INSERCIONES AL AGREGAR SERIAL Y OMITIR ID EXPLICITO 
---Creando algunas Clasificaciones, arrelgar y poner el serial y quitar las primarys de aqui 
-insert into classifications values(1,'FALLA DE RED','intercambio de datos');
-insert into classifications values(2,'ROBO','Perdida de patrimonio que afecta el proceso');
-insert into classifications values(3,'VULNERABILIDAD','Acceso vulnerable a datos');
-insert into classifications values(4,'ENERGIA','Falla en suministro de electricidad');
 
-alter table incidences alter column creationday set not null;
-alter table incidences alter column creationday set default current_timestamp;
-
--- Esto ya estubo, ignorar 
-alter table incidences add column idDepto int;
-alter table incidences add constraint fk_depto foreign key(iddepto) references departments(iddepto);
 
 -- Insertando incidencias 
 select * from users;
@@ -146,11 +123,18 @@ select * from deptobyusers;
 select iddepto from deptobyusers where iduser = 5;
 select * from classifications;
 
-select * from managements;
+select iduser from users where username ='CHARLY3';
+
+insert into incidencebyreceptor(status,idreceptor,idincidence)
+values(2,8,1);
 
 
+
+select count(*) from pg_stat_activity where client_addr = '127.0.0.1';
 
 
 select typemanagement,title,description,correctionday,attachfile,costmsg from managements where idibr = 11;
 
+select * from managements;
 
+select typemanagement,title,description,correctionday,attachfile,costmsg,idmanagement from managements where idibr =4 order by idmanagement desc;

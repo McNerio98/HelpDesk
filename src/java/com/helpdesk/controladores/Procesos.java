@@ -44,7 +44,7 @@ public class Procesos extends HttpServlet {
 
         if (accion == null || idIBR == null || idIncidence == null) {
             response.sendRedirect("Principal");
-        } else{
+        } else {
             int newStatus = 0;
             switch (accion) {
                 case "conceder":
@@ -92,7 +92,6 @@ public class Procesos extends HttpServlet {
             Nota nt = new Nota();
             nt.setDescription(txtContenido);
             nt.setIdIncidence(Integer.parseInt(idIncidence));
-            
 
             if (accion.equals("rechazar")) {
                 nt.setNotetype(Enums.NOTA.RECHAZO);
@@ -103,50 +102,52 @@ public class Procesos extends HttpServlet {
                 s.setAttribute("nuevaNota", nt);
                 response.sendRedirect("Procesos?accion=denegar&ic=" + idIncidence + "&idbr=" + idIBR);
             }
-            
-            
-            
-        }else if(accion.equals("verificar")){
+
+        } else if (accion.equals("verificar")) {
             response.setContentType("text/plain");
             PrintWriter out = response.getWriter();
             Integer myIdUser = (Integer) s.getAttribute("idUsuario");
-            if(verificarActivas(myIdUser)){
+            if (verificarActivas(myIdUser)) {
                 out.print("true");
-            }else{
+            } else {
                 out.print("false");
             }
-        }else if(accion.equals("nuevaGestion")){
+        } else if (accion.equals("nuevaGestion")) {
             String titulo = request.getParameter("txtTitle");
             String tipo = request.getParameter("slcTipo");
             String descripcion = request.getParameter("txtDescription");
             String costo = request.getParameter("txtCost");
-            
-            
-            try{
+
+            double cost = 0.0;
+            if (costo != null && !costo.equals("")) {
+                cost = Double.valueOf(costo);
+            }
+
+            try {
                 Conexion conn = new ConexionPool();
                 conn.conectar();
                 Operaciones.abrirConexion(conn);
                 Operaciones.iniciarTransaccion();
-                
+
                 Gestion gn = new Gestion();
                 gn.setTitle(titulo);
                 gn.setDescription(descripcion);
                 gn.setTypemanagement(Integer.parseInt(tipo));
                 gn.setCorrectionDay(new Timestamp(System.currentTimeMillis()));
-                gn.setCostmsg(BigDecimal.valueOf(Double.valueOf(costo)));
+                gn.setCostmsg(BigDecimal.valueOf(cost));
                 gn.setIdIBR(Integer.parseInt(idIBR));
-                
+
                 gn = Operaciones.insertar(gn);
-                
+
                 Operaciones.commit();
                 response.sendRedirect("Informacion?idIncidencia=" + idIncidence);
-            }catch(Exception ex){        
+            } catch (Exception ex) {
                 try {
                     Operaciones.rollback();
                 } catch (SQLException ex1) {
                     Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex1);
                 }
-            }finally{
+            } finally {
                 try {
                     Operaciones.cerrarConexion();
                 } catch (SQLException ex2) {
@@ -154,8 +155,6 @@ public class Procesos extends HttpServlet {
                 }
             }
 
-            
-            
         }
 
     }
@@ -230,6 +229,15 @@ public class Procesos extends HttpServlet {
                     }
                     break;
                 }
+
+                case Enums.ESTADO.FINALIZADA: {
+                    Integer myIdUser = (Integer) s.getAttribute("idUsuario");
+                    if (myIdUser == ipe.getIdreceptor() && ipe.getStatus() == Enums.ESTADO.ACEPTADA) {
+                        newIpe.setStatus(newEstado);
+                        seteado = true;
+                    }
+                    break;
+                }
             }
 
             if (seteado) {
@@ -267,7 +275,7 @@ public class Procesos extends HttpServlet {
             String sql = "select count(*) from incidencebyreceptor where status = 3 and idreceptor = " + idReceptor;
             String[][] rs = Operaciones.consultar(sql, null);
             Integer numActivas = Integer.parseInt(rs[0][0]);
-            if(numActivas != 0){
+            if (numActivas != 0) {
                 cola = true;
             }
         } catch (Exception ex) {

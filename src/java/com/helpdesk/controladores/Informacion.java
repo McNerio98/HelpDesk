@@ -124,11 +124,13 @@ public class Informacion extends HttpServlet {
 
         } catch (Exception ex) {
             di = null;
+            Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
 
         return di;
@@ -165,12 +167,14 @@ public class Informacion extends HttpServlet {
                 }
             }
         } catch (Exception ex) {
-            LstControl = null;
+                LstControl = null;
+                Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
         return LstControl;
     }
@@ -203,11 +207,13 @@ public class Informacion extends HttpServlet {
             }
 
         } catch (Exception ex) {
+                Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
 
         return ListNotes;
@@ -221,14 +227,16 @@ public class Informacion extends HttpServlet {
             conn.conectar();
             Operaciones.abrirConexion(conn);
             
-            String sql = "select typemanagement,title,description,correctionday,attachfile,costmsg from managements where idibr = "+idIBR;
-            String[][] rs = Operaciones.consultar(sql, null);
+            String sql = "select typemanagement,title,description,correctionday,attachfile,costmsg,idmanagement from managements where idibr = ? order by idmanagement desc";
+            List<Object> params = new ArrayList<>();
+            params.add(idIBR);
+            String[][] rs = Operaciones.consultar(sql, params);
             
             if(rs!=null){
                 for(int i = 0; i<rs[0].length; i++){
                     DataGestion dg = new DataGestion();
                     dg.setType(Integer.parseInt(rs[0][i]));
-                    dg.setTitle(rs[1][0]);
+                    dg.setTitle(rs[1][i]);
                     dg.setDescription(rs[2][i]);
                     dg.setFecha(rs[3][i]);
                     dg.setAttach(rs[4][i]);
