@@ -98,9 +98,10 @@ public class Procesos extends HttpServlet {
                 s.setAttribute("nuevaNota", nt);
                 response.sendRedirect("Procesos?accion=rechazar&ic=" + idIncidence + "&idbr=" + idIBR);
             } else {
+                String idDeptoTec = request.getParameter("iddc");
                 nt.setNotetype(Enums.NOTA.DENEGACION);
                 s.setAttribute("nuevaNota", nt);
-                response.sendRedirect("Procesos?accion=denegar&ic=" + idIncidence + "&idbr=" + idIBR);
+                response.sendRedirect("Procesos?accion=denegar&ic=" + idIncidence + "&idbr=" + idIBR + "&iddc="+idDeptoTec);
             }
 
         } else if (accion.equals("verificar")) {
@@ -152,6 +153,40 @@ public class Procesos extends HttpServlet {
                     Operaciones.cerrarConexion();
                 } catch (SQLException ex2) {
                     Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
+                }
+            }
+
+        } else if (accion.equals("observacion")) {
+            String ContenidoObs = request.getParameter("txtContentObs");
+
+            try {
+                Conexion conn = new ConexionPool();
+                conn.conectar();
+                Operaciones.abrirConexion(conn);
+                Operaciones.iniciarTransaccion();
+
+                Nota note = new Nota();
+                note.setDescription(ContenidoObs);
+                note.setNotetype(Enums.NOTA.OBSERVACION);
+                Integer myIdUser = (Integer) s.getAttribute("idUsuario");
+                note.setIdIncidence(Integer.parseInt(idIncidence));
+                note.setIdHolder(myIdUser);
+                
+                note = Operaciones.insertar(note);
+
+                Operaciones.commit();
+                response.sendRedirect("Informacion?idIncidencia=" + idIncidence);
+            } catch (Exception ex) {
+                try {
+                    Operaciones.rollback();
+                } catch (SQLException ex1) {
+                    Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            } finally {
+                try {
+                    Operaciones.cerrarConexion();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 

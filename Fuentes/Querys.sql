@@ -121,7 +121,7 @@ select * from incidencebyreceptor;
 select * from users;
 select * from deptobyusers;
 select iddepto from deptobyusers where iduser = 5;
-select * from classifications;
+select * from permissions;
 
 select iduser from users where username ='CHARLY3';
 

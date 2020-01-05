@@ -271,6 +271,9 @@ public class Login extends HttpServlet {
     private List<Menu> getPermisos(Integer idRol) {
         List<Menu> permisos = new ArrayList();
         try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
             String sql = "select * from menus where idMenu in (select idmenu from permissions where idrole = ?)";
             List<Object> parametros = new ArrayList();
             parametros.add(idRol);
@@ -285,7 +288,13 @@ public class Login extends HttpServlet {
                 permisos.add(m);
             }
         } catch (Exception ex) {
-            //permisos = null;
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
         return permisos;
     }

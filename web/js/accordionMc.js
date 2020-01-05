@@ -1,7 +1,3 @@
-function MosOcultar() {
-    this.style.color = 'red';
-}
-
 
 $(document).ready(function () {
 
@@ -41,7 +37,6 @@ $(document).ready(function () {
         });
     });    
     
-    
-    
+    $('#cantidadMsg').html($('#contentNotes').children('div').length);
     
 })

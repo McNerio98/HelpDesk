@@ -30,11 +30,13 @@ public class DataList {
             Operaciones.abrirConexion(conn);
             clasf = Operaciones.getTodos(new Clasificacion());
         } catch (Exception ex) {
+                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
         return clasf;
     }
@@ -47,11 +49,13 @@ public class DataList {
             Operaciones.abrirConexion(conn);
             deptos = Operaciones.getTodos(new Departamento());
         } catch (Exception ex) {
+                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
         return deptos;
     }
@@ -71,11 +75,13 @@ public class DataList {
             idDepto = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
         
         }catch(Exception ex){
+                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
         
         return idDepto;

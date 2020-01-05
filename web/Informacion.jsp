@@ -98,7 +98,7 @@
                                                         </div>
 
                                                         <div class="modal-body">
-                                                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=denegar&idbr=${ibr}&ic=${idIncidence}" method="POST">
+                                                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=denegar&idbr=${ibr}&ic=${idIncidence}&iddc=${ObjectInfo.idDeptoTecnico}" method="POST">
                                                                 <div class="form-group">
                                                                     <label for="exampleFormControlTextarea1">Especifique motivo de la denegacion</label>
                                                                     <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required" maxlength="500"></textarea>
@@ -265,12 +265,12 @@
                 <div class="card-header">
                     <h3 class="card-title">Notas y Observaciones</h3>
                     <div class="card-tools">
-                        <span class="badge badge-primary">9</span>
+                        <span class="badge badge-primary" id="cantidadMsg">0</span>
                     </div>
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body p-2" style="max-height: 350px !important;overflow-y: auto;">
+                <div class="card-body p-2" style="max-height: 350px !important;overflow-y: auto;" id="contentNotes">
 
                     <c:choose>
                         <c:when test="${LstNotes!= null}">
@@ -305,11 +305,11 @@
                     <!-- /.card-body -->
                     <c:if test="${(ObjectInfo.idTecnico == idUsuario || idRol != 3)&& ObjectInfo.status == 'Finalizada'}">
                         <div class="card-footer p-2">
-                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=observacion" method="POST">
+                            <form action="${pageContext.servletContext.contextPath}/Procesos?accion=observacion&ic=${idIncidence}" method="POST">
                                 <div class="input-group">
-                                    <input type="text" name="message" placeholder="Observacion..." class="form-control">
+                                    <input type="text" name="txtContentObs" placeholder="Observacion..." class="form-control" required="required" maxlength="500">
                                     <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary">Enviar</button>
+                                        <input class="btn btn-primary" type="submit" value="Enviar">
                                     </span>
                                 </div>
                             </form>
