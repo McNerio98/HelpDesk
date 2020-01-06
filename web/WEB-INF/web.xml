@@ -44,6 +44,14 @@
         <servlet-name>Procesos</servlet-name>
         <servlet-class>com.helpdesk.controladores.Procesos</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReportGerente</servlet-name>
+        <servlet-class>com.helpdesk.reportes.ReportGerente</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Reportes</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Reportes</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -79,6 +87,14 @@
     <servlet-mapping>
         <servlet-name>Procesos</servlet-name>
         <url-pattern>/Procesos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReportGerente</servlet-name>
+        <url-pattern>/ReportGerente</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Reportes</servlet-name>
+        <url-pattern>/Reportes</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
