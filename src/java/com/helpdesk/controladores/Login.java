@@ -43,21 +43,8 @@ public class Login extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else if (accion.equals("registro")) {
             ArrayList<Departamento> Deptos = new ArrayList<Departamento>();
-            try {
-                ConexionPool conn = new ConexionPool();
-                conn.conectar();
-                Operaciones.abrirConexion(conn);
-                Deptos = Operaciones.getTodos(new Departamento());
-                request.setAttribute("DeptosList", Deptos);
-            } catch (Exception ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    Operaciones.cerrarConexion();
-                } catch (SQLException ex2) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
-                }
-            }
+            Deptos = DataList.getAllDeptos();
+            request.setAttribute("DeptosList", Deptos);
             request.getRequestDispatcher("registro.jsp").forward(request, response);
         }
     }
@@ -102,18 +89,18 @@ public class Login extends HttpServlet {
                     Operaciones.iniciarTransaccion();
 
                     u = Operaciones.insertar(u);
-                    s.setAttribute("idUsuario", u.getIdUser());
+                    /*s.setAttribute("idUsuario", u.getIdUser());
                     s.setAttribute("Usuario", u.getUserName());
                     s.setAttribute("Rol", u.getIdRole());
                     s.setAttribute("idUsuario", u.getIdUser());
-                    s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));
+                    s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));*/
                     DeptoPorUsuario dp = new DeptoPorUsuario();
                     dp.setIdDepto(Integer.parseInt(idDepto));
                     dp.setIdUser(u.getIdUser());
 
                     dp = Operaciones.insertar(dp);
                     Operaciones.commit();
-                    response.sendRedirect("Principal");
+                    response.sendRedirect("Login");
                 } catch (Exception ex) {
 
                     try {

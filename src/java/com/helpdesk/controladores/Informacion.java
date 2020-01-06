@@ -143,7 +143,7 @@ public class Informacion extends HttpServlet {
                 + "ibr.startdate, i.finaldate, ibr.finaldate from users u, \n"
                 + "incidencebyreceptor ibr, incidences i where \n"
                 + "ibr.idreceptor = u.iduser and \n"
-                + "ibr.idincidence = i.idincidence and ibr.idincidence = ?";
+                + "ibr.idincidence = i.idincidence and ibr.idincidence = ? order by idibr";
 
         List<Object> params = new ArrayList();
         params.add(idIncidencia);

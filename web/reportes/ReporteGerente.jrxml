@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ec59ce20-270b-46b9-8fc5-5140fd7949fd">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="80"/>
+	<property name="ireport.y" value="0"/>
 	<subDataset name="NewDataset" uuid="e38c2ad3-b7fc-4724-9c8b-ca8a28f351b7">
 		<queryString language="SQL">
 			<![CDATA[select deptoname from departments where iddepto = 3;]]>
@@ -47,8 +47,8 @@ and i.creationday between $P{fechaInicio}::timestamp and $P{fechaFin}::timestamp
 				<text><![CDATA[REPORTES DE INCIDENCIAS]]></text>
 			</staticText>
 			<image>
-				<reportElement x="14" y="12" width="178" height="55" uuid="abe2d612-9e90-4d2b-a4e9-e1a479812690"/>
-				<imageExpression><![CDATA["C:\\Users\\ZEUS\\Desktop\\Helpdesk\\web\\img\\Logo.png"]]></imageExpression>
+				<reportElement x="26" y="15" width="55" height="50" uuid="20a9eff5-3c5c-44a7-b5b8-e7d67e59366b"/>
+				<imageExpression><![CDATA["C:\\Users\\Mack_\\Documents\\NetBeansProjects\\HelpDesk\\web\\img\\Logo.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

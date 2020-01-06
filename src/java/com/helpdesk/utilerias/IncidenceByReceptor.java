@@ -27,13 +27,15 @@ public class IncidenceByReceptor {
     private int iddepto;
 
     public IncidenceByReceptor(int idu) {
-        this.iduser = idu;
-        this.iddepto = DataList.getIdDepto(this.iduser);
+        
         try {
             ConexionPool conexion = new ConexionPool();
             conexion.conectar();
             Operaciones.abrirConexion(conexion);
-            Operaciones.iniciarTransaccion();
+            
+            this.iduser = idu;
+            this.iddepto = DataList.getIdDepto(this.iduser);
+        
             this.idrol = Operaciones.get(this.iduser, new Usuario()).getIdRole();
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -147,19 +149,19 @@ public class IncidenceByReceptor {
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and b.idreceptor=" + this.iduser;
+                + "a.idincidence=b.idincidence and b.idreceptor=" + this.iduser + "group by a.idincidence";
         //En el caso de un gerente
         String query2 = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence";
+                + "a.idincidence=b.idincidence group by a.idincidence";
         //En el caso de un lider
         String query3 = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and a.iddepto=?";
+                + "a.idincidence=b.idincidence and a.iddepto=? group by a.idincidence";
         switch (this.idrol) {
             case 1: {
                 listAll = listIncidencia(query2, null);
@@ -186,7 +188,7 @@ public class IncidenceByReceptor {
             ConexionPool conexion = new ConexionPool();
             conexion.conectar();
             Operaciones.abrirConexion(conexion);
-            Operaciones.iniciarTransaccion();
+            
 
             String[][] array = Operaciones.consultar(query, params);
 

@@ -117,16 +117,28 @@ select count(*) from incidencebyreceptor where status = 3 and idreceptor = 29;
 
 
 
-select * from users;
+select * from users where idrole = 4;
+select * from users where iduser = 31;
 select * from deptobyusers;
-select iddepto from deptobyusers where iduser = 5;
+select iddepto from deptobyusers where iduser = 31;
 select * from permissions;
 
 select iduser from users where username ='NAHUM';
 
+--reasignar 
 insert into incidencebyreceptor(status,idreceptor,idincidence)
-values(2,8,1);
+values(2,6,12);
 
+select * from incidencebyreceptor;
+select iduser from users where firstname = 'Nolberto';
+
+select ibr.idibr, u.username, ibr.status, i.creationday, 
+ibr.startdate, i.finaldate, ibr.finaldate from users u, 
+incidencebyreceptor ibr, incidences i where 
+ibr.idreceptor = u.iduser and 
+ibr.idincidence = i.idincidence and ibr.idincidence = 1 order by idibr;
+
+delete from incidencebyreceptor where idibr = 15;
 
 
 select count(*) from pg_stat_activity where client_addr = '127.0.0.1';
@@ -203,7 +215,7 @@ select status from incidencebyreceptor where idincidence = 1 order by idibr desc
 select i.idincidence,i.title, cl.classification, to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion
 from incidences i,classifications cl
 where i.idclassification = cl.idclassification
-and(select status from incidencebyreceptor ibr where ibr.idincidence = i.idincidence order by idibr desc limit 1) = 2
+and(select status from incidencebyreceptor ibr where ibr.idincidence = i.idincidence order by idibr desc limit 1) = 3
 and i.iddepto = 2 
 and i.creationday between '2020/01/01' and '2020/01/04 23:59:59';
 
@@ -213,4 +225,16 @@ select deptoname from departments where iddepto = 3;
 
 select idincidence,title,to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion from incidences i where i.creationday between '2020/01/01' and '2020/01/04 23:59:59';
 >>>>>>> origin/McNerio
+
+
+
+select 
+
+a.idincidence
+                from incidences a, incidencebyreceptor b
+                where 
+                a.idincidence=b.idincidence group by a.idincidence;
+select * from incidences;
+
+
 
