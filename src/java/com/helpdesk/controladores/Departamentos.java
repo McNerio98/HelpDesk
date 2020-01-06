@@ -125,12 +125,17 @@ public class Departamentos extends HttpServlet {
                             response.sendRedirect(request.getContextPath() + "/Departamentos");
 
                         }catch (Exception ex) {
-                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+
+                            try {
+                                Operaciones.rollback();
+                            } catch (SQLException ex1) {
+                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                            }
                         } finally {
                             try {
                                 Operaciones.cerrarConexion();
-                            } catch (SQLException ex2) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                         break;

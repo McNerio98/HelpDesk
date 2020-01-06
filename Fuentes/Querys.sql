@@ -1,29 +1,6 @@
---Insertar dos usuarios con los siguientes userName para luego acenderlos 
---MCNERIO98	ax.minck@gmail.com		Mario Nerio			Redes
---ROGER85 	jm.roger@gmail.com 		Jorge Mundo   		Redes
---ALUX75 	ale.75@hotmail.com 		Alejandro Eduardo 	Tecnologia
---NOVA94 	nov.rar@hotmail.com 	Santiago Smith 		Diseño
 
---Asendiendo 
-update users set idrole = 1 where username = 'ROGER85'; --Gerente 
-update users set idrole = 2 where username = 'ALUX75'; -- Lider 
-update users set idrole = 3 where username = 'NOVA94'; -- Receptor 
-update users set idrole = 4 where username = 'MCNERIO98'; --Receptor 
 
-select * from departments;
---ARREGLAR ESTAS INSERCIONES AL AGREGAR SERIAL Y OMITIR ID EXPLICITO 
---Creando algunas Clasificaciones, arrelgar y poner el serial y quitar las primarys de aqui 
-insert into classifications values(1,'FALLA DE RED','intercambio de datos');
-insert into classifications values(2,'ROBO','Perdida de patrimonio que afecta el proceso');
-insert into classifications values(3,'VULNERABILIDAD','Acceso vulnerable a datos');
-insert into classifications values(4,'ENERGIA','Falla en suministro de electricidad');
 
-alter table incidences alter column creationday set not null;
-alter table incidences alter column creationday set default current_timestamp;
-
--- Esto ya estubo, ignorar 
-alter table incidences add column idDepto int;
-alter table incidences add constraint fk_depto foreign key(iddepto) references departments(iddepto);
 
 -- Insertando incidencias 
 select * from users;
@@ -118,29 +95,146 @@ dp.iduser = inc.idreceptor and i.idincidence = 18 and inc.idibr = 7;
 
 
 
-select * from incidences;
-
-select * from incidencebyreceptor;
-
 select ibr.idibr, u.username, ibr.status, i.creationday, ibr.startdate, 
 i.finaldate, ibr.finaldate  
 from users u, incidencebyreceptor ibr, incidences i
 where ibr.idreceptor = u.iduser and 
 ibr.idincidence = i.idincidence and ibr.idincidence = 18;
 
-delete  from incidences;
-delete  from incidencebyreceptor;
+
+--Extraer notas de una unica incidencia 
+select * from notes;
+select * from users;
+
+select CONCAT(u.firstname,' ',u.lastname) as fullname,
+r.rolename, n.description, n.notetype
+from roles r, users u, notes n
+where n.idholder = u.iduser and u.idrole = r.idrol and 
+n.idincidence = 23;
 
 
+select count(*) from incidencebyreceptor where status = 3 and idreceptor = 29;
+
+
+
+select * from users where idrole = 4;
+select * from users where iduser = 31;
+select * from deptobyusers;
+select iddepto from deptobyusers where iduser = 31;
+select * from permissions;
+
+select iduser from users where username ='NAHUM';
+
+--reasignar 
+insert into incidencebyreceptor(status,idreceptor,idincidence)
+values(2,6,12);
+
+select * from incidencebyreceptor;
+select iduser from users where firstname = 'Nolberto';
+
+select ibr.idibr, u.username, ibr.status, i.creationday, 
+ibr.startdate, i.finaldate, ibr.finaldate from users u, 
+incidencebyreceptor ibr, incidences i where 
+ibr.idreceptor = u.iduser and 
+ibr.idincidence = i.idincidence and ibr.idincidence = 1 order by idibr;
+
+delete from incidencebyreceptor where idibr = 15;
+
+
+select count(*) from pg_stat_activity where client_addr = '127.0.0.1';
+
+
+select typemanagement,title,description,correctionday,attachfile,costmsg from managements where idibr = 11;
+
+select * from managements;
+
+select typemanagement,title,description,correctionday,attachfile,costmsg,idmanagement from managements where idibr =4 order by idmanagement desc;
+
+
+<<<<<<< HEAD
+
+
+
+--trigger para controlar el costo total de una incidencia
+CREATE OR REPLACE FUNCTION updatecost()
+  RETURNS trigger AS
+$$
+BEGIN
+         UPDATE 
+    incidences
+SET 
+    totalcost = 
+    (
+        SELECT 
+            sum(costmsg) 
+        FROM 
+            managements a,
+			incidencebyreceptor b
+        WHERE 
+            a.idibr = b.idibr and b.idincidence = incidences.idincidence
+    )
+WHERE
+    incidences.idincidence IN 
+    (
+        SELECT
+            b.idincidence
+        FROM
+            managements a,
+			incidencebyreceptor b
+		WHERE 
+            a.idibr = b.idibr and b.idincidence = incidences.idincidence
+    );
+ 
+    RETURN NULL;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+
+CREATE TRIGGER updatingTotalCost
+  AFTER INSERT
+  ON managements
+  FOR EACH ROW
+  EXECUTE PROCEDURE updatecost();
+
+
+
+=======
+-- consultar para primer reporte por estado y fechas 
 select * from incidences;
 select * from incidencebyreceptor;
-select * from users;
-select * from deptobyusers;
-select iddepto from deptobyusers where iduser = 5;
-select * from classifications;
-select * from departments;
+select from incidences i,  incidencebyreceptor ib
 
-update incidencebyreceptor set status = 1 where idibr = 20;
+where ib.status = 4;
+
+select ib.status
+
+-- Calculando estado de una incdencia , selecionando las que estan en ejecucion status = 3 
+select status from incidencebyreceptor where idincidence = 1 order by idibr desc limit 1;
+
+select i.idincidence,i.title, cl.classification, to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion
+from incidences i,classifications cl
+where i.idclassification = cl.idclassification
+and(select status from incidencebyreceptor ibr where ibr.idincidence = i.idincidence order by idibr desc limit 1) = 3
+and i.iddepto = 2 
+and i.creationday between '2020/01/01' and '2020/01/04 23:59:59';
+
+select * from incidences where creationday between '2020/01/01' and '2020/01/04 23:59:59';
+
+select deptoname from departments where iddepto = 3;
+
+select idincidence,title,to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion from incidences i where i.creationday between '2020/01/01' and '2020/01/04 23:59:59';
+>>>>>>> origin/McNerio
+
+
+
+select 
+
+a.idincidence
+                from incidences a, incidencebyreceptor b
+                where 
+                a.idincidence=b.idincidence group by a.idincidence;
+select * from incidences;
 
 
 

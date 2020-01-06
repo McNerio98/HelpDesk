@@ -52,7 +52,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Titulo" name="txtTitle" required="true">
+                                <input type="text" class="form-control" placeholder="Titulo" name="txtTitle" required="true" maxlength="50">
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -90,13 +90,13 @@
 
                             <div class="form-group row">
                                 <label>Descripcion</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion"></textarea>
+                                <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion" maxlength="500"></textarea>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1"><a href="">Asignar a:</a></label>
-                                        <input type="hidden" value="9" name="txtReceptor" id="idReceptor">
+                                        <input type="hidden" value="" name="txtReceptor" id="idReceptor">
                                         <input type="text" class="form-control" id="Receptor" placeholder="Ninguno Selecionado" disabled="">
                                     </div>
                                 </div>

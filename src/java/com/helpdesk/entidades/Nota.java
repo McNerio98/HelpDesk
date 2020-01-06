@@ -14,11 +14,12 @@ import com.helpdesk.anotaciones.*;
 @Entity(table="NOTES")
 public class Nota {
     @PrimaryKey
+    @AutoIncrement
     private int idNota;
     @NotNull
     private String description;
     @NotNull
-    private String type;
+    private int notetype;
     @NotNull
     private int idHolder;
     @NotNull
@@ -27,10 +28,10 @@ public class Nota {
     public Nota() {
     }
 
-    public Nota(int idNota, String description, String type, int idHolder, int idIncidence) {
+    public Nota(int idNota, String description, int notetype, int idHolder, int idIncidence) {
         this.idNota = idNota;
         this.description = description;
-        this.type = type;
+        this.notetype = notetype;
         this.idHolder = idHolder;
         this.idIncidence = idIncidence;
     }
@@ -51,12 +52,12 @@ public class Nota {
         this.description = description;
     }
 
-    public String getType() {
-        return type;
+    public int getNotetype() {
+        return notetype;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setNotetype(int notetype) {
+        this.notetype = notetype;
     }
 
     public int getIdHolder() {
@@ -74,7 +75,5 @@ public class Nota {
     public void setIdIncidence(int idIncidence) {
         this.idIncidence = idIncidence;
     }
-    
        
-    
 }

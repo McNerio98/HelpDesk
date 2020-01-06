@@ -12,6 +12,7 @@ import com.helpdesk.entidades.IncidenciaPorEncargado;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
+import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -48,10 +49,12 @@ public class Incidencias extends HttpServlet {
             if (request.getSession().getAttribute("resultado") != null) {
                 request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
                 request.getSession().removeAttribute("resultado");
-            }            
+            }
             request.setAttribute("DeptosList", DataList.getAllDeptos());
             request.setAttribute("ClasfList", DataList.getAllClassifications());
             request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
+        } else if (accion.equals("update")) {
+            //Se procede a obtener la incidencia 
         }
 
     }
@@ -64,9 +67,9 @@ public class Incidencias extends HttpServlet {
 
         switch (accion) {
             case "nueva": {
-                if(insertarIncidencia(request, response)){
+                if (insertarIncidencia(request, response)) {
                     request.getSession().setAttribute("resultado", 2); //Se inserto 
-                }else{
+                } else {
                     request.getSession().setAttribute("resultado", 1); //No se inserto 
                 }
                 response.sendRedirect("Incidencias");
@@ -79,7 +82,7 @@ public class Incidencias extends HttpServlet {
 
     private boolean insertarIncidencia(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = true;
-        
+
         String titulo = request.getParameter("txtTitle");
         String idclasf = request.getParameter("slcClasificacion");
         String prioridad = request.getParameter("slcPrioridad");
@@ -88,40 +91,36 @@ public class Incidencias extends HttpServlet {
         String fechafinal = request.getParameter("dateFechaFinal");
         int idCreador = (int) request.getSession().getAttribute("idUsuario");
         int idDepto = 0;
-        
-        int status = 2; //2 - Asignada 
-        int idRol = (int)request.getSession().getAttribute("Rol");
-        
-        if( idRol == 2){ //Si es un lider verificar si el receptor pertenece al mismo depto
-            if(!SameDepto(idCreador,Integer.parseInt(idReceptor))){
-                status = 1; //Se agrega como una solicitud             
+
+        int status = Enums.ESTADO.ASIGNADA;
+        int idRol = (int) request.getSession().getAttribute("Rol");
+
+        if (idRol == 2) { //Si es un lider verificar si el receptor pertenece al mismo depto
+            if (!SameDepto(idCreador, Integer.parseInt(idReceptor))) {
+                status = Enums.ESTADO.SOLICITADA; //Se agrega como una solicitud             
             }
         }
-        
-        //Fecha Actual
-        DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String ahora = hourdateFormat.format(new Date());
-        
-        try{
+
+        try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
-            
+
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = simpleDateFormat.parse(fechafinal);
-            
-            if(idRol == 2){
+
+            if (idRol == 2) {
                 String sql = "select iddepto from deptobyusers where iduser = ?";
                 List<Object> params = new ArrayList();
                 params.add(idCreador);
                 String[][] rs = Operaciones.consultar(sql, params);
                 idDepto = Integer.parseInt(rs[0][0]);
-                
-            }else if(idRol == 1){ //Para gerente sera el que halla selecionado 
+
+            } else if (idRol == 1) { //Para gerente sera el que halla selecionado 
                 idDepto = Integer.parseInt(request.getParameter("slcDeptoIncidence"));
             }
-            
+
             Incidencia icn = new Incidencia();
             icn.setTitle(titulo);
             icn.setDescription(desc);
@@ -132,26 +131,25 @@ public class Incidencias extends HttpServlet {
             icn.setIdClassification(Integer.parseInt(idclasf));
             icn.setIdCreator(idCreador);
             icn.setIdDepto(idDepto); //Multimedia cambiar de forma dinamica
-            
+
             icn = Operaciones.insertar(icn);
-            
+
             IncidenciaPorEncargado ixp = new IncidenciaPorEncargado();
             ixp.setStatus(status);
             ixp.setIdreceptor(Integer.parseInt(idReceptor));
             ixp.setIdIncidence(icn.getIdIncidence());
-            
-            
+
             ixp = Operaciones.insertar(ixp);
-            
+
             Operaciones.commit();
-        }catch(Exception ex){
+        } catch (Exception ex) {
             estado = false;
             try {
                 Operaciones.rollback();
             } catch (SQLException ex1) {
                 Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex1);
             }
-        }finally{
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
@@ -162,23 +160,36 @@ public class Incidencias extends HttpServlet {
         return estado;
     }
 
-
-    private boolean SameDepto(int a, int b){ //id de Creador e id de receptor 
+    private boolean SameDepto(int a, int b) { //id de Creador e id de receptor 
         boolean sm = false;
-        
-        Integer da = DataList.getIdDepto(a);
-        Integer db = DataList.getIdDepto(b);
-        
-        if(da == db){
-            sm = true;
+
+
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Integer da = DataList.getIdDepto(a);
+            Integer db = DataList.getIdDepto(b);
+
+            if (da == db) {
+                sm = true;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
+
         return sm;
     }
-    
+
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 
 }

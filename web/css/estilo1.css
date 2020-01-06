@@ -36,3 +36,22 @@
     padding: 30px 10px;
     text-align: center;
 }
+
+.mh-inherit{
+    min-height: inherit !important;
+}
+
+.w-60px{
+    width: 60px !important;
+}
+
+.titleGestion:hover{
+    cursor: pointer;
+    background-color: rgb(226, 226, 226);
+}
+.descripInc{display: none;}
+
+.table-no-b tr td {
+    border: none !important;
+    padding: 0px !important;
+}

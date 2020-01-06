@@ -43,21 +43,8 @@ public class Login extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else if (accion.equals("registro")) {
             ArrayList<Departamento> Deptos = new ArrayList<Departamento>();
-            try {
-                ConexionPool conn = new ConexionPool();
-                conn.conectar();
-                Operaciones.abrirConexion(conn);
-                Deptos = Operaciones.getTodos(new Departamento());
-                request.setAttribute("DeptosList", Deptos);
-            } catch (Exception ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    Operaciones.cerrarConexion();
-                } catch (SQLException ex2) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
-                }
-            }
+            Deptos = DataList.getAllDeptos();
+            request.setAttribute("DeptosList", Deptos);
             request.getRequestDispatcher("registro.jsp").forward(request, response);
         }
     }
@@ -84,7 +71,7 @@ public class Login extends HttpServlet {
                 String clave = request.getParameter("txtPassword");
                 String correo = request.getParameter("txtEmail");
                 String telefono = request.getParameter("txtTelephone");
-
+                
                 Usuario u = new Usuario();
                 u.setUserName(userName.toUpperCase());
                 u.setFirsName(nom);
@@ -93,6 +80,7 @@ public class Login extends HttpServlet {
                 u.setTelephone(telefono);
                 u.setPassword(Hash.generarHash(clave, Hash.SHA256));
                 u.setIdRole(4); //role 4 Empleado
+                HttpSession s = request.getSession();
 
                 try {
                     Conexion conn = new ConexionPool();
@@ -101,14 +89,18 @@ public class Login extends HttpServlet {
                     Operaciones.iniciarTransaccion();
 
                     u = Operaciones.insertar(u);
-
+                    /*s.setAttribute("idUsuario", u.getIdUser());
+                    s.setAttribute("Usuario", u.getUserName());
+                    s.setAttribute("Rol", u.getIdRole());
+                    s.setAttribute("idUsuario", u.getIdUser());
+                    s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));*/
                     DeptoPorUsuario dp = new DeptoPorUsuario();
                     dp.setIdDepto(Integer.parseInt(idDepto));
                     dp.setIdUser(u.getIdUser());
 
                     dp = Operaciones.insertar(dp);
                     Operaciones.commit();
-                    response.sendRedirect("Principal");
+                    response.sendRedirect("Login");
                 } catch (Exception ex) {
 
                     try {
@@ -158,7 +150,7 @@ public class Login extends HttpServlet {
 
     private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) {
 
-        String cuenta = request.getParameter("txtCuenta").toUpperCase();
+        String cuenta = request.getParameter("txtCuenta");
         String clave = request.getParameter("txtClave");
         try {
             Conexion conn = new ConexionPool();
@@ -188,9 +180,7 @@ public class Login extends HttpServlet {
                     s.setAttribute("idUsuario", u.getIdUser());
                     s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));
 
-                    /*if (u.getIdRole() == 2) { //Si es lider pertenece a un departamento 
-                        s.setAttribute("idDep", DataList.getIdDepto(u.getIdUser()));
-                    }*/
+                    
 
                     List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);
@@ -208,11 +198,13 @@ public class Login extends HttpServlet {
             }
 
         } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex1) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            }        
         }
     }
 
@@ -230,11 +222,13 @@ public class Login extends HttpServlet {
                 es = true;
             }
         } catch (Exception e) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }        
         }
         return es;
     }
@@ -253,11 +247,13 @@ public class Login extends HttpServlet {
                 es = true;
             }
         } catch (Exception e) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }        
         }
         return es;
     }
@@ -265,6 +261,9 @@ public class Login extends HttpServlet {
     private List<Menu> getPermisos(Integer idRol) {
         List<Menu> permisos = new ArrayList();
         try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
             String sql = "select * from menus where idMenu in (select idmenu from permissions where idrole = ?)";
             List<Object> parametros = new ArrayList();
             parametros.add(idRol);
@@ -279,7 +278,13 @@ public class Login extends HttpServlet {
                 permisos.add(m);
             }
         } catch (Exception ex) {
-            //permisos = null;
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
         return permisos;
     }

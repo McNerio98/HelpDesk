@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1ebc06d3-322e-411d-99bd-b36e9c3ef788">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaInicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFinal" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select idincidence,title,to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion from incidences i where i.creationday between $P{fechaInicio}::timestamp and $P{fechaFinal}::timestamp;]]>
+	</queryString>
+	<field name="idincidence" class="java.lang.Integer"/>
+	<field name="title" class="java.lang.String"/>
+	<field name="fechacreacion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="19" y="2" width="100" height="20" uuid="c16266ba-7bac-4c36-b32b-453dbd7021c7"/>
+				<text><![CDATA[idincidence]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="2" width="100" height="20" uuid="c34a65ba-d855-45dc-8cf0-68b1b473dbc4"/>
+				<text><![CDATA[title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="462" y="2" width="100" height="20" uuid="9bcdf125-7014-4196-a9b1-67a446db7da0"/>
+				<text><![CDATA[fechacreacion]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="12" width="100" height="20" uuid="0f792df3-9ddf-46d1-b51d-632ccd05d6f1"/>
+				<textFieldExpression><![CDATA[$F{idincidence}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="260" y="12" width="100" height="20" uuid="9e558b5a-dc73-4ff5-86cf-2643245b24d6"/>
+				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="462" y="12" width="100" height="20" uuid="ed534554-3ce4-49f8-97f9-4cf96f65c58a"/>
+				<textFieldExpression><![CDATA[$F{fechacreacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

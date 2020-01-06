@@ -11,6 +11,7 @@ import com.helpdesk.entidades.DeptoPorUsuario;
 import com.helpdesk.entidades.Rol;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.listarEmpleado;
 import com.helpdesk.utilerias.printUsuariosJsonByFilter;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -44,8 +46,43 @@ public class Empleados extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            HttpSession s = request.getSession();
             String accion = request.getParameter("accion");
+            int idUserSession = (int) s.getAttribute("idUsuario");
+            int rolss = (int) s.getAttribute("Rol");
+            
+
             if (accion == null) {
+                if (rolss == 1) {
+                    s.setAttribute("requestEmpleado", DataList.getEmpleados());
+                }
+                if (rolss == 2) {
+                    s.setAttribute("requestIncidencia", DataList.getIncidenciasSolicitadas(idUserSession));
+
+                }
+                ArrayList<Departamento> listDepto = new ArrayList<>();
+                ArrayList<Rol> listRol = new ArrayList<>();
+
+                try {
+                    ConexionPool conexion = new ConexionPool();
+                    conexion.conectar();
+                    Operaciones.abrirConexion(conexion);
+                    Operaciones.iniciarTransaccion();
+                    listDepto = Operaciones.getTodos(new Departamento());
+                    listRol = Operaciones.getTodos(new Rol());
+
+                } catch (Exception ex) {
+                    Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        Operaciones.cerrarConexion();
+                    } catch (SQLException ex2) {
+                        Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
+                    }
+                }
+                request.setAttribute("listDepto", listDepto);
+                request.setAttribute("listRol", listRol);
+                request.setAttribute("listEmpleados", DataList.getEmpleados());
                 request.getRequestDispatcher("asignarRol.jsp").forward(request, response);
             } else {
                 switch (accion) {
@@ -78,12 +115,17 @@ public class Empleados extends HttpServlet {
                             response.sendRedirect(request.getContextPath() + "/Empleados");
 
                         } catch (Exception ex) {
-                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+
+                            try {
+                                Operaciones.rollback();
+                            } catch (SQLException ex1) {
+                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                            }
                         } finally {
                             try {
                                 Operaciones.cerrarConexion();
-                            } catch (SQLException ex2) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
 
@@ -141,7 +183,6 @@ public class Empleados extends HttpServlet {
                                 listDepto = Operaciones.getTodos(new Departamento());
                                 listRol = Operaciones.getTodos(new Rol());
 
-                                Operaciones.commit();
                                 request.setAttribute("listEmpleado", lstEmpleado);
                                 request.setAttribute("listDepto", listDepto);
                                 request.setAttribute("listRol", listRol);
@@ -177,12 +218,17 @@ public class Empleados extends HttpServlet {
                             Operaciones.commit();
                             response.sendRedirect(request.getContextPath() + "/Empleados?op=3");
                         } catch (Exception ex) {
-                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+
+                            try {
+                                Operaciones.rollback();
+                            } catch (SQLException ex1) {
+                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                            }
                         } finally {
                             try {
                                 Operaciones.cerrarConexion();
-                            } catch (SQLException ex2) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                         break;
@@ -196,8 +242,8 @@ public class Empleados extends HttpServlet {
                         switch (idCase) {
                             case 1: {
                                 if (UsersByFilters(idRol, idDepto, 1) != null) {
-                                    
-                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 1),response);
+
+                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 1), response);
 
                                 } else {
                                     out.print("null");
@@ -206,8 +252,8 @@ public class Empleados extends HttpServlet {
                             }
                             case 2: {
                                 if (UsersByFilters(idRol, idDepto, 2) != null) {
-                                    
-                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 2),response);
+
+                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 2), response);
 
                                 } else {
                                     out.print("null");
@@ -232,14 +278,14 @@ public class Empleados extends HttpServlet {
                 + "a.iduser = b.iduser and \n"
                 + "a.idrole = c.idrol and\n"
                 + "b.iddepto=? and a.idrole=? ";
-        
+
         String query2 = "select \n"
                 + "a.iduser \n"
                 + "from users a, deptobyusers b, roles c\n"
                 + "where \n"
                 + "a.iduser = b.iduser and \n"
                 + "a.idrole = c.idrol and\n"
-                + "b.iddepto="+idDepto+" and a.idrole=3; ";
+                + "b.iddepto=" + idDepto + " and a.idrole=3; ";
         List<Object> params = new ArrayList<>();
         params.add(idDepto);
         params.add(idRol);
@@ -250,12 +296,11 @@ public class Empleados extends HttpServlet {
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
             String[][] array = null;
-            if(idcase==1){
+            if (idcase == 1) {
                 array = Operaciones.consultar(query, params);
-            }else{
+            } else {
                 array = Operaciones.consultar(query2, null);
             }
-            
 
             if (array == null) {
                 lstUsers = null;
