@@ -58,10 +58,10 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        <c:if test="${listEmpleado != null}">
-                            <c:forEach var="listUser" items="${listEmpleado}">
-                                <tr id="${listUser.getUsuario().getIdUser()}">
+                        
+                        <c:if test="${listEmpleados != null}">
+                            <c:forEach var="listUser" items="${listEmpleados}">
+                                <tr id="id${listUser.getUsuario().getIdUser()}">
                                     <td>${listUser.getUsuario().getIdUser()}</td>
                                     <td hidden>${listUser.getDepto().getIdDepto()}</td>
                                     <td hidden>${listUser.getRol().getIdRol()}</td>
@@ -69,13 +69,33 @@
                                     <td>${listUser.getDepto().getDeptoName()}</td>
                                     <td>${listUser.getRol().getRoleName()}</td>
                                     <td>
-                                        <button type="button" class="btn btn-info" onclick="updateUser(${listUser.getUsuario().getIdUser()}, 1)">Actualizar</button>
-                                        <button type="button" class="btn btn-danger" onclick="updateUser(${listUser.getUsuario().getIdUser()}, 2)">Eliminar</button>
+                                        <button type="button" class="btn btn-info" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 1)">Actualizar</button>
+                                        <button type="button" class="btn btn-danger" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 2)">Eliminar</button>
                                     </td>
                                 </tr>
                             </c:forEach>
                         </c:if>
-                        <c:if test="${dataEmpty == 'true'}">
+
+                        <c:if test="${listEmpleado != null}">
+                            <c:forEach var="listUser" items="${listEmpleado}">
+                                <tr id="id${listUser.getUsuario().getIdUser()}">
+                                    <td>${listUser.getUsuario().getIdUser()}</td>
+                                    <td hidden>${listUser.getDepto().getIdDepto()}</td>
+                                    <td hidden>${listUser.getRol().getIdRol()}</td>
+                                    <td>${listUser.getUsuario().getFirsName()} ${listUser.getUsuario().getLastName()}</td>
+                                    <td>${listUser.getDepto().getDeptoName()}</td>
+                                    <td>${listUser.getRol().getRoleName()}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 1)">Actualizar</button>
+                                        <button type="button" class="btn btn-danger" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 2)">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:if>
+                        
+                        
+                        
+                                <c:if test="${dataEmpty == 'true'}">
                         <div class="alert alert-warning" role="alert">
                             No se encontro ninguna resultado
                         </div>

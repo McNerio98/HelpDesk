@@ -4,6 +4,7 @@
 
 <%@include file="_startPanel.jsp" %>
 
+<script src="js/momentjs.min.js"></script>
 
 <!-- Content Header (Page header) Esto dependera de cada pagina-->
 <div class="content-header">
@@ -167,7 +168,12 @@
                                     <span class="info-box-icon bg-info w-60px"><i class="fas fa-calendar-alt"></i></span>
                                     <div class="info-box-content">
                                         <span class="info-box-text">Fecha de Creacion</span>
-                                        <span class="info-box-number">${ObjectInfo.getFechaCreacion()}</span>
+                                         <script>
+                                                moment.locale('es');
+                                                var date = "${ObjectInfo.getFechaCreacion()}";
+                                                var result = moment(date).format('L') + " " + moment().format('LT');
+                                                document.write(result);
+                                            </script></span>
                                     </div>
                                 </div>
                             </div>
@@ -230,10 +236,38 @@
                                         <tr>
                                             <td>${ic.receptor}</td>
                                             <td>${ic.status}</td>
-                                            <td>${ic.inicioPrev}</td>
-                                            <td>${ic.inicioReal}</td>
-                                            <td>${ic.finPrev}</td>
-                                            <td>${ic.finReal}</td>                                            
+                                            <td><script>
+                                                if ("${ic.inicioPrev}" != "") {
+                                                    moment.locale('es');
+                                                    var date = "${ic.inicioPrev}";
+                                                    var result = moment(date).format('L') + " " + moment().format('LT');
+                                                    document.write(result);
+                                                }
+                                                </script></td>
+                                            <td><script>
+                                                if ("${ic.inicioReal}" != "") {
+                                                    moment.locale('es');
+                                                    var date = "${ic.inicioReal}";
+                                                    var result = moment(date).format('L') + " " + moment().format('LT');
+                                                    document.write(result);
+                                                }
+                                                </script></td>
+                                            <td><script>
+                                                if ("${ic.finPrev}" != "") {
+                                                    moment.locale('es');
+                                                    var date = "${ic.finPrev}";
+                                                    var result = moment(date).format('L') + " " + moment().format('LT');
+                                                    document.write(result);
+                                                }
+                                                </script></td>
+                                            <td><script>
+                                                if ("${ic.finReal}" != "") {
+                                                    moment.locale('es');
+                                                    var date = "${ic.finReal}";
+                                                    var result = moment(date).format('L') + " " + moment().format('LT');
+                                                    document.write(result);
+                                                }
+                                                </script>--</td>                                              
                                         </tr>
                                     </c:forEach>
 

@@ -138,3 +138,53 @@ select typemanagement,title,description,correctionday,attachfile,costmsg from ma
 select * from managements;
 
 select typemanagement,title,description,correctionday,attachfile,costmsg,idmanagement from managements where idibr =4 order by idmanagement desc;
+
+
+
+
+
+--trigger para controlar el costo total de una incidencia
+CREATE OR REPLACE FUNCTION updatecost()
+  RETURNS trigger AS
+$$
+BEGIN
+         UPDATE 
+    incidences
+SET 
+    totalcost = 
+    (
+        SELECT 
+            sum(costmsg) 
+        FROM 
+            managements a,
+			incidencebyreceptor b
+        WHERE 
+            a.idibr = b.idibr and b.idincidence = incidences.idincidence
+    )
+WHERE
+    incidences.idincidence IN 
+    (
+        SELECT
+            b.idincidence
+        FROM
+            managements a,
+			incidencebyreceptor b
+		WHERE 
+            a.idibr = b.idibr and b.idincidence = incidences.idincidence
+    );
+ 
+    RETURN NULL;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+
+CREATE TRIGGER updatingTotalCost
+  AFTER INSERT
+  ON managements
+  FOR EACH ROW
+  EXECUTE PROCEDURE updatecost();
+
+
+
+

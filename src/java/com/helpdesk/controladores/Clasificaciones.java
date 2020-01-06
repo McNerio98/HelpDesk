@@ -60,12 +60,12 @@ public class Clasificaciones extends HttpServlet {
 
                     Operaciones.commit();
                 } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     try {
                         Operaciones.cerrarConexion();
                     } catch (SQLException ex2) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
+                        Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
                     }
                 }
             } else {

@@ -84,7 +84,7 @@ public class Login extends HttpServlet {
                 String clave = request.getParameter("txtPassword");
                 String correo = request.getParameter("txtEmail");
                 String telefono = request.getParameter("txtTelephone");
-
+                
                 Usuario u = new Usuario();
                 u.setUserName(userName.toUpperCase());
                 u.setFirsName(nom);
@@ -93,6 +93,7 @@ public class Login extends HttpServlet {
                 u.setTelephone(telefono);
                 u.setPassword(Hash.generarHash(clave, Hash.SHA256));
                 u.setIdRole(4); //role 4 Empleado
+                HttpSession s = request.getSession();
 
                 try {
                     Conexion conn = new ConexionPool();
@@ -101,7 +102,11 @@ public class Login extends HttpServlet {
                     Operaciones.iniciarTransaccion();
 
                     u = Operaciones.insertar(u);
-
+                    s.setAttribute("idUsuario", u.getIdUser());
+                    s.setAttribute("Usuario", u.getUserName());
+                    s.setAttribute("Rol", u.getIdRole());
+                    s.setAttribute("idUsuario", u.getIdUser());
+                    s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));
                     DeptoPorUsuario dp = new DeptoPorUsuario();
                     dp.setIdDepto(Integer.parseInt(idDepto));
                     dp.setIdUser(u.getIdUser());
@@ -188,9 +193,7 @@ public class Login extends HttpServlet {
                     s.setAttribute("idUsuario", u.getIdUser());
                     s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));
 
-                    /*if (u.getIdRole() == 2) { //Si es lider pertenece a un departamento 
-                        s.setAttribute("idDep", DataList.getIdDepto(u.getIdUser()));
-                    }*/
+                    
 
                     List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
                     s.setAttribute("MenuPrincipal", MenuPrincipal);

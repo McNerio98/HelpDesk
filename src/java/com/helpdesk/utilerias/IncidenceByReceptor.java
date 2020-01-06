@@ -8,6 +8,7 @@ package com.helpdesk.utilerias;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.controladores.Login;
 import com.helpdesk.entidades.Incidencia;
+import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,22 +23,165 @@ import java.util.logging.Logger;
 public class IncidenceByReceptor {
 
     private int iduser;
-    
+    private int idrol;
+    private int iddepto;
+
     public IncidenceByReceptor(int idu) {
         this.iduser = idu;
+        this.iddepto = DataList.getIdDepto(this.iduser);
+        try {
+            ConexionPool conexion = new ConexionPool();
+            conexion.conectar();
+            Operaciones.abrirConexion(conexion);
+            Operaciones.iniciarTransaccion();
+            this.idrol = Operaciones.get(this.iduser, new Usuario()).getIdRole();
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex2) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
+            }
+        }
     }
 
     public ArrayList<Incidencia> getIncidencesByStatus(int id) {
         ArrayList<Incidencia> listStatus = new ArrayList<>();
+        //En el caso  para un receptor
         String query = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
                 + "a.idincidence=b.idincidence and idreceptor=? and b.status=?";
-        List<Object> params = new ArrayList<>();
-        params.add(this.iduser);
-        params.add(id);
+        //En el caso para un gerente
+        String query2 = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where\n"
+                + "a.idincidence=b.idincidence and b.status=?";
+        //En el caso para un lider
+        String query3 = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where\n"
+                + "a.idincidence=b.idincidence and b.status=? and a.iddepto=?";
 
+        switch (this.idrol) {
+            case 1: {
+                List<Object> params = new ArrayList<>();
+                params.add(id);
+                listStatus = listIncidencia(query2, params);
+                break;
+            }
+            case 2: {
+                List<Object> params = new ArrayList<>();
+                params.add(id);
+                params.add(this.iddepto);
+                listStatus = listIncidencia(query3, params);
+                break;
+            }
+            case 3: {
+                List<Object> params = new ArrayList<>();
+                params.add(this.iduser);
+                params.add(id);
+                listStatus = listIncidencia(query, params);
+                break;
+            }
+        }
+
+        return listStatus;
+    }
+
+    public ArrayList<Incidencia> getIncidencesByPriority(int id) {
+        ArrayList<Incidencia> listPrty = new ArrayList<>();
+        //En el caso para un receptor
+        String query = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where \n"
+                + "a.idincidence=b.idincidence and idreceptor=? and a.priority=?";
+        //En el caso para un gerente
+        String query2 = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where \n"
+                + "a.idincidence=b.idincidence and a.priority=?";
+        //En el caso para un lider
+        String query3 = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where \n"
+                + "a.idincidence=b.idincidence and a.priority=? and a.iddepto=?";
+
+        switch (this.idrol) {
+            case 1: {
+                List<Object> params = new ArrayList<>();
+                params.add(id);
+                listPrty = listIncidencia(query2, params);
+                break;
+            }
+            case 2: {
+                List<Object> params = new ArrayList<>();
+                params.add(id);
+                params.add(this.iddepto);
+                listPrty = listIncidencia(query3, params);
+                break;
+            }
+            case 3: {
+                List<Object> params = new ArrayList<>();
+                params.add(this.iduser);
+                params.add(id);
+                listPrty = listIncidencia(query3, params);
+                break;
+            }
+        }
+
+        return listPrty;
+    }
+
+    public ArrayList<Incidencia> getAllIncidences() {
+        ArrayList<Incidencia> listAll = new ArrayList<>();
+        //En el caso de un receptor
+        String query = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where \n"
+                + "a.idincidence=b.idincidence and b.idreceptor=" + this.iduser;
+        //En el caso de un gerente
+        String query2 = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where \n"
+                + "a.idincidence=b.idincidence";
+        //En el caso de un lider
+        String query3 = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where \n"
+                + "a.idincidence=b.idincidence and a.iddepto=?";
+        switch (this.idrol) {
+            case 1: {
+                listAll = listIncidencia(query2, null);
+                break;
+            }
+            case 2: {
+                List<Object> params = new ArrayList<>();
+                params.add(this.iddepto);
+                listAll = listIncidencia(query3, params);
+                break;
+            }
+            case 3: {
+
+                listAll = listIncidencia(query, null);
+                break;
+            }
+        }
+        return listAll;
+    }
+
+    public ArrayList<Incidencia> listIncidencia(String query, List<Object> params) {
+        ArrayList<Incidencia> list = new ArrayList<>();
         try {
             ConexionPool conexion = new ConexionPool();
             conexion.conectar();
@@ -51,14 +195,12 @@ public class IncidenceByReceptor {
                 for (int i = 0; i < array[0].length; i++) {
                     Incidencia inctmp = new Incidencia();
                     inctmp = Operaciones.get(Integer.parseInt(array[0][i]), new Incidencia());
-                    listStatus.add(inctmp);
+                    list.add(inctmp);
                 }
 
             } else {
-                listStatus = null;
+                list = null;
             }
-
-            Operaciones.commit();
 
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,87 +212,20 @@ public class IncidenceByReceptor {
             }
         }
 
-        return listStatus;
+        return list;
     }
 
-    public ArrayList<Incidencia> getIncidencesByPriority(int id) {
-        ArrayList<Incidencia> listPrty = new ArrayList<>();
-        String query = "select\n"
-                + "a.idincidence\n"
-                + "from incidences a, incidencebyreceptor b\n"
-                + "where \n"
-                + "a.idincidence=b.idincidence and idreceptor=? and a.priority=?";
-        List<Object> params = new ArrayList<>();
-        params.add(this.iduser);
-        params.add(id);
-
-        try {
-            ConexionPool conexion = new ConexionPool();
-            conexion.conectar();
-            Operaciones.abrirConexion(conexion);
-            Operaciones.iniciarTransaccion();
-
-            String[][] array = Operaciones.consultar(query, params);
-
-            if (array != null) {
-                for (int i = 0; i < array[0].length; i++) {
-                    Incidencia tmp = new Incidencia();
-                    tmp = Operaciones.get(Integer.parseInt(array[0][i]), new Incidencia());
-                    listPrty.add(tmp);
-                }
-            } else {
-                listPrty = null;
-            }
-
-            Operaciones.commit();
-
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                Operaciones.cerrarConexion();
-            } catch (SQLException ex2) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
-            }
-        }
-        return listPrty;
-    }
-
-    public ArrayList<Incidencia> getAllIncidences() {
+    public ArrayList<Incidencia> getIncidenciaSolicitada() {
         ArrayList<Incidencia> listAll = new ArrayList<>();
         String query = "select\n"
-                + "a.idincidence\n"
-                + "from incidences a, incidencebyreceptor b\n"
-                + "where \n"
-                + "a.idincidence=b.idincidence and b.idreceptor=" + this.iduser;
-        try {
-            ConexionPool conexion = new ConexionPool();
-            conexion.conectar();
-            Operaciones.abrirConexion(conexion);
-            Operaciones.iniciarTransaccion();
-
-            String[][] array = Operaciones.consultar(query, null);
-
-            if (array != null) {
-                for (int i = 0; i < array[0].length; i++) {
-                    Incidencia tmp = new Incidencia();
-                    tmp = Operaciones.get(Integer.parseInt(array[0][i]), new Incidencia());
-                    listAll.add(tmp);
-                }
-            } else {
-                listAll = null;
-            }
-
-            Operaciones.commit();
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                Operaciones.cerrarConexion();
-            } catch (SQLException ex2) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
-            }
-        }
+                + "                a.idincidence\n"
+                + "                from incidences a, incidencebyreceptor b, deptobyusers c\n"
+                + "                where \n"
+                + "                a.idincidence=b.idincidence  and \n"
+                + "				b.status=1 \n"
+                + "				and b.idreceptor=c.iduser and\n"
+                + "				c.iddepto=" + this.iddepto;
+        listAll = listIncidencia(query, null);
         return listAll;
     }
 }

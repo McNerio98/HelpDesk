@@ -1,5 +1,4 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="_startPanel.jsp" %>
 
 
@@ -47,6 +46,23 @@
                 </div>
                 <!-- ./col -->        
             </c:if>
+            <c:if test="${todasDiv == null}">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>0</h3>
+
+                            <p>Todas la incidencias</p>
+                        </div>
+                        <div class="icon">
+                            <i class="far fa-file-alt"></i>
+                        </div>
+                        <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->        
+            </c:if>
             <c:if test="${processDiv != null}">
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
@@ -60,6 +76,23 @@
                             <i class="ion ion-md-settings"></i>
                         </div>
                         <a onclick="getIncidences(2)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->        
+            </c:if>
+            <c:if test="${processDiv == null}">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>0</h3>
+
+                            <p>En proceso</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-md-settings"></i>
+                        </div>
+                        <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->        
@@ -81,6 +114,23 @@
                 </div>
                 <!-- ./col -->        
             </c:if>
+            <c:if test="${urgenteDiv == null}">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>0</h3>
+
+                            <p>Urgente</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-md-flame"></i>
+                        </div>
+                        <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->        
+            </c:if>
             <c:if test="${finishDiv != null}">
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
@@ -98,6 +148,25 @@
                 </div>
                 <!-- ./col -->        
             </c:if>
+            <c:if test="${finishDiv == null}">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3>0</h3>
+
+                            <p>Finalizadas</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-md-clipboard"></i>
+                        </div>
+                        <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->        
+            </c:if>
+                
+            
 
         </div>
         <input type="hidden" id="path" value="${pageContext.servletContext.contextPath}">
