@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-label-group">
-                    <input type="text" id="inputEmail" class="form-control" name="txtCuenta" placeholder="Usuario o Correo" required autofocus style="text-transform:uppercase;">
+                    <input type="text" id="inputEmail" class="form-control" name="txtCuenta" placeholder="USUARIO O CORREO" required autofocus>
                     <label for="inputEmail">USUARIO O CORREO</label>
                 </div>
 
