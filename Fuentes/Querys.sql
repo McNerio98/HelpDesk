@@ -116,14 +116,13 @@ n.idincidence = 23;
 select count(*) from incidencebyreceptor where status = 3 and idreceptor = 29;
 
 
-select * from incidences;
-select * from incidencebyreceptor;
+
 select * from users;
 select * from deptobyusers;
 select iddepto from deptobyusers where iduser = 5;
 select * from permissions;
 
-select iduser from users where username ='CHARLY3';
+select iduser from users where username ='NAHUM';
 
 insert into incidencebyreceptor(status,idreceptor,idincidence)
 values(2,8,1);
@@ -140,6 +139,7 @@ select * from managements;
 select typemanagement,title,description,correctionday,attachfile,costmsg,idmanagement from managements where idibr =4 order by idmanagement desc;
 
 
+<<<<<<< HEAD
 
 
 
@@ -187,4 +187,30 @@ CREATE TRIGGER updatingTotalCost
 
 
 
+=======
+-- consultar para primer reporte por estado y fechas 
+select * from incidences;
+select * from incidencebyreceptor;
+select from incidences i,  incidencebyreceptor ib
+
+where ib.status = 4;
+
+select ib.status
+
+-- Calculando estado de una incdencia , selecionando las que estan en ejecucion status = 3 
+select status from incidencebyreceptor where idincidence = 1 order by idibr desc limit 1;
+
+select i.idincidence,i.title, cl.classification, to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion
+from incidences i,classifications cl
+where i.idclassification = cl.idclassification
+and(select status from incidencebyreceptor ibr where ibr.idincidence = i.idincidence order by idibr desc limit 1) = 2
+and i.iddepto = 2 
+and i.creationday between '2020/01/01' and '2020/01/04 23:59:59';
+
+select * from incidences where creationday between '2020/01/01' and '2020/01/04 23:59:59';
+
+select deptoname from departments where iddepto = 3;
+
+select idincidence,title,to_char(i.creationday,'DD/MM/YYYY HH12:MMAM') as FechaCreacion from incidences i where i.creationday between '2020/01/01' and '2020/01/04 23:59:59';
+>>>>>>> origin/McNerio
 

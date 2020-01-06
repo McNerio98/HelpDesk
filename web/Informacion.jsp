@@ -360,7 +360,7 @@
         <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
-<!-- Acoordion personalizado -->
+
 
 <!-- Modal sobre Error de incidencias activas -->
 <div class="modal fade" id="errorModalActivas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">

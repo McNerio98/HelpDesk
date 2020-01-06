@@ -163,7 +163,7 @@ public class Login extends HttpServlet {
 
     private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) {
 
-        String cuenta = request.getParameter("txtCuenta").toUpperCase();
+        String cuenta = request.getParameter("txtCuenta");
         String clave = request.getParameter("txtClave");
         try {
             Conexion conn = new ConexionPool();
