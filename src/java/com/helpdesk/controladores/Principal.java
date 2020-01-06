@@ -5,12 +5,19 @@
  */
 package com.helpdesk.controladores;
 
+
+import com.helpdesk.utilerias.DataList;
+import com.helpdesk.utilerias.IncidenceByReceptor;
+
+import com.helpdesk.utilerias.printIncidencesJson;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -18,66 +25,102 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Principal extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Principal</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Principal at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession s = request.getSession();
+        String accion = request.getParameter("accion");
+        int idUserSession = (int) s.getAttribute("idUsuario");
+        int rol = (int) s.getAttribute("Rol");
+        
+
+        if (accion == null) {
+
+            IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+
+            if (rol == 1) {
+                s.setAttribute("requestEmpleado", DataList.getEmpleados());
+
+            }
+            if (rol == 2) {
+                s.setAttribute("requestIncidencia", DataList.getIncidenciasSolicitadas(idUserSession));
+
+            }
+           
+            request.setAttribute("todasDiv", list.getAllIncidences());
+            request.setAttribute("processDiv", list.getIncidencesByStatus(3));
+            request.setAttribute("urgenteDiv", list.getIncidencesByPriority(3));
+            request.setAttribute("finishDiv", list.getIncidencesByStatus(4));
+            request.getRequestDispatcher("pnlPrincipal.jsp").forward(request, response);
+        } else if (accion.equals("logout")) {
+            cerrarSesion(request, response);
+        } else {
+            switch (accion) {
+                case "todas": {
+                   
+                    int id = (int) s.getAttribute("idUsuario");
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(id);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getAllIncidences(), response);
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+                case "enproceso": {
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getIncidencesByStatus(3), response);
+
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+                case "urgente": {
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getIncidencesByPriority(3), response);
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+                case "finalizadas": {
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getIncidencesByStatus(4), response);
+
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+            }
+        }
+
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession s = request.getSession();
+        s.removeAttribute("Usuario");
+        s.removeAttribute("idUsuario");
+        s.removeAttribute("Rol");
+        s.invalidate();
+        response.sendRedirect("Login");
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";
