@@ -45,17 +45,21 @@ public class Incidencias extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
+        String idIncidencia = request.getParameter("ic");
         if (accion == null) {
             if (request.getSession().getAttribute("resultado") != null) {
                 request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
                 request.getSession().removeAttribute("resultado");
             }
-            request.setAttribute("DeptosList", DataList.getAllDeptos());
-            request.setAttribute("ClasfList", DataList.getAllClassifications());
-            request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
         } else if (accion.equals("update")) {
-            //Se procede a obtener la incidencia 
+            //Se procede a obtener la incidencia
+            Incidencia ie = obtenerIncidencia(Integer.parseInt(idIncidencia));
+            request.setAttribute("ie",ie);    
         }
+
+        request.setAttribute("DeptosList", DataList.getAllDeptos());
+        request.setAttribute("ClasfList", DataList.getAllClassifications());
+        request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
 
     }
 
@@ -80,6 +84,28 @@ public class Incidencias extends HttpServlet {
 
     }
 
+    private Incidencia obtenerIncidencia(int idIncidencia) {
+        Incidencia inc = new Incidencia();
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            
+            inc = Operaciones.get(5, new Incidencia());
+        } catch (Exception e) {
+            Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            inc = null;
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return inc;
+    }
+
     private boolean insertarIncidencia(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = true;
 
@@ -87,7 +113,7 @@ public class Incidencias extends HttpServlet {
         String idclasf = request.getParameter("slcClasificacion");
         String prioridad = request.getParameter("slcPrioridad");
         String desc = request.getParameter("txtDescripcion");
-        String idReceptor = request.getParameter("txtReceptor"); //esta quemado con id 3 que corresponde a NOVA 
+        String idReceptor = request.getParameter("txtReceptor");
         String fechafinal = request.getParameter("dateFechaFinal");
         int idCreador = (int) request.getSession().getAttribute("idUsuario");
         int idDepto = 0;
@@ -110,13 +136,8 @@ public class Incidencias extends HttpServlet {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = simpleDateFormat.parse(fechafinal);
 
-            if (idRol == 2) {
-                String sql = "select iddepto from deptobyusers where iduser = ?";
-                List<Object> params = new ArrayList();
-                params.add(idCreador);
-                String[][] rs = Operaciones.consultar(sql, params);
-                idDepto = Integer.parseInt(rs[0][0]);
-
+            if (idRol == 2) { //para el lider sera en el depto que tiene a cargo 
+                idDepto = DataList.getIdDepto(idCreador);
             } else if (idRol == 1) { //Para gerente sera el que halla selecionado 
                 idDepto = Integer.parseInt(request.getParameter("slcDeptoIncidence"));
             }
@@ -130,7 +151,9 @@ public class Incidencias extends HttpServlet {
             icn.setPriority(Integer.parseInt(prioridad));
             icn.setIdClassification(Integer.parseInt(idclasf));
             icn.setIdCreator(idCreador);
-            icn.setIdDepto(idDepto); //Multimedia cambiar de forma dinamica
+            icn.setIdDepto(idDepto);
+            icn.setStatus(status);
+            icn.setIdreceptor(Integer.parseInt(idReceptor));
 
             icn = Operaciones.insertar(icn);
 
@@ -162,7 +185,6 @@ public class Incidencias extends HttpServlet {
 
     private boolean SameDepto(int a, int b) { //id de Creador e id de receptor 
         boolean sm = false;
-
 
         try {
             Conexion conn = new ConexionPool();

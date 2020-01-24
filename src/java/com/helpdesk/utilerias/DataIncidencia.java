@@ -12,21 +12,23 @@ import java.math.BigDecimal;
  * @author ZEUS
  */
 public class DataIncidencia {
+
     private String departamento;
     private String titulo;
     private String descripcion;
     private String status;
     private String fechaCreacion;
-    private String prioridad;
+    private String tecnico;
+    private int idTecnico;
+    private String nomTecnico;
+    private int idDeptoTecnico;
     private String creador;
+    private String nomCreador;
     private String clasificacion;
     private String costoTotal;
-    private int idDeptoTecnico;
-    private int idTecnico;
 
     public DataIncidencia() {
     }
-
 
     public String getDepartamento() {
         return departamento;
@@ -40,8 +42,8 @@ public class DataIncidencia {
         return titulo;
     }
 
-    public void setTitulo(String title) {
-        this.titulo = title;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getDescripcion() {
@@ -58,7 +60,7 @@ public class DataIncidencia {
 
     public void setStatus(int status) {
         String estado = "";
-        switch(status){
+        switch (status) {
             case 1://Solicitud 
                 estado = "En Solicitud";
                 break;
@@ -71,7 +73,7 @@ public class DataIncidencia {
             case 4:
                 estado = "Finalizada";
                 break;
-            case 5: 
+            case 5:
                 estado = "Rechazada";
                 break;
             case 6:
@@ -89,25 +91,36 @@ public class DataIncidencia {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public String getPrioridad() {
-        return prioridad;
+    public String getTecnico() {
+        return tecnico;
     }
 
-    public void setPrioridad(int pri) {
-        String prioridad = "";
-        switch(pri){
-            case 1:
-                prioridad = "BAJA";
-                break;
-            case 2:
-                prioridad = "MEDIA";
-                break;
-            case 3: 
-                prioridad = "ALTA";
-                break;
-        }
-        
-        this.prioridad = prioridad;
+    public void setTecnico(String tecnico) {
+        this.tecnico = tecnico;
+    }
+
+    public int getIdTecnico() {
+        return idTecnico;
+    }
+
+    public void setIdTecnico(int idTecnico) {
+        this.idTecnico = idTecnico;
+    }
+
+    public String getNomTecnico() {
+        return nomTecnico;
+    }
+
+    public void setNomTecnico(String nomTecnico) {
+        this.nomTecnico = nomTecnico;
+    }
+
+    public int getIdDeptoTecnico() {
+        return idDeptoTecnico;
+    }
+
+    public void setIdDeptoTecnico(int idDeptoTecnico) {
+        this.idDeptoTecnico = idDeptoTecnico;
     }
 
     public String getCreador() {
@@ -116,6 +129,14 @@ public class DataIncidencia {
 
     public void setCreador(String creador) {
         this.creador = creador;
+    }
+
+    public String getNomCreador() {
+        return nomCreador;
+    }
+
+    public void setNomCreador(String nomCreador) {
+        this.nomCreador = nomCreador;
     }
 
     public String getClasificacion() {
@@ -134,21 +155,4 @@ public class DataIncidencia {
         this.costoTotal = costoTotal;
     }
 
-    public int getIdDeptoTecnico() {
-        return idDeptoTecnico;
-    }
-
-    public void setIdDeptoTecnico(int idDepto) {
-        this.idDeptoTecnico = idDepto;
-    }
-
-    public int getIdTecnico() {
-        return idTecnico;
-    }
-
-    public void setIdTecnico(int idTecnico) {
-        this.idTecnico = idTecnico;
-    }
-    
-    
 }

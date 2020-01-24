@@ -25,6 +25,7 @@ public class Incidencia {
     private Timestamp creationDay;
     @NotNull
     private Timestamp finalDate;
+    @NotNull
     private BigDecimal totalCost;
     @NotNull
     private int priority;
@@ -34,6 +35,10 @@ public class Incidencia {
     private int idCreator;
     @NotNull
     private int idDepto;
+    @NotNull
+    private int status;
+    @NotNull
+    private int idreceptor;
 
     public Incidencia() {
     }
@@ -130,9 +135,23 @@ public class Incidencia {
     public void setIdDepto(int idDepto) {
         this.idDepto = idDepto;
     }
-    
-    
-    
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getIdreceptor() {
+        return idreceptor;
+    }
+
+    public void setIdreceptor(int idreceptor) {
+        this.idreceptor = idreceptor;
+    }
+
 }
 
 

@@ -52,7 +52,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Titulo" name="txtTitle" required="true" maxlength="50">
+                                <input type="text" class="form-control" placeholder="Titulo" name="txtTitle" required="true" maxlength="50" value="${ie.title}">
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -90,7 +90,7 @@
 
                             <div class="form-group row">
                                 <label>Descripcion</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion" maxlength="500"></textarea>
+                                <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion" maxlength="500">${ie.description}</textarea>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
