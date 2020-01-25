@@ -8,6 +8,7 @@ package com.helpdesk.controladores;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Gestion;
+import com.helpdesk.entidades.Incidencia;
 import com.helpdesk.entidades.IncidenciaPorEncargado;
 import com.helpdesk.entidades.Nota;
 import com.helpdesk.operaciones.Operaciones;
@@ -68,6 +69,7 @@ public class Procesos extends HttpServlet {
             }
             if (newStatus != 0) {
                 if (setEstado(request, response, idIBR, newStatus)) {
+                    updateEstadoIncidencia(newStatus, Integer.parseInt(idIncidence));
                     response.sendRedirect("Informacion?idIncidencia=" + idIncidence);
                 } else {
                     response.getWriter().print("No tiene Permisos");
@@ -101,7 +103,7 @@ public class Procesos extends HttpServlet {
                 String idDeptoTec = request.getParameter("iddc");
                 nt.setNotetype(Enums.NOTA.DENEGACION);
                 s.setAttribute("nuevaNota", nt);
-                response.sendRedirect("Procesos?accion=denegar&ic=" + idIncidence + "&idbr=" + idIBR + "&iddc="+idDeptoTec);
+                response.sendRedirect("Procesos?accion=denegar&ic=" + idIncidence + "&idbr=" + idIBR + "&iddc=" + idDeptoTec);
             }
 
         } else if (accion.equals("verificar")) {
@@ -171,7 +173,7 @@ public class Procesos extends HttpServlet {
                 Integer myIdUser = (Integer) s.getAttribute("idUsuario");
                 note.setIdIncidence(Integer.parseInt(idIncidence));
                 note.setIdHolder(myIdUser);
-                
+
                 note = Operaciones.insertar(note);
 
                 Operaciones.commit();
@@ -217,6 +219,7 @@ public class Procesos extends HttpServlet {
             newIpe.setIdreceptor(ipe.getIdreceptor());
             newIpe.setIdIncidence(ipe.getIdIncidence()); //Los otros campos dependeran de la accion 
 
+            //Aqui debo obtener el objeto de la incidencia ........
             switch (newEstado) {
                 case Enums.ESTADO.ASIGNADA: {
                     Integer myDepto = (Integer) s.getAttribute("idDepUser");
@@ -296,6 +299,30 @@ public class Procesos extends HttpServlet {
         }
 
         return seteado;
+    }
+
+    private void updateEstadoIncidencia(int estado, int idInc) {
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Incidencia inc = Operaciones.get(idInc, new Incidencia());
+            inc.setStatus(estado);
+            inc = Operaciones.actualizar(inc.getIdIncidence(), inc);
+        } catch (Exception ex) {
+                Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                Operaciones.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex2) {
+                Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
+            }
+        }
     }
 
     /*Esta funcion verifica si el usuario que esta aceptando 
