@@ -18,14 +18,27 @@
                 <a href="#" class="d-block">${Usuario}</a>
             </div>
         </div>
-
+        <!--Icons Arrays-->
+        <%
+            String[] icons  = new String[7];
+            icons[0] = "fas fa-columns";
+            icons[1] = "fas fa-calendar-plus";
+            icons[2] = "fas fa-users";
+            icons[3] = "fas fa-users-cog";
+            icons[4] = "fas fa-grip-horizontal";
+            icons[5] = "fas fa-layer-group";
+            icons[6] = "fas fa-chart-line";
+            
+            request.setAttribute("lcom", icons);
+        %>
+            
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <c:forEach var="iterador" items="${MenuPrincipal}">
                     <li class="nav-item">
-                        <a href="${pageContext.servletContext.contextPath}${iterador.controller}" class="nav-link">
-                        <i class="fas fa-circle nav-icon"></i>
+                        <a href="${pageContext.servletContext.contextPath}${iterador.controller}" class="nav-link">                        
+                        <i class="${lcom[iterador.idMenu-1]}"></i>    
                         <p>${iterador.menu}</p>
                         </a>
                     </li>
