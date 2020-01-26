@@ -35,7 +35,7 @@
 
         <!--Table-->
         <div class="col-md-12 table-responsive">
-            <table class="table table-striped">
+            <table class="display" id="table-class">
                 <thead>
 
                     <tr>
@@ -47,23 +47,7 @@
                 </thead>
                 <tbody>
 
-                    <c:if test="${listClass != null}">
-                        <c:forEach var="listClass" items="${listClass}">
-                            <tr id="${listClass.getIdClassification()}">
-                                <td>${listClass.getIdClassification()}</td>
-                                <td>${listClass.getClassification()}</td>
-                                <td>${listClass.getDescription()}</td>
-                                <td>
-                                    <button type="button" class="btn btn-info" onclick="updateClass(${listClass.getIdClassification()})">Actualizar</button>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:if>
-                    <c:if test="${listClass == null}">
-                    <div class="alert alert-warning" role="alert">
-                        Aun no hay clasificaciones
-                    </div>
-                </c:if>
+
 
 
 
@@ -145,3 +129,66 @@
 </section>
 
 <%@include file="_endPanel.jsp" %>
+
+<script>
+    $(document).ready(function () {
+        $('#table-class').DataTable({
+            ajax: {
+                url: '${pageContext.servletContext.contextPath}/Clasificaciones?accion=getAll',
+                dataSrc: ''
+            },
+            "createdRow": function (row, data, index) {
+
+                // Add identity if it specified
+                
+                    row.id = "id" + data.idClassification;
+                
+            },
+            columns: [
+                {data: 'idClassification'},
+                {data: 'classification'},
+                {data: 'description'},
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // Combine the first and last names into a single table field
+                        return `<button type="button" class="btn btn-info" onclick="updateClass('id`+data.idClassification+`')">Actualizar</button>
+                                        `;
+                    }
+
+                }
+            ],
+            language:
+                    {
+                        "sProcessing": "Procesando...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        "buttons": {
+                            "copy": "Copiar",
+                            "colvis": "Visibilidad"
+                        }
+                    }
+
+        });
+    });
+
+</script>

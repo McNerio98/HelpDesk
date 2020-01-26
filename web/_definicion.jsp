@@ -1,6 +1,15 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="row">
     <!--Aqui se valida para mostrar diferentes opciones-->
     <%@include file="_validaciones.jsp"%>
+    <c:choose>
+        <c:when test="${statusUpdate != null && statusUpdate == 1}">
+            <p class="text-success text-center" style="width: 100%;">Actualizacion Confirmada</p>
+        </c:when>
+        <c:when test="${statusUpdate != null && statusUpdate == 2}">
+            <p class="text-danger text-center" style="width: 100%;">Problemas al Actualizar</p>
+        </c:when>        
+    </c:choose>
 </div>
 <table class="table mt-4">
     <tbody>

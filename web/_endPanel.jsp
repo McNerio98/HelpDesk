@@ -36,6 +36,7 @@
 <script src="framework/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="framework/js/demo.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
 </body>
 
 </html>

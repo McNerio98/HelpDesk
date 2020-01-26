@@ -44,6 +44,7 @@ public class Procesos extends HttpServlet {
         HttpSession s = request.getSession();
 
         if (accion == null || idIBR == null || idIncidence == null) {
+            //Parametros incompletos o nulos 
             response.sendRedirect("Principal");
         } else {
             int newStatus = 0;
@@ -72,7 +73,8 @@ public class Procesos extends HttpServlet {
                     updateEstadoIncidencia(newStatus, Integer.parseInt(idIncidence));
                     response.sendRedirect("Informacion?idIncidencia=" + idIncidence);
                 } else {
-                    response.getWriter().print("No tiene Permisos");
+                    //No tiene permisos o valores  no validos 
+                    response.sendRedirect("Principal");
                 }
             }
 
@@ -211,20 +213,16 @@ public class Procesos extends HttpServlet {
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
 
-            IncidenciaPorEncargado ipe = new IncidenciaPorEncargado();
-            ipe = Operaciones.get(idIBR, new IncidenciaPorEncargado());
 
-            IncidenciaPorEncargado newIpe = new IncidenciaPorEncargado();
-            newIpe.setIdIBR(idIBR);
-            newIpe.setIdreceptor(ipe.getIdreceptor());
-            newIpe.setIdIncidence(ipe.getIdIncidence()); //Los otros campos dependeran de la accion 
+            IncidenciaPorEncargado newIpe = Operaciones.get(idIBR, new IncidenciaPorEncargado());
+            
 
             //Aqui debo obtener el objeto de la incidencia ........
             switch (newEstado) {
                 case Enums.ESTADO.ASIGNADA: {
                     Integer myDepto = (Integer) s.getAttribute("idDepUser");
                     Integer deptoReceptor = Integer.parseInt(request.getParameter("iddc"));
-                    if (myRol == 2 && deptoReceptor == myDepto && ipe.getStatus() == Enums.ESTADO.SOLICITADA) {
+                    if (myRol == 2 && deptoReceptor == myDepto && newIpe.getStatus() == Enums.ESTADO.SOLICITADA) {
                         newIpe.setStatus(newEstado);
                         seteado = true;
                     }
@@ -232,8 +230,9 @@ public class Procesos extends HttpServlet {
                 }
                 case Enums.ESTADO.ACEPTADA: {
                     Integer myIdUser = (Integer) s.getAttribute("idUsuario");
-                    if (myIdUser == ipe.getIdreceptor() && ipe.getStatus() == Enums.ESTADO.ASIGNADA) {
+                    if (myIdUser == newIpe.getIdreceptor() && newIpe.getStatus() == Enums.ESTADO.ASIGNADA) {
                         newIpe.setStatus(newEstado);
+                        newIpe.setStartDate(new Timestamp(System.currentTimeMillis()));
                         seteado = true;
                     }
                     break;
@@ -242,7 +241,7 @@ public class Procesos extends HttpServlet {
                 case Enums.ESTADO.RECHAZADA: {
                     Integer myIdUser = (Integer) s.getAttribute("idUsuario");
                     Nota nt = (Nota) s.getAttribute("nuevaNota");
-                    if (myIdUser == ipe.getIdreceptor() && ipe.getStatus() == Enums.ESTADO.ASIGNADA && nt != null) {
+                    if (myIdUser == newIpe.getIdreceptor() && newIpe.getStatus() == Enums.ESTADO.ASIGNADA && nt != null) {
                         //Si existe el objeto nota se procede a insertarlo y a realizar el cambio en la IBR 
                         nt.setIdHolder(myIdUser);//Se agrega el id del Titular 
                         nt = Operaciones.insertar(nt); //Se inserta 
@@ -258,7 +257,7 @@ public class Procesos extends HttpServlet {
                     Integer myDepto = (Integer) s.getAttribute("idDepUser");
                     Nota nt = (Nota) s.getAttribute("nuevaNota");
                     Integer deptoReceptor = Integer.parseInt(request.getParameter("iddc"));
-                    if (myRol == 2 && deptoReceptor == myDepto && ipe.getStatus() == Enums.ESTADO.SOLICITADA && nt != null) {
+                    if (myRol == 2 && deptoReceptor == myDepto && newIpe.getStatus() == Enums.ESTADO.SOLICITADA && nt != null) {
                         nt.setIdHolder(myIdUser);//Se agrega el id del Titular 
                         nt = Operaciones.insertar(nt); //Se inserta 
                         newIpe.setStatus(newEstado);
@@ -270,8 +269,9 @@ public class Procesos extends HttpServlet {
 
                 case Enums.ESTADO.FINALIZADA: {
                     Integer myIdUser = (Integer) s.getAttribute("idUsuario");
-                    if (myIdUser == ipe.getIdreceptor() && ipe.getStatus() == Enums.ESTADO.ACEPTADA) {
+                    if (myIdUser == newIpe.getIdreceptor() && newIpe.getStatus() == Enums.ESTADO.ACEPTADA) {
                         newIpe.setStatus(newEstado);
+                        newIpe.setFinalDate(new Timestamp(System.currentTimeMillis()));
                         seteado = true;
                     }
                     break;

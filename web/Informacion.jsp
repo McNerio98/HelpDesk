@@ -51,7 +51,7 @@
                     </div>
                 </div>  
             </div>
-            <div class="card col-md-4 mt-4 mt-md-0">
+            <div class="card col-md-4 mt-4 mt-md-0" style="max-height: 500px;">
                 <%@include file="_notas.jsp"%>
             </div>
 

@@ -5,9 +5,11 @@
  */
 package com.helpdesk.controladores;
 
+import com.google.gson.Gson;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Clasificacion;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -138,9 +140,21 @@ public class Clasificaciones extends HttpServlet {
                         }
                         break;
                     }
+                    case "getAll": {
+                        out.print(this.getAllClasificaciones());
+                        break;
+                    }
                 }
             }
         }
+    }
+
+    public String getAllClasificaciones() {
+        ArrayList<Clasificacion> list = DataList.getAllClassifications();
+
+        String json = new Gson().toJson(list);
+        
+        return json;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

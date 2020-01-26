@@ -52,9 +52,18 @@ public class Incidencias extends HttpServlet {
                 request.getSession().removeAttribute("resultado");
             }
         } else if (accion.equals("update")) {
-            //Se procede a obtener la incidencia
             Incidencia ie = obtenerIncidencia(Integer.parseInt(idIncidencia));
-            request.setAttribute("ie",ie);    
+            //Verificando permisos
+            int myIdUser = (int) request.getSession().getAttribute("idUsuario");
+            if(ie!=null && (ie.getStatus()==Enums.ESTADO.RECHAZADA || ie.getStatus()==Enums.ESTADO.DENEGADA) && ie.getIdCreator()== myIdUser){
+                request.setAttribute("ie", ie);
+                request.setAttribute("accionProcess", "update");
+            }else{
+                request.getSession().setAttribute("statusUpdate", 2);
+                response.sendRedirect("Informacion?idIncidencia="+idIncidencia);
+                return;
+            }
+            
         }
 
         request.setAttribute("DeptosList", DataList.getAllDeptos());
@@ -66,7 +75,13 @@ public class Incidencias extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String accion = request.getParameter("accion");
+        String idIncidencia = request.getParameter("txtIdIncidencia");
+        String accion = "nueva";
+
+        if (idIncidencia != null && !"".equals(idIncidencia)) {
+            accion = "reasignar";
+        }
+
         PrintWriter out = response.getWriter();
 
         switch (accion) {
@@ -80,8 +95,75 @@ public class Incidencias extends HttpServlet {
                 break;
             }
 
+            case "reasignar": {
+                if (reasignar(request, response)) {
+                    request.getSession().setAttribute("statusUpdate", 1); //se Actualizo  
+                } else {
+                    request.getSession().setAttribute("statusUpdate", 2); //No se Actualizo  
+                }
+                response.sendRedirect("Informacion?idIncidencia="+idIncidencia);
+                break;
+            }
+
         }
 
+    }
+
+    
+    private boolean reasignar(HttpServletRequest request, HttpServletResponse response) {
+        boolean reasing = false;
+        int idIncidencia = Integer.parseInt(request.getParameter("txtIdIncidencia"));
+        int nuevoReceptor = Integer.parseInt(request.getParameter("txtReceptor"));
+        int idRol = (int) request.getSession().getAttribute("Rol");
+
+        Incidencia inc = obtenerIncidencia(idIncidencia);
+
+        if (inc != null) { //Si existe una incidencia con ese id 
+            int idCreador = inc.getIdCreator(); //aqui ya se valido en otra parte 
+            int status = Enums.ESTADO.ASIGNADA;
+
+            if (idRol == 2) { //Si es un lider verificar si el receptor pertenece al mismo depto
+                if (!SameDepto(idCreador, nuevoReceptor)) {
+                    status = Enums.ESTADO.SOLICITADA; //Se agrega como una solicitud             
+                }
+            }
+
+            IncidenciaPorEncargado ibr = new IncidenciaPorEncargado();
+            ibr.setStatus(status);
+            ibr.setIdreceptor(nuevoReceptor);
+            ibr.setIdIncidence(idIncidencia);
+            
+            //Actualizando datos de la incidencia 
+            inc.setStatus(status);
+            inc.setIdreceptor(nuevoReceptor);
+
+            try {
+                Conexion conn = new ConexionPool();
+                conn.conectar();
+                Operaciones.abrirConexion(conn);
+                Operaciones.iniciarTransaccion();
+                ibr = Operaciones.insertar(ibr);
+                
+                inc = Operaciones.actualizar(inc.getIdIncidence(), inc);
+                
+                Operaciones.commit();
+                reasing = true;
+            } catch (Exception e) {
+                try {
+                    Operaciones.rollback();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } finally {
+                try {
+                    Operaciones.cerrarConexion();
+                } catch (SQLException ex2) {
+                    Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex2);
+                }
+            }
+        }
+
+        return reasing;
     }
 
     private Incidencia obtenerIncidencia(int idIncidencia) {
@@ -90,12 +172,12 @@ public class Incidencias extends HttpServlet {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
-            
-            inc = Operaciones.get(5, new Incidencia());
+
+            inc = Operaciones.get(idIncidencia, new Incidencia());
         } catch (Exception e) {
             Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
             inc = null;
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {

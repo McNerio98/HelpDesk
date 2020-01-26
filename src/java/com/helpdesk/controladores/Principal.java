@@ -50,8 +50,10 @@ public class Principal extends HttpServlet {
            
             request.setAttribute("todasDiv", list.getAllIncidences());
             request.setAttribute("processDiv", list.getIncidencesByStatus(3));
-            request.setAttribute("urgenteDiv", list.getIncidencesByPriority(3));
+            request.setAttribute("pendingDiv", list.getIncidencesByStatus(2));
             request.setAttribute("finishDiv", list.getIncidencesByStatus(4));
+            request.setAttribute("requestDiv", list.getIncidencesByStatus(1));
+            request.setAttribute("refuseDiv", list.getIncidencesByStatus(5));
             request.getRequestDispatcher("pnlPrincipal.jsp").forward(request, response);
         } else if (accion.equals("logout")) {
             cerrarSesion(request, response);
@@ -95,6 +97,41 @@ public class Principal extends HttpServlet {
                     IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
                     if (list != null) {
                         printIncidencesJson.Render(list.getIncidencesByStatus(4), response);
+
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+                case "solicitadas":
+                {
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getIncidencesByStatus(1), response);
+
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+                case "refuse":{
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getIncidencesByStatus(5), response);
+
+                    } else {
+                        out.print("null");
+                    }
+                    break;
+                }
+                
+                case "pending":{
+                    PrintWriter out = response.getWriter();
+                    IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
+                    if (list != null) {
+                        printIncidencesJson.Render(list.getIncidencesByStatus(2), response);
 
                     } else {
                         out.print("null");

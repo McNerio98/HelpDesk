@@ -9,22 +9,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Buscar Empleado</h1>
-                <!-- SEARCH FORM -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <form action="${pageContext.servletContext.contextPath}/Empleados?accion=buscar" method="post" class="form-inline ml-3">
-                            <div class="input-group input-group-sm">
-                                <input required autofocus name="fullname" class="form-control form-control-navbar" type="search" placeholder="Digite nombre completo" aria-label="Search">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>            
+
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -46,60 +31,22 @@
             <!-- Table row -->
 
             <div class="col-md-12 table-responsive">
-                <table class="table table-striped">
+                <table class="display" id="table_empleados">
                     <thead>
 
                         <tr>
                             <th>ID</th>
                             <th>Nombre completo</th>
+                            <th>Correo Electronico</th>
+                            <th>Contacto</th>
                             <th>Departamento</th>
                             <th>Rol</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
-                        <c:if test="${listEmpleados != null}">
-                            <c:forEach var="listUser" items="${listEmpleados}">
-                                <tr id="id${listUser.getUsuario().getIdUser()}">
-                                    <td>${listUser.getUsuario().getIdUser()}</td>
-                                    <td hidden>${listUser.getDepto().getIdDepto()}</td>
-                                    <td hidden>${listUser.getRol().getIdRol()}</td>
-                                    <td>${listUser.getUsuario().getFirsName()} ${listUser.getUsuario().getLastName()}</td>
-                                    <td>${listUser.getDepto().getDeptoName()}</td>
-                                    <td>${listUser.getRol().getRoleName()}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-info" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 1)">Actualizar</button>
-                                        <button type="button" class="btn btn-danger" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 2)">Eliminar</button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </c:if>
 
-                        <c:if test="${listEmpleado != null}">
-                            <c:forEach var="listUser" items="${listEmpleado}">
-                                <tr id="id${listUser.getUsuario().getIdUser()}">
-                                    <td>${listUser.getUsuario().getIdUser()}</td>
-                                    <td hidden>${listUser.getDepto().getIdDepto()}</td>
-                                    <td hidden>${listUser.getRol().getIdRol()}</td>
-                                    <td>${listUser.getUsuario().getFirsName()} ${listUser.getUsuario().getLastName()}</td>
-                                    <td>${listUser.getDepto().getDeptoName()}</td>
-                                    <td>${listUser.getRol().getRoleName()}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-info" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 1)">Actualizar</button>
-                                        <button type="button" class="btn btn-danger" onclick="updateUser('id${listUser.getUsuario().getIdUser()}', 2)">Eliminar</button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </c:if>
-                        
-                        
-                        
-                                <c:if test="${dataEmpty == 'true'}">
-                        <div class="alert alert-warning" role="alert">
-                            No se encontro ninguna resultado
-                        </div>
-                    </c:if>
+
 
 
 
@@ -139,7 +86,7 @@
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Departamentos</label>
                         </div>
-                        <select name="depto" class="custom-select" id="inputGroupSelect01">
+                        <select name="depto" class="custom-select" id="inputGroupSelect01" value="">
 
                             <c:forEach var="listDepto" items="${listDepto}">
                                 <option value="${listDepto.getIdDepto()}">${listDepto.getDeptoName()}</option>
@@ -150,7 +97,7 @@
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Roles</label>
                         </div>
-                        <select name="rol" class="custom-select" id="inputGroupSelect02">
+                        <select name="rol" class="custom-select" id="inputGroupSelect02" value="">
 
                             <c:forEach var="listRol" items="${listRol}">
                                 <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
@@ -198,3 +145,76 @@
 <!-- /.container-fluid -->
 </section>
 <%@include file="_endPanel.jsp" %>
+
+<script>
+    $(document).ready(function () {
+        $('#table_empleados').DataTable({
+            ajax: {
+                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll',
+                dataSrc: ''
+            },
+            "createdRow": function (row, data, index) {
+
+                // Add identity if it specified
+                if (data.hasOwnProperty("id")) {
+                    row.id = "id" + data.id;
+                }
+            },
+            columns: [
+                {data: 'id'},
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // Combine the first and last names into a single table field
+                        return data.name + ' ' + data.lastname;
+                    },
+                    editField: ['name', 'lastname']
+                },
+                {data: 'email'},
+                {data: 'contacto'},
+                {data: 'departamento'},
+                {data: 'rol'},
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // Combine the first and last names into a single table field
+                        return `<button type="button" class="btn btn-info" onclick="updateUser('id` + data.id + `', 1)">Actualizar</button>
+                                        <button type="button" class="btn btn-danger" onclick="updateUser('id` + data.id + `', 2)">Eliminar</button>`;
+                    },
+
+                },
+            ],
+            language:
+                    {
+                        "sProcessing": "Procesando...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        "buttons": {
+                            "copy": "Copiar",
+                            "colvis": "Visibilidad"
+                        }
+                    }
+
+        });
+    });
+
+</script>

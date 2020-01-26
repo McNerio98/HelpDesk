@@ -9,12 +9,13 @@ function updateUser(id,op) {
         //case 1:
         {
             var array = document.getElementById(id).getElementsByTagName('td');
+            console.log(array);
             
             var elems2 = document.getElementById("inputGroupSelect02").getElementsByTagName('option');
-            document.getElementById('empleado').innerHTML = array[3].textContent;
+            document.getElementById('empleado').innerHTML = array[1].textContent;
             document.getElementById('inputuser').setAttribute('value', array[0].textContent);
-            setInputs(array,"inputGroupSelect01",1);
-            setInputs(array,"inputGroupSelect02",2);
+            setInputs(array,"inputGroupSelect01",4);
+            setInputs(array,"inputGroupSelect02",5);
             $('#modaltoUpdateUser').modal('show');
         }
         else
@@ -31,7 +32,9 @@ function updateUser(id,op) {
 function setInputs(array,id,tag){
     var elems = document.getElementById(id).getElementsByTagName('option');
     for(i=0;i<elems.length;i++){
+        console.log(elems[i]);
                 if(elems[i].value==array[tag].textContent){
+                    console.log(elems[i]);
                     elems[i].setAttribute('selected', true);
                     break;
                 }

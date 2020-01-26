@@ -29,7 +29,7 @@
 
         <!--Table-->
         <div class="col-md-12 table-responsive">
-            <table class="table table-striped">
+            <table class="display" id="table-depto">
                 <thead>
 
                     <tr>
@@ -41,23 +41,7 @@
                 </thead>
                 <tbody>
 
-                    <c:if test="${listDepto != null}">
-                        <c:forEach var="listDepto" items="${listDepto}">
-                            <tr id="${listDepto.getIdDepto()}">
-                                <td>${listDepto.getIdDepto()}</td>
-                                <td>${listDepto.getDeptoName()}</td>
-                                <td>${listDepto.getDescription()}</td>
-                                <td>
-                                    <button type="button" class="btn btn-info" onclick="updateDepto(${listDepto.getIdDepto()})">Actualizar</button>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </c:if>
-                    <c:if test="${listDepto == null}">
-                    <div class="alert alert-warning" role="alert">
-                        Aun no hay departamentos
-                    </div>
-                </c:if>
+                    
 
 
 
@@ -138,3 +122,65 @@
     <!-- /.container-fluid -->
 </section>
         <%@include file="_endPanel.jsp" %>
+<script>
+    $(document).ready(function () {
+        $('#table-depto').DataTable({
+            ajax: {
+                url: '${pageContext.servletContext.contextPath}/Departamentos?accion=getAll',
+                dataSrc: ''
+            },
+            "createdRow": function (row, data, index) {
+
+                // Add identity if it specified
+                
+                    row.id = "id" + data.idDepto;
+                
+            },
+            columns: [
+                {data: 'idDepto'},
+                {data: 'deptoName'},
+                {data: 'description'},
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // Combine the first and last names into a single table field
+                        return `<button type="button" class="btn btn-info" onclick="updateDepto('id`+data.idDepto+`')">Actualizar</button>
+                                        `;
+                    }
+
+                }
+            ],
+            language:
+                    {
+                        "sProcessing": "Procesando...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        "buttons": {
+                            "copy": "Copiar",
+                            "colvis": "Visibilidad"
+                        }
+                    }
+
+        });
+    });
+
+</script>

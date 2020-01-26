@@ -42,8 +42,15 @@ public class Informacion extends HttpServlet {
         Integer idIncidencia = Integer.parseInt(request.getParameter("idIncidencia"));
 
         if (idIncidencia == null) {
-            out.print("Se redirecciona, sin identificador");
+            //Sin parametro de identificacion 
+            response.sendRedirect("Principal");
         } else { //Se extrae informacion de la incidencia 
+            
+            if (request.getSession().getAttribute("statusUpdate") != null) {
+                request.setAttribute("statusUpdate", request.getSession().getAttribute("statusUpdate"));
+                request.getSession().removeAttribute("statusUpdate");
+            }            
+            
             ArrayList<DataControl> LstControl = getListControl(idIncidencia);
             if (LstControl != null) { //Siempre existira un registro por la incidencia 
                 //Se procebe a obtener el idIBR del ultimo registro 
@@ -141,8 +148,8 @@ public class Informacion extends HttpServlet {
     private ArrayList<DataControl> getListControl(Integer idIncidencia) {
         ArrayList<DataControl> LstControl = new ArrayList<>();
 
-        String sql = "select ibr.idibr, u.username, ibr.status, i.creationday, \n"
-                + "ibr.startdate, i.finaldate, ibr.finaldate from users u, \n"
+        String sql = "select ibr.idibr, u.username, ibr.status, \n"
+                + "to_char(ibr.startdate,'DD-MM-yy HH:MI PM'), to_char(i.finaldate,'DD-MM-yy HH:MI PM'), to_char(ibr.finaldate,'DD-MM-yy HH:MI PM') from users u, \n"
                 + "incidencebyreceptor ibr, incidences i where \n"
                 + "ibr.idreceptor = u.iduser and \n"
                 + "ibr.idincidence = i.idincidence and ibr.idincidence = ? order by idibr";
@@ -161,10 +168,9 @@ public class Informacion extends HttpServlet {
                     ct.setIdIBR(Integer.parseInt(rs[0][i]));
                     ct.setReceptor(rs[1][i]);
                     ct.setStatus(Integer.parseInt(rs[2][i]));
-                    ct.setInicioPrev(rs[3][i]);
-                    ct.setInicioReal(rs[4][i]);
-                    ct.setFinPrev(rs[5][i]);
-                    ct.setFinReal(rs[6][i]);
+                    ct.setInicioReal(rs[3][i]);
+                    ct.setFinPrev(rs[4][i]);
+                    ct.setFinReal(rs[5][i]);
                     LstControl.add(ct);
                 }
             }
