@@ -47,7 +47,8 @@ public class Principal extends HttpServlet {
                 s.setAttribute("requestIncidencia", DataList.getIncidenciasSolicitadas(idUserSession));
 
             }
-           
+            
+            request.setAttribute("idRol", rol);
             request.setAttribute("todasDiv", list.getAllIncidences());
             request.setAttribute("processDiv", list.getIncidencesByStatus(3));
             request.setAttribute("pendingDiv", list.getIncidencesByStatus(2));
