@@ -58,7 +58,7 @@ public class FiltroPrincipal implements Filter {
 
             String pathPrincipal = request.getContextPath() + "/Principal";
 
-            if (request.getParameter("accion") == null && !url.equals(pathPrincipal) && !url.equals(context + "/Login")) {
+            if (request.getParameter("accion") == null && !url.equals(pathPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Informacion")) {
                 List<Menu> permisos = (List<Menu>) request.getSession().getAttribute("MenuPrincipal");
                 encontrado = false;
                 int cont = 0;

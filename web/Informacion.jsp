@@ -118,7 +118,7 @@
                     </div>
                     <div class="form-group">
                         <label for="txtDescription">Descripcion</label>
-                        <textarea class="form-control" id="txtDescription" name="txtDescription" rows="2"></textarea>
+                        <textarea class="form-control" id="txtDescription" name="txtDescription" rows="2" required="required"></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-sm-7">
@@ -128,7 +128,7 @@
                         <div class="col-sm-5">
                             <div class="form-group">
                                 <label for="txtCost">Costo Adicionales</label>
-                                <input type="text" class="form-control" id="txtCost" name="txtCost" placeholder="$ 0.00">
+                                <input type="number" step="0.01" class="form-control" id="txtCost" name="txtCost" placeholder=" 0.00">
                             </div>                        
                         </div>
                     </div>
