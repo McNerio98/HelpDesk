@@ -198,7 +198,7 @@ public class Informacion extends HttpServlet {
                     + "r.rolename, n.description, n.notetype \n"
                     + "from roles r, users u, notes n \n"
                     + "where n.idholder = u.iduser and u.idrole = r.idrol and \n"
-                    + "n.idincidence = " + idIncidencia;
+                    + "n.idincidence = " + idIncidencia + " order by n.idnota";
             String[][] rs = Operaciones.consultar(sql, null);
 
             if (rs != null) {
@@ -235,7 +235,7 @@ public class Informacion extends HttpServlet {
             conn.conectar();
             Operaciones.abrirConexion(conn);
 
-            String sql = "select typemanagement,title,description,correctionday,attachfile,costmsg,idmanagement from managements where idibr = ? order by idmanagement desc";
+            String sql = "select typemanagement,title,description,to_char(correctionday,'dd-MM-yy HH:MI AM'),attachfile,costmsg,idmanagement from managements where idibr = ? order by idmanagement desc";
             List<Object> params = new ArrayList<>();
             params.add(idIBR);
             String[][] rs = Operaciones.consultar(sql, params);
