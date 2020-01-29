@@ -55,19 +55,19 @@ public class IncidenceByReceptor {
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and idreceptor=? and b.status=?";
+                + "a.idincidence=b.idincidence and a.idreceptor=? and a.status=? group by a.idincidence";
         //En el caso para un gerente
         String query2 = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where\n"
-                + "a.idincidence=b.idincidence and b.status=?";
+                + "a.idincidence=b.idincidence and a.status=? group by a.idincidence";
         //En el caso para un lider
         String query3 = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where\n"
-                + "a.idincidence=b.idincidence and b.status=? and a.iddepto=?";
+                + "a.idincidence=b.idincidence and a.status=? and a.iddepto=? group by a.idincidence";
 
         switch (this.idrol) {
             case 1: {
@@ -102,19 +102,19 @@ public class IncidenceByReceptor {
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and idreceptor=? and a.priority=?";
+                + "a.idincidence=b.idincidence and a.idreceptor=? and a.priority=? group by a.idincidence";
         //En el caso para un gerente
         String query2 = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and a.priority=?";
+                + "a.idincidence=b.idincidence and a.priority=? group by a.idincidence";
         //En el caso para un lider
         String query3 = "select\n"
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and a.priority=? and a.iddepto=?";
+                + "a.idincidence=b.idincidence and a.priority=? and a.iddepto=? group by a.idincidence";
 
         switch (this.idrol) {
             case 1: {
@@ -149,7 +149,7 @@ public class IncidenceByReceptor {
                 + "a.idincidence\n"
                 + "from incidences a, incidencebyreceptor b\n"
                 + "where \n"
-                + "a.idincidence=b.idincidence and b.idreceptor=" + this.iduser + "group by a.idincidence";
+                + "a.idincidence=b.idincidence and a.idreceptor=" + this.iduser + "group by a.idincidence";
         //En el caso de un gerente
         String query2 = "select\n"
                 + "a.idincidence\n"

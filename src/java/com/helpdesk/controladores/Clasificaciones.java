@@ -5,9 +5,11 @@
  */
 package com.helpdesk.controladores;
 
+import com.google.gson.Gson;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Clasificacion;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -75,32 +77,37 @@ public class Clasificaciones extends HttpServlet {
                         String classname = request.getParameter("classname");
                         String descripcion = request.getParameter("descripcion");
 
-                        Clasificacion classs = new Clasificacion();
+                        if (classname.length() > 50 || descripcion.length() > 500) {
+                            request.setAttribute("errorCharacters", "actualizar");
+                            request.getRequestDispatcher("clasificaciones.jsp").forward(request, response);
+                        } else {
+                            Clasificacion classs = new Clasificacion();
 
-                        classs.setClassification(classname);
+                            classs.setClassification(classname);
 
-                        classs.setDescription(descripcion);
+                            classs.setDescription(descripcion);
 
-                        try {
-                            ConexionPool conn = new ConexionPool();
-                            conn.conectar();
-                            Operaciones.abrirConexion(conn);
-                            Operaciones.iniciarTransaccion();
-                            Operaciones.actualizar(idclass, classs);
-
-                            response.sendRedirect(request.getContextPath() + "/Clasificaciones?op=5");
-
-                        } catch (Exception ex) {
                             try {
-                                Operaciones.rollback();
-                            } catch (SQLException ex1) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
-                            }
-                        } finally {
-                            try {
-                                Operaciones.cerrarConexion();
-                            } catch (SQLException ex) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                ConexionPool conn = new ConexionPool();
+                                conn.conectar();
+                                Operaciones.abrirConexion(conn);
+                                Operaciones.iniciarTransaccion();
+                                Operaciones.actualizar(idclass, classs);
+
+                                response.sendRedirect(request.getContextPath() + "/Clasificaciones?op=5");
+
+                            } catch (Exception ex) {
+                                try {
+                                    Operaciones.rollback();
+                                } catch (SQLException ex1) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            } finally {
+                                try {
+                                    Operaciones.cerrarConexion();
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                         break;
@@ -110,37 +117,56 @@ public class Clasificaciones extends HttpServlet {
                         String classname = request.getParameter("classname");
                         String descripcion = request.getParameter("descripcion");
 
-                        Clasificacion classs = new Clasificacion();
-                        classs.setClassification(classname);
-                        classs.setDescription(descripcion);
+                        if (classname.length() > 50 || descripcion.length() > 500) {
+                            request.setAttribute("errorCharacters", "crear");
+                            request.getRequestDispatcher("clasificaciones.jsp").forward(request, response);
+                        } else {
 
-                        try {
-                            ConexionPool conn = new ConexionPool();
-                            conn.conectar();
-                            Operaciones.abrirConexion(conn);
-                            Operaciones.iniciarTransaccion();
-                            Operaciones.insertar(classs);
+                            Clasificacion classs = new Clasificacion();
+                            classs.setClassification(classname);
+                            classs.setDescription(descripcion);
 
-                            Operaciones.commit();
-                            response.sendRedirect(request.getContextPath() + "/Clasificaciones?op=5");
-                        } catch (Exception ex) {
                             try {
-                                Operaciones.rollback();
-                            } catch (SQLException ex1) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
-                            }
-                        } finally {
-                            try {
-                                Operaciones.cerrarConexion();
-                            } catch (SQLException ex) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                ConexionPool conn = new ConexionPool();
+                                conn.conectar();
+                                Operaciones.abrirConexion(conn);
+                                Operaciones.iniciarTransaccion();
+                                Operaciones.insertar(classs);
+
+                                Operaciones.commit();
+                                response.sendRedirect(request.getContextPath() + "/Clasificaciones?op=5");
+                            } catch (Exception ex) {
+                                try {
+                                    Operaciones.rollback();
+                                } catch (SQLException ex1) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            } finally {
+                                try {
+                                    Operaciones.cerrarConexion();
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
+
+                        break;
+                    }
+                    case "getAll": {
+                        out.print(this.getAllClasificaciones());
                         break;
                     }
                 }
             }
         }
+    }
+
+    public String getAllClasificaciones() {
+        ArrayList<Clasificacion> list = DataList.getAllClassifications();
+
+        String json = new Gson().toJson(list);
+
+        return json;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

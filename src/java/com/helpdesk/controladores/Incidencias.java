@@ -45,24 +45,43 @@ public class Incidencias extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
+        String idIncidencia = request.getParameter("ic");
         if (accion == null) {
             if (request.getSession().getAttribute("resultado") != null) {
                 request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
                 request.getSession().removeAttribute("resultado");
             }
-            request.setAttribute("DeptosList", DataList.getAllDeptos());
-            request.setAttribute("ClasfList", DataList.getAllClassifications());
-            request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
         } else if (accion.equals("update")) {
-            //Se procede a obtener la incidencia 
+            Incidencia ie = obtenerIncidencia(Integer.parseInt(idIncidencia));
+            //Verificando permisos
+            int myIdUser = (int) request.getSession().getAttribute("idUsuario");
+            if(ie!=null && (ie.getStatus()==Enums.ESTADO.RECHAZADA || ie.getStatus()==Enums.ESTADO.DENEGADA) && ie.getIdCreator()== myIdUser){
+                request.setAttribute("ie", ie);
+                request.setAttribute("accionProcess", "update");
+            }else{
+                request.getSession().setAttribute("statusUpdate", 2);
+                response.sendRedirect("Informacion?idIncidencia="+idIncidencia);
+                return;
+            }
+            
         }
+
+        request.setAttribute("DeptosList", DataList.getAllDeptos());
+        request.setAttribute("ClasfList", DataList.getAllClassifications());
+        request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
 
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String accion = request.getParameter("accion");
+        String idIncidencia = request.getParameter("txtIdIncidencia");
+        String accion = "nueva";
+
+        if (idIncidencia != null && !"".equals(idIncidencia)) {
+            accion = "reasignar";
+        }
+
         PrintWriter out = response.getWriter();
 
         switch (accion) {
@@ -76,8 +95,97 @@ public class Incidencias extends HttpServlet {
                 break;
             }
 
+            case "reasignar": {
+                if (reasignar(request, response)) {
+                    request.getSession().setAttribute("statusUpdate", 1); //se Actualizo  
+                } else {
+                    request.getSession().setAttribute("statusUpdate", 2); //No se Actualizo  
+                }
+                response.sendRedirect("Informacion?idIncidencia="+idIncidencia);
+                break;
+            }
+
         }
 
+    }
+
+    
+    private boolean reasignar(HttpServletRequest request, HttpServletResponse response) {
+        boolean reasing = false;
+        int idIncidencia = Integer.parseInt(request.getParameter("txtIdIncidencia"));
+        int nuevoReceptor = Integer.parseInt(request.getParameter("txtReceptor"));
+        int idRol = (int) request.getSession().getAttribute("Rol");
+
+        Incidencia inc = obtenerIncidencia(idIncidencia);
+
+        if (inc != null) { //Si existe una incidencia con ese id 
+            int idCreador = inc.getIdCreator(); //aqui ya se valido en otra parte 
+            int status = Enums.ESTADO.ASIGNADA;
+
+            if (idRol == 2) { //Si es un lider verificar si el receptor pertenece al mismo depto
+                if (!SameDepto(idCreador, nuevoReceptor)) {
+                    status = Enums.ESTADO.SOLICITADA; //Se agrega como una solicitud             
+                }
+            }
+
+            IncidenciaPorEncargado ibr = new IncidenciaPorEncargado();
+            ibr.setStatus(status);
+            ibr.setIdreceptor(nuevoReceptor);
+            ibr.setIdIncidence(idIncidencia);
+            
+            //Actualizando datos de la incidencia 
+            inc.setStatus(status);
+            inc.setIdreceptor(nuevoReceptor);
+
+            try {
+                Conexion conn = new ConexionPool();
+                conn.conectar();
+                Operaciones.abrirConexion(conn);
+                Operaciones.iniciarTransaccion();
+                ibr = Operaciones.insertar(ibr);
+                
+                inc = Operaciones.actualizar(inc.getIdIncidence(), inc);
+                
+                Operaciones.commit();
+                reasing = true;
+            } catch (Exception e) {
+                try {
+                    Operaciones.rollback();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } finally {
+                try {
+                    Operaciones.cerrarConexion();
+                } catch (SQLException ex2) {
+                    Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex2);
+                }
+            }
+        }
+
+        return reasing;
+    }
+
+    private Incidencia obtenerIncidencia(int idIncidencia) {
+        Incidencia inc = new Incidencia();
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+
+            inc = Operaciones.get(idIncidencia, new Incidencia());
+        } catch (Exception e) {
+            Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
+            inc = null;
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return inc;
     }
 
     private boolean insertarIncidencia(HttpServletRequest request, HttpServletResponse response) {
@@ -87,7 +195,7 @@ public class Incidencias extends HttpServlet {
         String idclasf = request.getParameter("slcClasificacion");
         String prioridad = request.getParameter("slcPrioridad");
         String desc = request.getParameter("txtDescripcion");
-        String idReceptor = request.getParameter("txtReceptor"); //esta quemado con id 3 que corresponde a NOVA 
+        String idReceptor = request.getParameter("txtReceptor");
         String fechafinal = request.getParameter("dateFechaFinal");
         int idCreador = (int) request.getSession().getAttribute("idUsuario");
         int idDepto = 0;
@@ -110,13 +218,8 @@ public class Incidencias extends HttpServlet {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = simpleDateFormat.parse(fechafinal);
 
-            if (idRol == 2) {
-                String sql = "select iddepto from deptobyusers where iduser = ?";
-                List<Object> params = new ArrayList();
-                params.add(idCreador);
-                String[][] rs = Operaciones.consultar(sql, params);
-                idDepto = Integer.parseInt(rs[0][0]);
-
+            if (idRol == 2) { //para el lider sera en el depto que tiene a cargo 
+                idDepto = DataList.getIdDepto(idCreador);
             } else if (idRol == 1) { //Para gerente sera el que halla selecionado 
                 idDepto = Integer.parseInt(request.getParameter("slcDeptoIncidence"));
             }
@@ -130,7 +233,9 @@ public class Incidencias extends HttpServlet {
             icn.setPriority(Integer.parseInt(prioridad));
             icn.setIdClassification(Integer.parseInt(idclasf));
             icn.setIdCreator(idCreador);
-            icn.setIdDepto(idDepto); //Multimedia cambiar de forma dinamica
+            icn.setIdDepto(idDepto);
+            icn.setStatus(status);
+            icn.setIdreceptor(Integer.parseInt(idReceptor));
 
             icn = Operaciones.insertar(icn);
 
@@ -162,7 +267,6 @@ public class Incidencias extends HttpServlet {
 
     private boolean SameDepto(int a, int b) { //id de Creador e id de receptor 
         boolean sm = false;
-
 
         try {
             Conexion conn = new ConexionPool();

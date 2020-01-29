@@ -1,7 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@include file="_startPanel.jsp" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!-- Content Header (Page header) Esto dependera de cada pagina-->
 <div class="content-header">
@@ -46,20 +46,21 @@
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form role="form" action="${pageContext.servletContext.contextPath}/Incidencias?accion=nueva" method="POST">
+                    <form role="form" action="${pageContext.servletContext.contextPath}/Incidencias?accion=nueva" method="POST" onsubmit="return validar();" >
                         <div class="card-body">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Titulo" name="txtTitle" required="true" maxlength="50">
+                                <input type="hidden" value="${ie.idIncidence}" name="txtIdIncidencia"/>
+                                <input type="text" class="form-control" placeholder="Titulo" name="txtTitle" required="true" maxlength="50" value="${ie.title}" id="txtTitle">
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Clasificacion</label>
-                                        <select class="form-control" name="slcClasificacion">
+                                        <select class="form-control" name="slcClasificacion" id="slcClasificacion">
                                             <c:forEach var="Iterador" items="${ClasfList}">
                                                 <option value="${Iterador.idClassification}">${Iterador.classification}</option>
                                             </c:forEach>                                                
@@ -69,7 +70,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Prioridad</label>
-                                        <select class="form-control" name="slcPrioridad">
+                                        <select class="form-control" name="slcPrioridad" id="slcPrioridad">
                                             <option value="1">BAJA</option>
                                             <option value="2">MEDIA</option>
                                             <option value="3">ALTA</option>
@@ -80,7 +81,7 @@
                             <c:if test="${Rol!= null && Rol==1}">
                                 <div class="form-group row">
                                     <label>Departamento</label>
-                                    <select  class="form-control" name="slcDeptoIncidence">
+                                    <select  class="form-control" name="slcDeptoIncidence" id="slcDeptoIncidence">
                                         <c:forEach var="idp" items="${DeptosList}">
                                             <option value="${idp.idDepto}">${idp.deptoName}</option>
                                         </c:forEach>
@@ -90,7 +91,7 @@
 
                             <div class="form-group row">
                                 <label>Descripcion</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion" maxlength="500"></textarea>
+                                <textarea class="form-control" rows="3" placeholder="Enter ..." required="true" name="txtDescripcion" maxlength="500" id="txtDescripcion">${ie.description}</textarea>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -111,7 +112,8 @@
                         <!-- /.card-body -->
 
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Crear</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                            <a class="btn btn-secondary" href="${pageContext.servletContext.contextPath}/Principal">Cancelar</a>
                         </div>
                     </form>
                 </div>
@@ -164,17 +166,17 @@
                                 </div>                                
                             </div>
                         </div>
-                        
+
                     </div>
                     <!-- /.card-body -->
                 </div> 
-                
-                <div class="row">
-                            <!-- Table row -->
-                            <div class="col-md-12" id="nofound"></div>
 
-                            <div class="col-md-12 table-responsive">
-                                <table class="table table-striped">
+                <div class="row">
+                    <!-- Table row -->
+                    <div class="col-md-12" id="nofound"></div>
+
+                    <div class="col-md-12 table-responsive">
+                        <table class="display" id="table_emp">
                                     <thead>
 
                                         <tr>
@@ -186,7 +188,7 @@
                                         </tr>
                                     </thead>
                                     <input id="path" type="hidden" value="${pageContext.servletContext.contextPath}">
-                                    <tbody id="fUsers">
+                                    <tbody>
                                     
                                         
                                         
@@ -197,8 +199,8 @@
 
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -211,5 +213,84 @@
 </section>
 <!-- /.content -->
 
-<script src="js/filtrarPorRol&Depto.js"></script>
+
+<script>
+    var titulo, clasificacion, prioridad, descripcion, tecnico, finalDate;
+    titulo = document.getElementById('txtTitle');
+    clasificacion = document.getElementById('slcClasificacion');
+    prioridad = document.getElementById('slcPrioridad');
+    descripcion = document.getElementById('txtDescripcion');
+    depto = document.getElementById('slcDeptoIncidence');
+    tecnico = document.getElementById('idReceptor');
+    fechaFinal = document.getElementById('dateFechaFinal');
+    hiddenReceptorId = document.getElementById('idReceptor');
+    
+
+    // metodo para validar 
+    function validar(){
+        if(fechaFinal.value.length == 0){
+            fechaFinal.focus();
+            alert("Debe ingresar la fecha");
+            return false;
+        }else if(hiddenReceptorId.value.length == 0){
+            alert("Debe seleccionar un Tecnico");
+            return false;
+        }
+        return true;
+    }
+    
+    var accion = "${accionProcess}";
+    clId = 1;
+    if (accion == 'update') {
+        titulo.disabled = true;
+        clasificacion.disabled = true;
+        clasificacion.value = "${ie.idClassification}";
+        prioridad.disabled = true;
+        prioridad.value = "${ie.priority}";
+        descripcion.disabled = true;
+        if (depto != null) {
+            depto.disabled = true;
+            depto.value = "${ie.idDepto}";
+        }
+        fechaFinal.disabled = true;
+        fechaFinal.value = "<fmt:formatDate value="${ie.finalDate}" pattern="yyyy-MM-dd"/>";
+    }    
+
+
+</script>
+
 <%@include file="_endPanel.jsp" %>
+<script src="js/filtrarPorRol&Depto.js"></script>
+<script>
+       $('#table_emp').DataTable({
+        language:
+                {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "buttons": {
+                        "copy": "Copiar",
+                        "colvis": "Visibilidad"
+                    }
+                }
+    });
+</script>

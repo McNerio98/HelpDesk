@@ -83,6 +83,10 @@ CREATE TABLE INCIDENCES(
 
 alter table incidences alter column TOTALCOST set default 0.0;
 alter table incidences alter column CREATIONDAY set default current_timestamp;
+alter table incidences add column status int;
+alter table incidences alter column status set not null;
+alter table incidences add column idreceptor int;
+alter table incidences alter column idreceptor set not null;
 
 CREATE TABLE NOTES(
 	IDNOTA SERIAL  NOT NULL,
@@ -195,6 +199,51 @@ END; $BODY$;
 ALTER FUNCTION public.deletedeptobyusers(integer)
     OWNER TO postgres;
 	
+
+   
+   
+      --trigger para controlar el costo total de una incidencia
+CREATE OR REPLACE FUNCTION updatecost()
+  RETURNS trigger AS
+$$
+BEGIN
+         UPDATE 
+    incidences
+SET 
+    totalcost = 
+    (
+        SELECT 
+            sum(costmsg) 
+        FROM 
+            managements a,
+			incidencebyreceptor b
+        WHERE 
+            a.idibr = b.idibr and b.idincidence = incidences.idincidence
+    )
+WHERE
+    incidences.idincidence IN 
+    (
+        SELECT
+            b.idincidence
+        FROM
+            managements a,
+			incidencebyreceptor b
+		WHERE 
+            a.idibr = b.idibr and b.idincidence = incidences.idincidence
+    );
+ 
+    RETURN NULL;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+
+CREATE TRIGGER updatingTotalCost
+  AFTER INSERT
+  ON managements
+  FOR EACH ROW
+  EXECUTE PROCEDURE updatecost();
+
 
 
 

@@ -26,6 +26,7 @@ import java.util.logging.Logger;
  */
 public class DataList {
 
+
     public static ArrayList<Clasificacion> getAllClassifications() {
         ArrayList<Clasificacion> clasf = new ArrayList<>();
         try {
