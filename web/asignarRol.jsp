@@ -179,7 +179,7 @@
                     render: function (data, type, row) {
                         // Combine the first and last names into a single table field
                         return `<button type="button" class="btn btn-info" onclick="updateUser('id` + data.id + `', 1)">Actualizar</button>
-                                        <button type="button" class="btn btn-danger" onclick="updateUser('id` + data.id + `', 2)">Eliminar</button>`;
+                                        `;
                     },
 
                 },

@@ -59,7 +59,7 @@
                             <div class="icon">
                                 <i class="far fa-file-alt"></i>
                             </div>
-                            <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            <a onclick="getIncidences(1)"  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->        
@@ -74,7 +74,7 @@
                                 <p>En proceso</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-cogs"></i>
+                                <i class="ion ion-md-settings"></i>
                             </div>
                             <a onclick="getIncidences(2)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -91,9 +91,9 @@
                                 <p>En proceso</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-cogs"></i>
+                                <i class="ion ion-md-settings"></i>
                             </div>
-                            <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            <a onclick="getIncidences(2)"  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->        
@@ -108,7 +108,7 @@
                                 <p>Pendientes</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-toolbox"></i>
+                                <i class="ion ion-md-flame"></i>
                             </div>
                             <a onclick="getIncidences(3)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -125,51 +125,50 @@
                                 <p>Pendientes</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-toolbox"></i>
+                                <i class="ion ion-md-flame"></i>
                             </div>
-                            <a onclick="#"   href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            <a onclick="getIncidences(3)"   href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->        
                 </c:if>
-
                 <c:if test="${idRol != 3}">
                     <c:if test="${requestDiv != null}">
-                        <div class="col-lg-4 col-sm-12 col-md-6  col-6 float-left">
-                            <!-- small box -->
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3>${fn:length(requestDiv)}</h3>
+                    <div class="col-lg-4 col-sm-12 col-md-6  col-6 float-left">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>${fn:length(requestDiv)}</h3>
 
-                                    <p>En solicitud</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-bell"></i>
-                                </div>
-                                <a onclick="getIncidences(5)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <p>En solicitud</p>
                             </div>
-                        </div>
-                        <!-- ./col -->        
-                    </c:if>
-                    <c:if test="${requestDiv == null}">
-                        <div class="col-lg-4 col-sm-12 col-md-6  col-6 float-left">
-                            <!-- small box -->
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3>0</h3>
-
-                                    <p>En solicitud</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-bell"></i>
-                                </div>
-                                <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            <div class="icon">
+                                <i class="ion ion-md-notifications"></i>
                             </div>
+                            <a onclick="getIncidences(5)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                        <!-- ./col -->        
-                    </c:if>
+                    </div>
+                    <!-- ./col -->        
                 </c:if>
+                <c:if test="${requestDiv == null}">
+                    <div class="col-lg-4 col-sm-12 col-md-6  col-6 float-left">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>0</h3>
 
+                                <p>En solicitud</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-md-notifications"></i>
+                            </div>
+                            <a onclick="getIncidences(5)"  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->        
+                </c:if>
+                </c:if>
+                
                 <c:if test="${refuseDiv != null}">
                     <div class="col-lg-4 col-sm-12 col-md-6  col-6 float-left">
                         <!-- small box -->
@@ -180,7 +179,7 @@
                                 <p>Rechazadas</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-exclamation-triangle"></i>
+                                <i class="ion ion-md-close"></i>
                             </div>
                             <a onclick="getIncidences(6)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -197,9 +196,9 @@
                                 <p>Rechazadas</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-exclamation-triangle"></i>
+                                <i class="ion ion-md-close"></i>
                             </div>
-                            <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            <a onclick="getIncidences(6)"  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->        
@@ -214,7 +213,7 @@
                                 <p>Finalizadas</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-clipboard-check"></i>
+                                <i class="ion ion-md-clipboard"></i>
                             </div>
                             <a onclick="getIncidences(4)" href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -231,9 +230,9 @@
                                 <p>Finalizadas</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-clipboard-check"></i>
+                                <i class="ion ion-md-clipboard"></i>
                             </div>
-                            <a  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            <a onclick="getIncidences(4)"  href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->        
@@ -249,6 +248,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Incidencia</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -277,5 +277,35 @@
 <%@include file="_endPanel.jsp" %>
 <script src="js/principal.js"></script>
 <script>
-                                $('#table_incidences').DataTable({});
+                                $('#table_incidences').DataTable({
+                                    language:
+                                            {
+                                                "sProcessing": "Procesando...",
+                                                "sLengthMenu": "Mostrar _MENU_ registros",
+                                                "sZeroRecords": "No se encontraron resultados",
+                                                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                                                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                                "sInfoPostFix": "",
+                                                "sSearch": "Buscar:",
+                                                "sUrl": "",
+                                                "sInfoThousands": ",",
+                                                "sLoadingRecords": "Cargando...",
+                                                "oPaginate": {
+                                                    "sFirst": "Primero",
+                                                    "sLast": "Último",
+                                                    "sNext": "Siguiente",
+                                                    "sPrevious": "Anterior"
+                                                },
+                                                "oAria": {
+                                                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                                },
+                                                "buttons": {
+                                                    "copy": "Copiar",
+                                                    "colvis": "Visibilidad"
+                                                }
+                                            }
+                                });
 </script>

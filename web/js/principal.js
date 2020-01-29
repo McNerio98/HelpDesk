@@ -26,7 +26,7 @@ function getIncidences(opc) {
         }
         case 4:
         {
-            
+
             displayDataTables(root.value + "/Principal?accion=finalizadas");
             break;
         }
@@ -42,7 +42,7 @@ function getIncidences(opc) {
             displayDataTables(root.value + "/Principal?accion=refuse");
             break;
         }
-        
+
     }
 }
 
@@ -58,7 +58,8 @@ function displayDataTables(url) {
         "createdRow": function (row, data, index) {
 
             // Add identity if it specified
-
+            $('td', row).eq(4).addClass("hidetd");
+            $('td', row).eq(5).addClass("hidetd");
             row.id = "id" + data.id;
 
         },
@@ -68,11 +69,12 @@ function displayDataTables(url) {
                 data: null,
                 render: function (data, type, row) {
                     // Combine the first and last names into a single table field
-                    return `<a href="`+root.value+"/Informacion?idIncidencia="+data.id+`">`+data.name+`</a>
+                    return `<a href="` + root.value + "/Informacion?idIncidencia=" + data.id + `">` + data.name + `</a>
                                         `;
                 }
 
-            }
+            },
+            {data: 'status'}
         ],
         language:
                 {
@@ -87,7 +89,7 @@ function displayDataTables(url) {
                     "sSearch": "Buscar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
-                    "sLoadingRecords": "Cargando...",
+                    "sLoadingRecords": "No se encontraron resultados",
                     "oPaginate": {
                         "sFirst": "Primero",
                         "sLast": "Último",

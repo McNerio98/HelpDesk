@@ -5,7 +5,7 @@
     <strong>Copyright &copy; 2019-2020 <a href="http://helpdesk.com">HelpDesk</a>.</strong>
     McNerio & CnkBlanco USO
     <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 1.0
+        <b>Version</b> 1.1
     </div>
 </footer>
 
@@ -37,6 +37,20 @@
 <!-- AdminLTE for demo purposes -->
 <script src="framework/js/demo.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
+<script>
+    function validarCaracteres(input,max,btn,alert){
+    document.getElementById(input).addEventListener("keyup",function(event){
+    if(event.target.value.length>=max){
+        document.getElementById(btn).setAttribute("disabled",true);
+        document.getElementById(alert).innerHTML = "El campo debe ser menos de " + max + " caracteres";
+    }
+    if(event.target.value.length<=max){
+        document.getElementById(btn).removeAttribute("disabled",false);
+        document.getElementById(alert).innerHTML = "";
+    }
+});
+}
+</script>
 </body>
 
 </html>

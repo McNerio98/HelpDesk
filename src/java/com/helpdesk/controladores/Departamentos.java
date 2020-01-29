@@ -60,7 +60,6 @@ public class Departamentos extends HttpServlet {
                     Operaciones.commit();
                     request.getRequestDispatcher("departamentos.jsp").forward(request, response);
 
-                    
                 } catch (Exception ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
@@ -72,37 +71,43 @@ public class Departamentos extends HttpServlet {
                 }
             } else {
                 switch (accion) {
-                    
+
                     case "nuevo": {
                         String deptoname = request.getParameter("deptoname");
                         String descripcion = request.getParameter("descripcion");
 
-                        Departamento depto = new Departamento();
-                        depto.setDeptoName(deptoname);
-                        depto.setDescription(descripcion);
-
-                        try {
-                            ConexionPool conn = new ConexionPool();
-                            conn.conectar();
-                            Operaciones.abrirConexion(conn);
-                            Operaciones.iniciarTransaccion();
-                            Operaciones.insertar(depto);
-                            Operaciones.commit();
-                            response.sendRedirect(request.getContextPath() + "/Departamentos");
-                        } catch (Exception ex) {
+                        if (deptoname.length() > 50 || descripcion.length() >= 500) {
+                            request.setAttribute("errorCharacters", "crear");
+                            request.getRequestDispatcher("clasificaciones.jsp").forward(request, response);
+                        } else {
+                            Departamento depto = new Departamento();
+                            depto.setDeptoName(deptoname);
+                            depto.setDescription(descripcion);
 
                             try {
-                                Operaciones.rollback();
-                            } catch (SQLException ex1) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
-                            }
-                        } finally {
-                            try {
-                                Operaciones.cerrarConexion();
-                            } catch (SQLException ex) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                ConexionPool conn = new ConexionPool();
+                                conn.conectar();
+                                Operaciones.abrirConexion(conn);
+                                Operaciones.iniciarTransaccion();
+                                Operaciones.insertar(depto);
+                                Operaciones.commit();
+                                response.sendRedirect(request.getContextPath() + "/Departamentos");
+                            } catch (Exception ex) {
+
+                                try {
+                                    Operaciones.rollback();
+                                } catch (SQLException ex1) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            } finally {
+                                try {
+                                    Operaciones.cerrarConexion();
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
+
                         break;
 
                     }
@@ -111,39 +116,44 @@ public class Departamentos extends HttpServlet {
                         String deptoname = request.getParameter("deptoname");
                         String descripcion = request.getParameter("descripcion");
 
-                        Departamento depto = new Departamento();
-                        depto.setIdDepto(Integer.parseInt(iddepto));
-                        depto.setDeptoName(deptoname);
+                        if (deptoname.length() > 50 || descripcion.length() >= 500) {
+                            request.setAttribute("errorCharacters", "actualizar");
+                            request.getRequestDispatcher("clasificaciones.jsp").forward(request, response);
+                        } else {
+                            Departamento depto = new Departamento();
+                            depto.setIdDepto(Integer.parseInt(iddepto));
+                            depto.setDeptoName(deptoname);
 
-                        depto.setDescription(descripcion);
-
-                        try {
-                            ConexionPool conn = new ConexionPool();
-                            conn.conectar();
-                            Operaciones.abrirConexion(conn);
-                            Operaciones.iniciarTransaccion();
-                            Operaciones.actualizar(depto.getIdDepto(), depto);
-                            Operaciones.commit();
-                            response.sendRedirect(request.getContextPath() + "/Departamentos");
-
-                        }catch (Exception ex) {
+                            depto.setDescription(descripcion);
 
                             try {
-                                Operaciones.rollback();
-                            } catch (SQLException ex1) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
-                            }
-                        } finally {
-                            try {
-                                Operaciones.cerrarConexion();
-                            } catch (SQLException ex) {
-                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                ConexionPool conn = new ConexionPool();
+                                conn.conectar();
+                                Operaciones.abrirConexion(conn);
+                                Operaciones.iniciarTransaccion();
+                                Operaciones.actualizar(depto.getIdDepto(), depto);
+                                Operaciones.commit();
+                                response.sendRedirect(request.getContextPath() + "/Departamentos");
+
+                            } catch (Exception ex) {
+
+                                try {
+                                    Operaciones.rollback();
+                                } catch (SQLException ex1) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            } finally {
+                                try {
+                                    Operaciones.cerrarConexion();
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                         break;
 
                     }
-                    case "getAll":{
+                    case "getAll": {
                         out.print(this.getAll());
                         break;
                     }
@@ -151,12 +161,12 @@ public class Departamentos extends HttpServlet {
             }
         }
     }
-    
-    public String getAll(){
+
+    public String getAll() {
         ArrayList<Departamento> list = DataList.getAllDeptos();
 
         String json = new Gson().toJson(list);
-        
+
         return json;
     }
 

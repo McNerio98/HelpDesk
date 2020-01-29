@@ -6,9 +6,16 @@
 <!-- Content Header (Page header) Esto dependera de cada pagina-->
 <div class="content-header">
     <div class="container-fluid">
+        <div class="col-12">
+            <c:if test="${errorCharacters!=null}">
+                <div class="alert alert-danger" role="alert">
+                    Error al ${errorCharacters} el registro. Uno o ambos de los campos sobrepasan la longitud de caracteres
+                </div>
+            </c:if>
+        </div>
         <div class="row mb-2">
             <div class="col-sm-6">
-               <h1 class="m-0 text-dark">Lista de Departamentos</h1>              
+                <h1 class="m-0 text-dark">Lista de Departamentos</h1>              
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -41,7 +48,7 @@
                 </thead>
                 <tbody>
 
-                    
+
 
 
 
@@ -62,20 +69,24 @@
                     <div class="modal-body">
                         <!--Formulario Nuevo-->
 
-                        
-                                <form action="${pageContext.servletContext.contextPath}/Departamentos?accion=nuevo" method="post">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Nombre</label>
-                                        <input name="deptoname" type="text" class="form-control" id="exampleInputEmail1" placeholder="Ingrese el nombre del departamento">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleFormControlTextarea1">Agrega una descripcion general</label>
-                                        <textarea name="descripcion" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                    </div>
 
-                                    <button type="submit" class="btn btn-primary float-right">Crear</button>
-                                </form>
-                           
+                        <form action="${pageContext.servletContext.contextPath}/Departamentos?accion=nuevo" method="post">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Nombre</label>
+                                <br>
+                                <span id="alertInput" class="text-danger"></span>
+                                <input onkeyup="validarCaracteres('exampleInputEmail1', 50, 'btnCreate', 'alertInput')" name="deptoname" type="text" class="form-control" id="exampleInputEmail1" placeholder="Ingrese el nombre del departamento">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Agrega una descripcion general</label>
+                                <br>
+                                <span id="alertArea" class="text-danger"></span>
+                                <textarea onkeyup="validarCaracteres('exampleFormControlTextarea1', 500, 'btnCreate', 'alertArea')" name="descripcion" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+
+                            <button id="btnCreate" type="submit" class="btn btn-primary float-right">Crear</button>
+                        </form>
+
 
                     </div>
                 </div>
@@ -100,17 +111,21 @@
                             <input type="hidden" value="" id="IdDepto" name="iddepto">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Nombre</label>
-                                <input name="deptoname" type="text" class="form-control" id="inputName" value="" >
+                                <br>
+                                <span class="text-danger" id="alertInput2"></span>
+                                <input onkeyup="validarCaracteres('inputName', 50, 'btnSaveChanges', 'alertInput2')" name="deptoname" type="text" class="form-control" id="inputName" value="" >
 
                             </div>
                             <div class="form-group">
                                 <label for="exampleFormControlTextarea1">Agrega una descripcion general</label>
-                                <textarea name="descripcion" class="form-control" id="inputDescription" rows="3"></textarea>
+                                <br>
+                                <span class="text-danger" id="alertArea2"></span>
+                                <textarea onkeyup="validarCaracteres('inputDescription', 500, 'btnSaveChanges', 'alertArea2')" name="descripcion" class="form-control" id="inputDescription" rows="3"></textarea>
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button id="btnSaveChanges" type="submit" class="btn btn-primary">Guardar Cambios</button>
                             </div>
                         </form>
                     </div>
@@ -121,7 +136,7 @@
     </div>
     <!-- /.container-fluid -->
 </section>
-        <%@include file="_endPanel.jsp" %>
+<%@include file="_endPanel.jsp" %>
 <script>
     $(document).ready(function () {
         $('#table-depto').DataTable({
@@ -132,9 +147,9 @@
             "createdRow": function (row, data, index) {
 
                 // Add identity if it specified
-                
-                    row.id = "id" + data.idDepto;
-                
+
+                row.id = "id" + data.idDepto;
+
             },
             columns: [
                 {data: 'idDepto'},
@@ -144,7 +159,7 @@
                     data: null,
                     render: function (data, type, row) {
                         // Combine the first and last names into a single table field
-                        return `<button type="button" class="btn btn-info" onclick="updateDepto('id`+data.idDepto+`')">Actualizar</button>
+                        return `<button type="button" class="btn btn-info" onclick="updateDepto('id` + data.idDepto + `')">Actualizar</button>
                                         `;
                     }
 

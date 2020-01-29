@@ -15,3 +15,6 @@ function updateClass(id) {
     document.getElementById('inputDescription').innerHTML =  array[2].textContent;
     $('#modaltoUpdateClass').modal('show');
 }
+
+
+
