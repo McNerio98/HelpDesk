@@ -90,8 +90,9 @@
                 </div>
             </li>
         </c:if>
-        <li class="nav-item">
-            <a href="Principal?accion=logout" class="btn btn-link">Cerrar Sesion</a>
+        <li class="nav-item"> 
+            <a href="Principal?accion=logout" class="btn btn-link d-none d-sm-block">Cerrar Sesion</a>
+            <a href="Principal?accion=logout" class="btn btn-link d-block d-sm-none"><i class="fas fa-sign-out-alt"></i></a
         </li>
 
     </ul>

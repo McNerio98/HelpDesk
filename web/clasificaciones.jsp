@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm- col-lg-12">
                 <div class="col-sm-6 col-md-6">
 
                     <h2 class=" text-dark">Lista de Clasificaciones</h2>
@@ -25,7 +25,7 @@
 
 
             </div><!-- /.col -->
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-lg-12">
                 <ol class="breadcrumb float-sm-right">
                     <button onclick="newForm()" type="button" class="btn btn-primary">Nuevo</button>
 
@@ -148,6 +148,7 @@
 <script>
                                     $(document).ready(function () {
                                         $('#table-class').DataTable({
+                                            responsive: true,
                                             ajax: {
                                                 url: '${pageContext.servletContext.contextPath}/Clasificaciones?accion=getAll',
                                                 dataSrc: ''
@@ -178,7 +179,7 @@
                                                         "sProcessing": "Procesando...",
                                                         "sLengthMenu": "Mostrar _MENU_ registros",
                                                         "sZeroRecords": "No se encontraron resultados",
-                                                        "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                                                        "sEmptyTable": "Ningun dato disponible en esta tabla",
                                                         "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                                                         "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
                                                         "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
@@ -186,10 +187,10 @@
                                                         "sSearch": "Buscar:",
                                                         "sUrl": "",
                                                         "sInfoThousands": ",",
-                                                        "sLoadingRecords": "Cargando...",
+                                                        "sLoadingRecords": "Ningun dato disponible en esta tabla",
                                                         "oPaginate": {
                                                             "sFirst": "Primero",
-                                                            "sLast": "Último",
+                                                            "sLast": "\DAltimo",
                                                             "sNext": "Siguiente",
                                                             "sPrevious": "Anterior"
                                                         },
