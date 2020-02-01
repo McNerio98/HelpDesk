@@ -261,7 +261,7 @@ public class Login extends HttpServlet {
     private List<Menu> getPermisos(Integer idRol) throws Exception {
         List<Menu> permisos = new ArrayList();
 
-            String sql = "select * from menus where idMenu in (select idmenu from permissions where idrole = ?)";
+            String sql = "select * from menus where idMenu in (select idmenu from permissions where idrole = ?) order by idmenu asc";
             List<Object> parametros = new ArrayList();
             parametros.add(idRol);
             String[][] result = Operaciones.consultar(sql, parametros);
