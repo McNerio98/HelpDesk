@@ -30,6 +30,7 @@
 
         <link rel="stylesheet" href="css/estilo1.css">
         <link rel="stylesheet" href="css/jquery.dataTables.min.css">
+        <link href="css/datepicker.css" rel="stylesheet" />
     </head>
 
     <body class="hold-transition sidebar-mini layout-fixed">
