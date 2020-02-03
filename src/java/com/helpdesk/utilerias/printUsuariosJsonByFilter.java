@@ -26,7 +26,7 @@ public class printUsuariosJsonByFilter {
                 out.println("{");
                 out.print("\"id\"" + ":" + "\"" + list.get(i).getUsuario().getIdUser() + "\"" + ",");
 
-                out.print("\"name\"" + ":" + "\"" + list.get(i).getUsuario().getFirsName() + "\"" + ",");
+                out.print("\"name\"" + ":" + "\"" + list.get(i).getUsuario().getFirstName() + "\"" + ",");
 
                 out.println("\"lastname\"" + ":" + "\"" + list.get(i).getUsuario().getLastName() + "\"" + ",");
 
@@ -44,7 +44,7 @@ public class printUsuariosJsonByFilter {
 
                 out.print("\"id\"" + ":" + "\"" + list.get(i).getUsuario().getIdUser() + "\"" + ",");
 
-                out.print("\"name\"" + ":" + "\"" + list.get(i).getUsuario().getFirsName() + "\"" + ",");
+                out.print("\"name\"" + ":" + "\"" + list.get(i).getUsuario().getFirstName() + "\"" + ",");
 
                 out.println("\"lastname\"" + ":" + "\"" + list.get(i).getUsuario().getLastName() + "\"" + ",");
 
