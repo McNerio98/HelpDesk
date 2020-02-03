@@ -9,7 +9,7 @@
 <div id="contenidoGestiones">
 
     <div class="p-3 text-center" id="pnlLoad" style="display:none;">
-        <img src="img/load.gif" style="width: 100px;height: auto;">
+        <img src="${pageContext.servletContext.contextPath}/img/load.gif" style="width: 100px;height: auto;">
     </div>
 
 </div>

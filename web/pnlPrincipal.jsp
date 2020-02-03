@@ -132,7 +132,7 @@
                     </div>
                     <!-- ./col -->        
                 </c:if>
-                <c:if test="${idRol != 3}">
+                <c:if test="${idRol != 3 && idRol != 4}">
                     <c:if test="${requestDiv != null}">
                     <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
                         <!-- small box -->
