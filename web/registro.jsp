@@ -36,7 +36,7 @@
             </div>
         </nav>
         <div class="container">
-            <form action="Q" class="mt-5" method="post" onsubmit="return validar();">
+            <form action="${pageContext.servletContext.contextPath}/Login?accion=nuevo" class="mt-5" method="post" onsubmit="return validar();">
                 <div class="row">
                     <div class="col-md-6">
                         <h1>Registrarse</h1>

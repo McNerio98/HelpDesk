@@ -8,8 +8,8 @@
 </c:if>
 <div id="contenidoGestiones">
 
-    <div class="p-3 text-center" id="pnlLoad" style="display:none;">
-        <img src="${pageContext.servletContext.contextPath}/img/load.gif" style="width: 100px;height: auto;">
+    <div class="spinner-border" role="status" style="width: 4rem !important; height: 4rem !important;">
+        <span class="sr-only">Loading...</span>
     </div>
 
 </div>

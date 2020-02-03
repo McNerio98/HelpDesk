@@ -56,7 +56,7 @@ public class Perfil extends HttpServlet {
                 Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
-        request.getRequestDispatcher("Perfil.jsp").forward(request, response);
+        request.getRequestDispatcher("perfil.jsp").forward(request, response);
     }
 
     @Override
@@ -99,6 +99,7 @@ public class Perfil extends HttpServlet {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
             Usuario u = Operaciones.get(idUsuario, new Usuario());
             u.setTelephone(celular);
             u.setFirsName(nombre);

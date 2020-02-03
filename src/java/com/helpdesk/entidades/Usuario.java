@@ -69,7 +69,7 @@ public class Usuario {
         this.password = password;
     }
 
-    public String getFirstName() {
+    public String getFirsName() {
         return firstName;
     }
 

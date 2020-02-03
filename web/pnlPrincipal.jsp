@@ -74,7 +74,7 @@
                                 <p>En proceso</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-settings"></i>
+                                <i class="fas fa-cogs"></i>
                             </div>
                             <a onclick="getIncidences(2)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -91,7 +91,7 @@
                                 <p>En proceso</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-settings"></i>
+                                <i class="fas fa-cogs"></i>
                             </div>
                             <a onclick="getIncidences(2)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -108,7 +108,7 @@
                                 <p>Pendientes</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-flame"></i>
+                                <i class="fas fa-toolbox"></i>
                             </div>
                             <a onclick="getIncidences(3)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -125,7 +125,7 @@
                                 <p>Pendientes</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-flame"></i>
+                                <i class="fas fa-toolbox"></i>
                             </div>
                             <a onclick="getIncidences(3)"    href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -143,7 +143,7 @@
                                 <p>En solicitud</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-notifications"></i>
+                                <i class="fas fa-bell"></i>
                             </div>
                             <a onclick="getIncidences(5)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -160,7 +160,7 @@
                                 <p>En solicitud</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-notifications"></i>
+                                <i class="fas fa-bell"></i>
                             </div>
                             <a onclick="getIncidences(5)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -179,7 +179,7 @@
                                 <p>Rechazadas</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-close"></i>
+                                <i class="fas fa-exclamation-triangle"></i>
                             </div>
                             <a onclick="getIncidences(6)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -196,7 +196,7 @@
                                 <p>Rechazadas</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-close"></i>
+                                <i class="fas fa-exclamation-triangle"></i>
                             </div>
                             <a onclick="getIncidences(6)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -213,7 +213,7 @@
                                 <p>Finalizadas</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-clipboard"></i>
+                                <i class="fas fa-check-double"></i>
                             </div>
                             <a onclick="getIncidences(4)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
@@ -230,7 +230,7 @@
                                 <p>Finalizadas</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-md-clipboard"></i>
+                                <i class="fas fa-check-double"></i>
                             </div>
                             <a onclick="getIncidences(4)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>

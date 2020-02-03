@@ -73,7 +73,7 @@ public class Procesos extends HttpServlet {
                     updateEstadoIncidencia(newStatus, Integer.parseInt(idIncidence));
                     response.sendRedirect("Informacion?idIncidencia=" + idIncidence);
                 } else {
-                    //No tiene permisos o valores  no validos 
+                    //No tiene permisos o valores  no validos desde el formulario 
                     response.sendRedirect("Principal");
                 }
             }
@@ -96,7 +96,9 @@ public class Procesos extends HttpServlet {
             Nota nt = new Nota();
             nt.setDescription(txtContenido);
             nt.setIdIncidence(Integer.parseInt(idIncidence));
-
+            
+            //Veriricacion de permisos 
+            
             if (accion.equals("rechazar")) {
                 nt.setNotetype(Enums.NOTA.RECHAZO);
                 s.setAttribute("nuevaNota", nt);

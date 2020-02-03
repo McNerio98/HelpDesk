@@ -12,6 +12,7 @@ import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataControl;
 import com.helpdesk.utilerias.DataGestion;
 import com.helpdesk.utilerias.DataIncidencia;
+import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.DataNotes;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,34 +45,30 @@ public class Informacion extends HttpServlet {
         if (idIncidencia == null) {
             //Sin parametro de identificacion 
             response.sendRedirect("Principal");
-        } else { //Se extrae informacion de la incidencia 
-            
+        } else {
+            //Verificar permisos 
+
             if (request.getSession().getAttribute("statusUpdate") != null) {
                 request.setAttribute("statusUpdate", request.getSession().getAttribute("statusUpdate"));
                 request.getSession().removeAttribute("statusUpdate");
-            }            
-            
-            ArrayList<DataControl> LstControl = getListControl(idIncidencia);
-            if (LstControl != null) { //Siempre existira un registro por la incidencia 
-                //Se procebe a obtener el idIBR del ultimo registro 
-                int idIBR = LstControl.get(LstControl.size() - 1).getIdIBR(); //Toma el id del ultimo control
+            }
 
+            boolean grant = DataList.permisosSobreIncidencia(idIncidencia, request.getSession());
+            if (grant) {
+                ArrayList<DataControl> LstControl = getListControl(idIncidencia);
+                int idIBR = LstControl.get(LstControl.size() - 1).getIdIBR(); //Toma el id del ultimo control
                 DataIncidencia dataInfo = getDefinicion(idIncidencia);
 
-                if (dataInfo != null) {
-                    ArrayList<DataNotes> LstNotes = getNotes(idIncidencia);//Puedo o no haber notas 
-                    request.setAttribute("ObjectInfo", dataInfo); //
-                    request.setAttribute("LstControl", LstControl); //Colecion
-                    request.setAttribute("LstNotes", LstNotes); //Colecion
-                    request.setAttribute("idIncidence", idIncidencia); // 
-                    request.setAttribute("ibr", idIBR); // 
-                    request.getRequestDispatcher("Informacion.jsp").forward(request, response);
-                } else {
-                    out.print("Error al Solicitar la Definicion");
-                }
-
-            } else {
-                out.print("Problema al solicitar el Control");
+                ArrayList<DataNotes> LstNotes = getNotes(idIncidencia);//Puedo o no haber notas 
+                request.setAttribute("ObjectInfo", dataInfo); //
+                request.setAttribute("LstControl", LstControl); //Colecion
+                request.setAttribute("LstNotes", LstNotes); //Colecion
+                request.setAttribute("idIncidence", idIncidencia); // 
+                request.setAttribute("ibr", idIBR); // 
+                request.getRequestDispatcher("Informacion.jsp").forward(request, response);
+            }else{
+                //No tiene permisos o no existe la incidencia
+                response.sendRedirect("Principal");
             }
 
         }

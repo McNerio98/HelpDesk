@@ -37,6 +37,8 @@ public class JavaMail {
             p.put("mail.smtp.starttls.enable", "true");
             p.put("mail.smtp.user", remitente);
             p.put("mail.smtp.clave", clave);
+
+
             Session s = Session.getDefaultInstance(p);
             MimeMessage mensaje = new MimeMessage(s);
             mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destino));
