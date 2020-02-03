@@ -21,7 +21,8 @@
                         <c:if test="${ic.inicioReal != null}">${ic.inicioReal}</c:if>
                     </td>
                     <td>
-                        ${ic.finPrev}
+                        <c:if test="${ic.finPrev == null}">- - -</c:if>
+                        <c:if test="${ic.finPrev != null}">${ic.finPrev}</c:if>                        
                     </td>
                     <td>
                         <c:if test="${ic.finReal == null}">- - -</c:if>

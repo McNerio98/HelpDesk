@@ -105,7 +105,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputtitle">Titulo</label>
-                            <input type="text" class="form-control" id="inputtitle" name="txtTitle" required="required">
+                            <input type="text" class="form-control" id="inputtitle" name="txtTitle" required="required" maxlength="49">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputtype">Tipo</label>
@@ -118,7 +118,7 @@
                     </div>
                     <div class="form-group">
                         <label for="txtDescription">Descripcion</label>
-                        <textarea class="form-control" id="txtDescription" name="txtDescription" rows="2" required="required"></textarea>
+                        <textarea class="form-control" id="txtDescription" name="txtDescription" rows="2" required="required" maxlength="499"></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-sm-7">
