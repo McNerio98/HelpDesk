@@ -248,6 +248,6 @@ CREATE TRIGGER updatingTotalCost
 
 
 
-
+alter table incidences alter column finaldate drop not null;
 
 

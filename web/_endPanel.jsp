@@ -37,20 +37,26 @@
 <!-- AdminLTE for demo purposes -->
 <script src="framework/js/demo.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
+
 <script>
-    function validarCaracteres(input,max,btn,alert){
-    document.getElementById(input).addEventListener("keyup",function(event){
-    if(event.target.value.length>=max){
-        document.getElementById(btn).setAttribute("disabled",true);
-        document.getElementById(alert).innerHTML = "El campo debe ser menos de " + max + " caracteres";
+    function validarCaracteres(input, max, btn, alert) {
+        document.getElementById(input).addEventListener("keyup", function (event) {
+            if (event.target.value.length >= max) {
+                document.getElementById(btn).setAttribute("disabled", true);
+                document.getElementById(alert).innerHTML = "El campo debe ser menos de " + max + " caracteres";
+            }
+            if (event.target.value.length <= max) {
+                document.getElementById(btn).removeAttribute("disabled", false);
+                document.getElementById(alert).innerHTML = "";
+            }
+        });
     }
-    if(event.target.value.length<=max){
-        document.getElementById(btn).removeAttribute("disabled",false);
-        document.getElementById(alert).innerHTML = "";
-    }
-});
-}
+
 </script>
+
+<script src="js/bootstrap-datepicker.js"></script>
+
+
 </body>
 
 </html>

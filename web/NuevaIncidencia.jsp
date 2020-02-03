@@ -21,7 +21,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">HerpDesk</li>
+                    <li class="breadcrumb-item active">HelpDesk</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -104,7 +104,11 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Fecha Final</label><br>
-                                        <input type="date" class="form-control" name="dateFechaFinal" id="dateFechaFinal">
+                                        <div id="datepicker-group" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            <input class="form-control" name="auxDate" type="text" placeholder="DD/MM/YYYY" id="auxDate"/>
+                                            <input type="hidden" value="" id="dateFechaFinal" name="dateFechaFinal">
+                                            <span class="input-group-addon"></span>
+                                        </div>                                                                            
                                     </div>                                
                                 </div>
                             </div>                                                
@@ -177,28 +181,28 @@
 
                     <div class="col-md-12 table-responsive">
                         <table class="display" id="table_emp">
-                                    <thead>
+                            <thead>
 
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombres</th>
-                                            <th>Apellidos</th>
-                                            <th>Email</th>
-                                            <th>Seleccionar</th>
-                                        </tr>
-                                    </thead>
-                                    <input id="path" type="hidden" value="${pageContext.servletContext.contextPath}">
-                                    <tbody>
-                                    
-                                        
-                                        
-                                        
-                                    
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Email</th>
+                                    <th>Seleccionar</th>
+                                </tr>
+                            </thead>
+                            <input id="path" type="hidden" value="${pageContext.servletContext.contextPath}">
+                            <tbody>
 
 
 
-                                    </tbody>
-                                </table>
+
+
+
+
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -213,9 +217,16 @@
 </section>
 <!-- /.content -->
 
-
 <script>
-    var titulo, clasificacion, prioridad, descripcion, tecnico, finalDate;
+
+    function formatear(inv) {
+        let dia = inv[0] + inv[1];
+        let mes = inv[3] + inv[4];
+        let anio = inv[6] + inv[7] + inv[8] + inv[9];
+        return anio + "-" + mes + "-" + dia;
+    }
+
+    var titulo, clasificacion, prioridad, descripcion, tecnico, finalDate, auxDate;
     titulo = document.getElementById('txtTitle');
     clasificacion = document.getElementById('slcClasificacion');
     prioridad = document.getElementById('slcPrioridad');
@@ -224,21 +235,27 @@
     tecnico = document.getElementById('idReceptor');
     fechaFinal = document.getElementById('dateFechaFinal');
     hiddenReceptorId = document.getElementById('idReceptor');
-    
+    auxDate = document.getElementById('auxDate');
+
+
 
     // metodo para validar 
-    function validar(){
-        if(fechaFinal.value.length == 0){
-            fechaFinal.focus();
-            alert("Debe ingresar la fecha");
-            return false;
-        }else if(hiddenReceptorId.value.length == 0){
+    function validar() {
+        if (hiddenReceptorId.value.length == 0) {
             alert("Debe seleccionar un Tecnico");
             return false;
+        }else if(clasificacion.value.length == 0){
+            alert("Debe registrar al menos una Clasificacion");
+            return false;
         }
+
+        if (auxDate.value.length > 0) {
+            fechaFinal.value = formatear(auxDate.value);
+        }
+
         return true;
     }
-    
+
     var accion = "${accionProcess}";
     clId = 1;
     if (accion == 'update') {
@@ -254,15 +271,14 @@
         }
         fechaFinal.disabled = true;
         fechaFinal.value = "<fmt:formatDate value="${ie.finalDate}" pattern="yyyy-MM-dd"/>";
-    }    
-
+    }
 
 </script>
 
 <%@include file="_endPanel.jsp" %>
 <script src="js/filtrarPorRol&Depto.js"></script>
 <script>
-       $('#table_emp').DataTable({
+    $('#table_emp').DataTable({
         responsive: true,
         language:
                 {
@@ -294,4 +310,17 @@
                     }
                 }
     });
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#datepicker-group").datepicker({
+            format: "dd/mm/yyyy",
+            todayHighlight: true,
+            autoclose: true,
+            clearBtn: true
+        });
+    });
+
 </script>

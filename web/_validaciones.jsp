@@ -20,7 +20,7 @@
                                 <form action="${pageContext.servletContext.contextPath}/Procesos?accion=rechazar&idbr=${ibr}&ic=${idIncidence}" method="POST">
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1">Especifique motivo de rechazo</label>
-                                        <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required"></textarea>
+                                        <textarea class="form-control" id="txtContenido" name="txtContenido" rows="3" required="required" maxlength="499"></textarea>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

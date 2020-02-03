@@ -215,8 +215,7 @@ public class Incidencias extends HttpServlet {
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = simpleDateFormat.parse(fechafinal);
+            
 
             if (idRol == 2) { //para el lider sera en el depto que tiene a cargo 
                 idDepto = DataList.getIdDepto(idCreador);
@@ -228,7 +227,6 @@ public class Incidencias extends HttpServlet {
             icn.setTitle(titulo);
             icn.setDescription(desc);
             icn.setCreationDay(new Timestamp(System.currentTimeMillis()));
-            icn.setFinalDate(new Timestamp(date.getTime()));
             icn.setTotalCost(BigDecimal.valueOf(0.0));
             icn.setPriority(Integer.parseInt(prioridad));
             icn.setIdClassification(Integer.parseInt(idclasf));
@@ -236,6 +234,13 @@ public class Incidencias extends HttpServlet {
             icn.setIdDepto(idDepto);
             icn.setStatus(status);
             icn.setIdreceptor(Integer.parseInt(idReceptor));
+            
+            //Se establece la fecha si la seleciono el usuario 
+            if(fechafinal!=null && !"".equals(fechafinal)){
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = simpleDateFormat.parse(fechafinal);
+                icn.setFinalDate(new Timestamp(date.getTime()));
+            }
 
             icn = Operaciones.insertar(icn);
 
