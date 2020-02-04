@@ -38,6 +38,14 @@ import javax.servlet.http.HttpSession;
  */
 public class Login extends HttpServlet {
 
+    public String generateRamdonString() {
+        byte[] array = new byte[7]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+
+        return generatedString;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -67,7 +75,7 @@ public class Login extends HttpServlet {
 
                     if (!email.equals("")) {
                         if (this.verificarCorreo(email)) {
-                            String key = email + "ABC123";
+                            String key = this.generateRamdonString();
                             s.setAttribute("emailUser", email);
                             s.setAttribute("keySesion", Hash.generarHash(key, Hash.SHA256));
                             String html1 = "<html>\n"
@@ -90,7 +98,7 @@ public class Login extends HttpServlet {
                                     + "  </head>\n"
                                     + "  <body>\n"
                                     + "    <div id='body'>\n"
-                                    + "      <p>Hi "+email+",</p>\n"
+                                    + "      <p>Hi " + email + ",</p>\n"
                                     + "      <p class='colored'>Para restablecer su contraseña, visite la siguiente dirección: </p>\n"
                                     + "<a style='background-color: red;\n"
                                     + "  color: white;\n"
@@ -101,7 +109,7 @@ public class Login extends HttpServlet {
                                     + "    </div>\n"
                                     + "  </body>\n"
                                     + "</html>";
-                           if (JavaMail.SendMessage(email, "Reset password", html1)) {
+                            if (JavaMail.SendMessage(email, "Reset password", html1)) {
                                 out.print("true");
                             } else {
                                 out.print("serverError");

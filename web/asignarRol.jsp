@@ -30,7 +30,7 @@
         <div class="row">
             <!-- Table row -->
 
-            <div class="col-md-12 table-responsive">
+            <div class="table-responsive">
                 <table class="display" id="table_empleados">
                     <thead>
 

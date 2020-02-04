@@ -43,7 +43,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="Principal">Home</a></li>
-                    <li class="breadcrumb-item active">HerpDesk</li>
+                    <li class="breadcrumb-item active">HelpDesk</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -136,7 +136,7 @@
         var pnlCnk = $('#pnlCnk');
         var btnSubmit = $('#commitChange');
         var btnAbort = $('#abort');
-        
+
 
 
         $(btnUpdate).click(function () {
@@ -146,18 +146,18 @@
             $(correo).attr('disabled', false);
             $(pnlCnk).css('display', 'flex');
             $(btnSubmit).css('display', 'inline-block');
-            $(this).css('display','none');
-            $(btnAbort).css('display','inline-block')
-            
+            $(this).css('display', 'none');
+            $(btnAbort).css('display', 'inline-block')
+
         });
 
         $(cnkShow).click(function () {
-            if($(this).prop('checked')){
+            if ($(this).prop('checked')) {
                 $(pnlPass).css('display', 'flex');
-            }else{
+            } else {
                 $(pnlPass).css('display', 'none');
             }
-            
+
         });
 
 
@@ -165,22 +165,22 @@
             if ($(celular).val().length == 0) {
                 alert('Ingrese un celular valido');
                 e.preventDefault();
-            }else if($(nombre).val().length == 0){
+            } else if ($(nombre).val().length == 0) {
                 alert('Ingrese un Nombre valido');
                 e.preventDefault();
-            }else if($(apellido).val().length == 0){
+            } else if ($(apellido).val().length == 0) {
                 alert('Ingrese apellido valido');
                 e.preventDefault();
-            }else if($(correo).val().length == 0){
+            } else if ($(correo).val().length == 0) {
                 alert('Ingrese un email valido');
                 e.preventDefault();
             }
-            
-            if($(cnkShow).prop('checked')){
+
+            if ($(cnkShow).prop('checked')) {
                 $(cnkShow).val("trueChange");
             }
         });
-        
+
     });
 
 

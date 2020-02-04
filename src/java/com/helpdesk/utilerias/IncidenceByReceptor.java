@@ -51,11 +51,8 @@ public class IncidenceByReceptor {
     public ArrayList<Incidencia> getIncidencesByStatus(int id) {
         ArrayList<Incidencia> listStatus = new ArrayList<>();
         //En el caso  para un receptor
-        String query = "select\n"
-                + "a.idincidence\n"
-                + "from incidences a, incidencebyreceptor b\n"
-                + "where \n"
-                + "a.idincidence=b.idincidence and a.idreceptor=? and a.status=? group by a.idincidence";
+        String query = "select idincidence from incidencebyreceptor \n" +
+                       "where idreceptor = ? and status = ?  group by idincidence";
         //En el caso para un gerente
         String query2 = "select\n"
                 + "a.idincidence\n"
@@ -145,11 +142,11 @@ public class IncidenceByReceptor {
     public ArrayList<Incidencia> getAllIncidences() {
         ArrayList<Incidencia> listAll = new ArrayList<>();
         //En el caso de un receptor
-        String query = "select\n"
-                + "a.idincidence\n"
-                + "from incidences a, incidencebyreceptor b\n"
-                + "where \n"
-                + "a.idincidence=b.idincidence and a.idreceptor=" + this.iduser + "group by a.idincidence";
+        String query = "select\n" +
+                       "a.idincidence\n" +
+                       "from  incidencebyreceptor a\n" +
+                       "where \n" +
+                       "a.idreceptor= "+this.iduser+" group by a.idincidence";
         //En el caso de un gerente
         String query2 = "select\n"
                 + "a.idincidence\n"

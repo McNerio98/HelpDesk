@@ -31,7 +31,7 @@
         <div class="row">
             <div class=" col-lg-6 col-md-12 col-sm-12">
                 <c:if test="${todasDiv != null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4 col-6 float-left">
+                    <div class="col-lg-4  col-md-4 col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
@@ -48,7 +48,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${todasDiv == null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
@@ -65,7 +65,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${processDiv != null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
@@ -82,7 +82,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${processDiv == null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
@@ -99,7 +99,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${pendingDiv != null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-light">
                             <div class="inner">
@@ -116,7 +116,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${pendingDiv == null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-light">
                             <div class="inner">
@@ -134,43 +134,43 @@
                 </c:if>
                 <c:if test="${idRol != 3 && idRol != 4}">
                     <c:if test="${requestDiv != null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3>${fn:length(requestDiv)}</h3>
+                        <div class="col-lg-4 col-md-4  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>${fn:length(requestDiv)}</h3>
 
-                                <p>En solicitud</p>
+                                    <p>En solicitud</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <a onclick="getIncidences(5)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            <a onclick="getIncidences(5)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                    </div>
-                    <!-- ./col -->        
-                </c:if>
-                <c:if test="${requestDiv == null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3>0</h3>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${requestDiv == null}">
+                        <div class="col-lg-4  col-md-4  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>0</h3>
 
-                                <p>En solicitud</p>
+                                    <p>En solicitud</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <a onclick="getIncidences(5)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            <a onclick="getIncidences(5)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
-                    </div>
-                    <!-- ./col -->        
+                        <!-- ./col -->        
+                    </c:if>
                 </c:if>
-                </c:if>
-                
+
                 <c:if test="${refuseDiv != null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
@@ -187,7 +187,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${refuseDiv == null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
@@ -204,7 +204,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${finishDiv != null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-gray">
                             <div class="inner">
@@ -221,7 +221,7 @@
                     <!-- ./col -->        
                 </c:if>
                 <c:if test="${finishDiv == null}">
-                    <div class="col-lg-4 col-sm-12 col-md-4  col-6 float-left">
+                    <div class="col-lg-4  col-md-4  col-6 float-left">
                         <!-- small box -->
                         <div class="small-box bg-gray">
                             <div class="inner">
@@ -242,19 +242,20 @@
 
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <input type="hidden" id="path" value="${pageContext.servletContext.contextPath}">
+                <div class="table-responsive">
+                    <table id="table_incidences" class="display table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Incidencia</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="Incidencias">
 
-                <table id="table_incidences" class="display table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Incidencia</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="Incidencias">
-
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 

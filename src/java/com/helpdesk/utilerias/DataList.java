@@ -133,6 +133,8 @@ public class DataList {
         boolean grant = false;
         Integer Rol = (int)sesion.getAttribute("Rol");
         Integer IdUs = (int)sesion.getAttribute("idUsuario");
+        Integer IdDepto = (int)sesion.getAttribute("idDepUser");
+        
         
         try{
             ConexionPool conn = new ConexionPool();
@@ -157,8 +159,13 @@ public class DataList {
                     break;
                 }
                 case 2: { //Para el caso el lider 
-                    //la tercera condicion es para saber si estube implicado con esa incidencia 
-                    if(i.getIdCreator() == IdUs || i.getIdreceptor() == IdUs || ibrValido){
+                    //la tercera condicion es para saber si estube implicado con esa incidencia
+                    boolean grant2 = false;
+                    if(IdDepto == getIdDepto(i.getIdreceptor())){
+                        grant2 = true;
+                    }
+                    
+                    if(i.getIdCreator() == IdUs || i.getIdreceptor() == IdUs || ibrValido || grant2){
                         grant = true;
                     }
                     break;
