@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author ZEUS
  */
 public class DataList {
+
 
     public static ArrayList<Clasificacion> getAllClassifications() {
         ArrayList<Clasificacion> clasf = new ArrayList<>();
@@ -125,6 +127,70 @@ public class DataList {
         ArrayList<Incidencia> list = new ArrayList<>();
         list = receptor.getIncidenciaSolicitada();
         return list;
+    }
+    
+    public static boolean permisosSobreIncidencia(int idIncidencia, HttpSession sesion){
+        boolean grant = false;
+        Integer Rol = (int)sesion.getAttribute("Rol");
+        Integer IdUs = (int)sesion.getAttribute("idUsuario");
+        Integer IdDepto = (int)sesion.getAttribute("idDepUser");
+        
+        
+        try{
+            ConexionPool conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Incidencia i = Operaciones.get(idIncidencia, new Incidencia());
+            if(i.getIdIncidence()==0){
+                return grant;
+            }
+            
+            //Esta Query se usara para los lideres y los receptores 
+            String sql = "select idibr from incidencebyreceptor where idreceptor = ? and idincidence = ?";
+            List<Object> parametros = new ArrayList();
+            parametros.add(IdUs);
+            parametros.add(idIncidencia);
+            String[][] result = Operaciones.consultar(sql, parametros);
+            boolean ibrValido = (result!=null)?true:false; //Si es verdadero es porque pertenece a un registro del control y si la puede ver
+            
+            switch(Rol){
+                case 1: { //Para caso del admin 
+                    grant = true;//Tiene privilegios para todas las incidencias 
+                    break;
+                }
+                case 2: { //Para el caso el lider 
+                    //la tercera condicion es para saber si estube implicado con esa incidencia
+                    boolean grant2 = false;
+                    if(IdDepto == getIdDepto(i.getIdreceptor())){
+                        grant2 = true;
+                    }
+                    
+                    if(i.getIdCreator() == IdUs || i.getIdreceptor() == IdUs || ibrValido || grant2){
+                        grant = true;
+                    }
+                    break;
+                }
+                
+                case 3:{ //para el caso del receptor 
+                    if(i.getIdreceptor() == IdUs || ibrValido){
+                        grant = true;
+                    }
+                break;                    
+                }
+            }
+            
+        }catch(Exception e){
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
+        return grant;
     }
 
 }

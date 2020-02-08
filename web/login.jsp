@@ -46,10 +46,10 @@
                             <p class="text-danger">Usuario o contraseña incorrectos!</p>
                 </c:if>
                 <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me"> Remember me
-                    </label>
+                    <a href="${pageContext.servletContext.contextPath}/Login?accion=recover&opc=b19498e29da193d545f4072e58687845a894bcd6" class="float-left text-muted">¿Olvidaste tu contraseña?</a>
+                    </br>
                 </div>
+                
                 <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
                 <p class="mt-4 mb-2 text-muted text-center">&copy; 2019-2020</p>
             </form>

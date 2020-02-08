@@ -7,25 +7,14 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/Helpdesk/pnlPrincipal.jsp" class="nav-link">Inicio</a>
+            <a href="${pageContext.servletContext.contextPath}/Principal" class="nav-link">Inicio</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
+            <a href="${pageContext.servletContext.contextPath}/Perfil" class="nav-link">Configuracion</a>
 
         </li>
     </ul>
 
-    <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
-        <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </form>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -90,8 +79,9 @@
                 </div>
             </li>
         </c:if>
-        <li class="nav-item">
-            <a href="Principal?accion=logout" class="btn btn-link">Cerrar Sesion</a>
+        <li class="nav-item"> 
+            <a href="Principal?accion=logout" class="btn btn-link d-none d-sm-block">Cerrar Sesion</a>
+            <a href="Principal?accion=logout" class="btn btn-link d-block d-sm-none"><i class="fas fa-sign-out-alt"></i></a
         </li>
 
     </ul>

@@ -17,36 +17,44 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class printUsuariosJsonByFilter {
 
-    public static void Render(ArrayList<Usuario> list, HttpServletResponse response) throws IOException {
+    public static void Render(ArrayList<listarEmpleado> list, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         out.println("[");
         for (int i = 0; i < list.size(); i++) {
             if (i == (list.size() - 1)) {
 
                 out.println("{");
-                out.print("\"id\"" + ":" + "\"" + list.get(i).getIdUser() + "\"" + ",");
+                out.print("\"id\"" + ":" + "\"" + list.get(i).getUsuario().getIdUser() + "\"" + ",");
 
-                out.print("\"name\"" + ":" + "\"" + list.get(i).getFirsName() + "\"" + ",");
+                out.print("\"name\"" + ":" + "\"" + list.get(i).getUsuario().getFirsName() + "\"" + ",");
 
-                out.println("\"lastname\"" + ":" + "\"" + list.get(i).getLastName() + "\"" + ",");
+                out.println("\"lastname\"" + ":" + "\"" + list.get(i).getUsuario().getLastName() + "\"" + ",");
 
-                out.println("\"email\"" + ":" + "\"" + list.get(i).getEmail() + "\"" + ",");
+                out.println("\"email\"" + ":" + "\"" + list.get(i).getUsuario().getEmail() + "\"" + ",");
 
-                out.println("\"contacto\"" + ":" + "\"" + list.get(i).getTelephone() + "\"");
+                out.println("\"contacto\"" + ":" + "\"" + list.get(i).getUsuario().getTelephone() + "\"" + ",");
+                
+                out.println("\"departamento\"" + ":" + "\"" + list.get(i).getDepto().getDeptoName() + "\"" + ",");
+                
+                out.println("\"rol\"" + ":" + "\"" + list.get(i).getRol().getRoleName() + "\"");
 
                 out.println("}");
             } else {
                 out.println("{");
 
-                out.print("\"id\"" + ":" + "\"" + list.get(i).getIdUser() + "\"" + ",");
+                out.print("\"id\"" + ":" + "\"" + list.get(i).getUsuario().getIdUser() + "\"" + ",");
 
-                out.print("\"name\"" + ":" + "\"" + list.get(i).getFirsName() + "\"" + ",");
+                out.print("\"name\"" + ":" + "\"" + list.get(i).getUsuario().getFirsName() + "\"" + ",");
 
-                out.println("\"lastname\"" + ":" + "\"" + list.get(i).getLastName() + "\"" + ",");
+                out.println("\"lastname\"" + ":" + "\"" + list.get(i).getUsuario().getLastName() + "\"" + ",");
 
-                out.println("\"email\"" + ":" + "\"" + list.get(i).getEmail() + "\"" + ",");
+                out.println("\"email\"" + ":" + "\"" + list.get(i).getUsuario().getEmail() + "\"" + ",");
 
-                out.println("\"contacto\"" + ":" + "\"" + list.get(i).getTelephone() + "\"");
+                out.println("\"contacto\"" + ":" + "\"" + list.get(i).getUsuario().getTelephone() + "\"" + ",");
+                
+                out.println("\"departamento\"" + ":" + "\"" + list.get(i).getDepto().getDeptoName() + "\"" + ",");
+                
+                out.println("\"rol\"" + ":" + "\"" + list.get(i).getRol().getRoleName() + "\"");
 
                 out.println("},");
             }
