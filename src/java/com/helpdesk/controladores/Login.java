@@ -15,6 +15,7 @@ import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
+import com.helpdesk.utilerias.htmlTemplate;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -78,38 +79,27 @@ public class Login extends HttpServlet {
                             String key = this.generateRamdonString();
                             s.setAttribute("emailUser", email);
                             s.setAttribute("keySesion", Hash.generarHash(key, Hash.SHA256));
-                            String html1 = "<html>\n"
-                                    + "  <head>\n"
-                                    + "    <style>\n"
-                                    + "      .colored {\n"
-                                    + "        color: blue;\n"
-                                    + "      }\n"
-                                    + "      #body {\n"
-                                    + "        font-size: 14px;\n"
-                                    + "      }\n"
-                                    + "      .btn{\n"
-                                    + "         background-color: red;\n"
-                                    + "         color: white;\n"
-                                    + "         padding: 1em 1.5em;\n"
-                                    + "         text-decoration: none;\n"
-                                    + "         text-transform: uppercase;'"
-                                    + "      }\n"
-                                    + "    </style>\n"
-                                    + "  </head>\n"
-                                    + "  <body>\n"
-                                    + "    <div id='body'>\n"
-                                    + "      <p>Hi " + email + ",</p>\n"
-                                    + "      <p class='colored'>Para restablecer su contraseña, visite la siguiente dirección: </p>\n"
-                                    + "<a style='background-color: red;\n"
-                                    + "  color: white;\n"
-                                    + "  padding: 1em 1.5em;\n"
-                                    + "  text-decoration: none;\n"
-                                    + "  text-transform: uppercase;'\n"
-                                    + " href='" + request.getRequestURL() + "?accion=recover&opc=e08e84916fb42ae1b61b75eb6fccf8a6eb98045e&key=" + Hash.generarHash(key, Hash.SHA256) + "'>RESET MY PASSWORD</a>\n"
-                                    + "    </div>\n"
-                                    + "  </body>\n"
-                                    + "</html>";
-                            if (JavaMail.SendMessage(email, "Reset password", html1)) {
+                            htmlTemplate html = new htmlTemplate();
+
+                            html.difineTag(
+                                    "<p>Hola " + email + ",</p>"
+                            );
+                              html.difineTag(
+                                    "<p class='colored'>Para restablecer su contraseña, "
+                                    + "visite la siguiente dirección: </p>"
+                            );
+                            html.difineTag(
+                                    "<a style='background-color: red;"
+                                    + "  color: white;"
+                                    + "  padding: 1em 1.5em;"
+                                    + "  text-decoration: none;"
+                                    + "  text-transform: uppercase;'"
+                                    + " href='" + request.getRequestURL()
+                                    + "?accion=recover&opc=e08e84916fb42ae1b61b75eb6fccf8a6eb98045e&key="
+                                    + Hash.generarHash(key, Hash.SHA256) + "'>RESET MY PASSWORD</a>"
+                            );
+
+                            if (JavaMail.SendMessage(email, "Reset password", html.RenderHTML())) {
                                 out.print("true");
                             } else {
                                 out.print("serverError");
