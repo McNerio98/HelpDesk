@@ -21,7 +21,7 @@ public class Menu {
     private String menu;
     @NotNull
     private String controller;
-    private int idParent;
+    
 
     public Menu() {
     }
@@ -48,15 +48,6 @@ public class Menu {
 
     public void setController(String controller) {
         this.controller = controller;
-    }
-
-    public int getIdParent() {
-        return idParent;
-    }
-
-    public void setIdParent(int idParent) {
-        this.idParent = idParent;
-    }
-    
+    }    
     
 }

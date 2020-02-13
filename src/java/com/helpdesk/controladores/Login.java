@@ -413,7 +413,6 @@ public class Login extends HttpServlet {
             m.setIdMenu(Integer.parseInt(result[0][i]));
             m.setMenu(result[1][i]);
             m.setController(result[2][i]);
-            m.setIdParent(Integer.parseInt(result[3][i] == null ? "0" : result[4][i]));
             permisos.add(m);
         }
 
