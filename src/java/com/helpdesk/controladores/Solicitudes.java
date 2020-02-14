@@ -5,21 +5,25 @@
  */
 package com.helpdesk.controladores;
 
-import com.helpdesk.utilerias.DataList;
+import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.UsuarioRequisicion;
+import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Mack_
+ * @author ALEX
  */
-public class PrincipalRequisicion extends HttpServlet {
+public class Solicitudes extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,8 +38,40 @@ public class PrincipalRequisicion extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            /*request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);*/
+            String accion = request.getParameter("accion");
+            if (accion.equals("aceptRequest")) {
+                aceptRequest(request, response);
+            }
+        }
+    }
+
+    private void aceptRequest(HttpServletRequest request, HttpServletResponse response) {
+        int idUser = Integer.parseInt(request.getParameter("iduser"));
+        try {
+            ConexionPool conexion = new ConexionPool();
+            conexion.conectar();
+            Operaciones.abrirConexion(conexion);
+            Operaciones.iniciarTransaccion();
+            
+            
+            UsuarioRequisicion user = Operaciones.get(idUser, new UsuarioRequisicion());
+            user.setIdRol(Enums.ROL.RECEPTOR_REQ);
+            
+            Operaciones.actualizar(user.getIdUsuario(), user);
+            Operaciones.commit();
+            
+            response.sendRedirect("PrincipalRequisicion");
+            
+        } catch (Exception ex) {
+            
+            Logger.getLogger(Solicitudes.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print("*****Server error");
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex2) {
+                Logger.getLogger(Solicitudes.class.getName()).log(Level.SEVERE, null, ex2);
+            }
         }
     }
 
@@ -51,17 +87,7 @@ public class PrincipalRequisicion extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        HttpSession s = request.getSession();
-        String accion = request.getParameter("accion");
-        int idUserSession = (int) s.getAttribute("idUsuario");
-        int rol = (int) s.getAttribute("Rol");
-        if(accion == null){
-            if(rol == Enums.ROL.GERENTE_REQ){
-                s.setAttribute("requestEmpleado", DataList.getEmpleados(1));
-            }
-            request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

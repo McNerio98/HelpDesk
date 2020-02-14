@@ -80,16 +80,25 @@ public class DataList {
     }
 
     /*Esta funcion trae todos los usuarios que tienen el rol de empleado*/
-    public static ArrayList<listarEmpleado> getEmpleados() {
+    public static ArrayList<listarEmpleado> getEmpleados(int id) {
         String query = "select iduser from users where idrole = 4";
+        String query2 = "select idusuario from usuariosrequisicion where idrol = 8";
         ArrayList<listarEmpleado> list = new ArrayList<>();
         try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
             
-
-            String[][] array = Operaciones.consultar(query, null);
+            String[][] array = null;
+            
+            if(id == 0){
+                //Empleado Helpdesk
+                array = Operaciones.consultar(query, null);
+            }else{
+                //Empleado Requisicion
+                array = Operaciones.consultar(query2, null);
+            }
+            
 
             for (int i = 0; i < array[0].length; i++) {
                 Usuario user = new Usuario();
