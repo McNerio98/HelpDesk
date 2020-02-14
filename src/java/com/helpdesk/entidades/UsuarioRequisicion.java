@@ -18,69 +18,41 @@ import com.helpdesk.anotaciones.PrimaryKey;
 public class UsuarioRequisicion {
 
     @PrimaryKey
-    @AutoIncrement
-    private int idUBE;
-    @NotNull
-    private int idEmpresa;
-    @NotNull
     private int idUsuario;
     @NotNull
-    private int estado;
+    private int idEmpresa;
     
-    /**
-     * @return the idUBE
-     */
-    public int getIdUBE() {
-        return idUBE;
+    @NotNull
+    private int idRol;
+
+    public UsuarioRequisicion() {
     }
 
-    /**
-     * @param idUBE the idUBE to set
-     */
-    public void setIdUBE(int idUBE) {
-        this.idUBE = idUBE;
-    }
-
-    /**
-     * @return the idEmpresa
-     */
-    public int getIdEmpresa() {
-        return idEmpresa;
-    }
-
-    /**
-     * @param idEmpresa the idEmpresa to set
-     */
-    public void setIdEmpresa(int idEmpresa) {
-        this.idEmpresa = idEmpresa;
-    }
-
-    /**
-     * @return the idUsuario
-     */
     public int getIdUsuario() {
         return idUsuario;
     }
 
-    /**
-     * @param idUsuario the idUsuario to set
-     */
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    /**
-     * @return the estado
-     */
-    public int getEstado() {
-        return estado;
+    public int getIdEmpresa() {
+        return idEmpresa;
     }
 
-    /**
-     * @param estado the estado to set
-     */
-    public void setEstado(int estado) {
-        this.estado = estado;
+    public void setIdEmpresa(int idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
+    }
+    
+    
+    
     
 }

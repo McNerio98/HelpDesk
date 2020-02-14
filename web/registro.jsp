@@ -55,26 +55,29 @@
                             <small id="emailHelp" class="form-text text-muted">Para iniciar sesion tambien podras utilizar tu correo electronico</small>
                             <p class="text-danger d-none" id="userExist">El Usuario ya existe</p>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="txtUserType" id="inlineRadio1" value="hd" checked="true">
-                            <label class="form-check-label" for="inlineRadio1">Usuario Helpdesk</label>
+                        <div class="custom-control custom-checkbox mr-sm-2">
+                            <input class="custom-control-input" type="checkbox" name="requisicion" id="ifcheckbox" value="true">
+                            <label class="custom-control-label" for="ifcheckbox">Requisicion Cheque</label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="txtUserType" id="inlineRadio2" value="req">
-                            <label class="form-check-label" for="inlineRadio2">Usuario Requisicion</label>
+                        <hr/>
+                        <div class="form-row mt-3">
+                            <div class="form-group col-md-6" id="pnlSelectEmpresa" style="display:none;">
+                                <label for="exampleFormControlSelect1">Empresa Asignada</label>
+                                <select class="form-control" id="empresa" name="empresa">
+                                    <option value="0">-- SELECIONAR EMPRESA --</option>
+                                </select>
+                            </div>                                                         
+                            <div class="form-group col-md-12" id="pnlSelectDepto">
+                                <label for="exampleFormControlSelect1">Departamento Asignado</label>
+                                <select class="form-control" id="depto" name="depto">
+                                    <option value="0">-- SELECIONAR DEPTTO --</option>
+                                    <c:forEach var="Iterador" items="${DeptosList}">
+                                        <option value="${Iterador.getIdDepto()}">${Iterador.getDeptoName()}</option>
+                                    </c:forEach>   
+                                </select>
+                            </div>                             
                         </div>
-                        <div class="mt-2 mb-2 text-center text-secondary">
-                            Cree una cuenta que le servira para gestionar incidencias dentro de la organizacion a la que pertenece. Podra recibir tareas una vez sea aceptado por el Gerente de su empresa. 
-                        </div>                        
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect1">Departamento Asignado</label>
-                            <select class="form-control" id="depto" name="depto">
-                                <option value="0">---SELECIONAR DEPARTAMENTO---</option>
-                                <c:forEach var="Iterador" items="${DeptosList}">
-                                    <option value="${Iterador.getIdDepto()}">${Iterador.getDeptoName()}</option>
-                                </c:forEach>   
-                            </select>
-                        </div>                                        
+
                     </div>
                     <div class="col-md-6 mt-5">
                         <label for="exampleFormControlInput1">Credenciales de Seguridad</label>
@@ -156,6 +159,17 @@
                             }
                         });
                     });
+                    
+                    $('#ifcheckbox').on('change',function(){
+                        if($(this).prop('checked')){
+                            $('#pnlSelectEmpresa').css('display','block');
+                            $('#pnlSelectDepto').removeClass('col-md-12').addClass('col-md-6');
+                            
+                        }else{
+                            $('#pnlSelectEmpresa').css('display','none');
+                            $('#pnlSelectDepto').removeClass('col-md-6').addClass('col-md-12');
+                        }
+                    })
                 });
         </script>         
     </body>

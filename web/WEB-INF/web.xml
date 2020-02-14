@@ -56,6 +56,10 @@
         <servlet-name>Perfil</servlet-name>
         <servlet-class>com.helpdesk.controladores.Perfil</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PrincipalRequisicion</servlet-name>
+        <servlet-class>com.helpdesk.controladores.PrincipalRequisicion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -103,6 +107,10 @@
     <servlet-mapping>
         <servlet-name>Perfil</servlet-name>
         <url-pattern>/Perfil</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrincipalRequisicion</servlet-name>
+        <url-pattern>/PrincipalRequisicion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
