@@ -24,6 +24,10 @@ public class Empresa {
     private String Nombre;
     @NotNull
     private String Direccion;
+    
+    public Empresa(){
+        
+    }
 
     /**
      * @return the idEmpresa

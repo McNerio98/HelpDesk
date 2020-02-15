@@ -24,6 +24,9 @@ public class EmpresaByDepto {
     private int idEmpresa;
     @NotNull
     private int idDepto;
+    
+    public EmpresaByDepto(){
+    }
 
     /**
      * @return the idEBD

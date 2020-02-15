@@ -30,30 +30,37 @@
         <div class="row">
             <!-- Table row -->
 
-            <div class="table-responsive">
-                <table class="display" id="table_empleados">
-                    <thead>
+            <div class="card col-12">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Empleados</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" id="table_empleados">
+                            <thead>
 
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre completo</th>
-                            <th>Correo Electronico</th>
-                            <th>Contacto</th>
-                            <th>Departamento</th>
-                            <th>Rol</th>
-                            <th>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre completo</th>
+                                    <th>Correo Electronico</th>
+                                    <th>Contacto</th>
+                                    <th>Departamento</th>
+                                    <th>Rol</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
 
 
 
 
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
             <!-- ./col -->
         </div>
         <!-- /.row -->
