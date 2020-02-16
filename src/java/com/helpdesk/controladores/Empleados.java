@@ -54,7 +54,7 @@ public class Empleados extends HttpServlet {
 
             if (accion == null) {
                 if (rolss == 1) {
-                    s.setAttribute("requestEmpleado", DataList.getEmpleados());
+                    s.setAttribute("requestEmpleado", DataList.getEmpleados(0));
                 }
                 if (rolss == 2) {
                     s.setAttribute("requestIncidencia", DataList.getIncidenciasSolicitadas(idUserSession));
@@ -82,7 +82,7 @@ public class Empleados extends HttpServlet {
                 }
                 request.setAttribute("listDepto", listDepto);
                 request.setAttribute("listRol", listRol);
-                request.setAttribute("listEmpleados", DataList.getEmpleados());
+                request.setAttribute("listEmpleados", DataList.getEmpleados(0));
                 request.getRequestDispatcher("asignarRol.jsp").forward(request, response);
             } else {
                 switch (accion) {

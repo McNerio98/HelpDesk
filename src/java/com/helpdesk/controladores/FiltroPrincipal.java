@@ -6,6 +6,7 @@
 package com.helpdesk.controladores;
 
 import com.helpdesk.entidades.Menu;
+import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -70,13 +71,17 @@ public class FiltroPrincipal implements Filter {
                     }
                     cont++;
                 }
-
             }
 
             if (encontrado) {
                 chain.doFilter(request, response);
             } else {
-                response.sendRedirect("Principal");
+                String rol = request.getParameter("typeSession");
+                if(rol.equals("REQ")){
+                    response.sendRedirect("PrincipalRequisicion");
+                }else{
+                    response.sendRedirect("Principal");
+                }
             }
 
         } else {

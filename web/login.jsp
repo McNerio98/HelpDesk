@@ -41,15 +41,21 @@
                     <input type="password" id="inputPassword" class="form-control" name="txtClave" placeholder="Contraseña" required>
                     <label for="inputPassword">Contraseña</label>
                 </div>
-
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <input class="custom-control-input" type="checkbox" name="loginReq" id="ifcheckbox" value="true">
+                    <label class="custom-control-label" for="ifcheckbox">Iniciar como Requisicion Cheque</label>
+                </div>
                 <c:if test="${error != null && error == 1}">
-                            <p class="text-danger">Usuario o contraseña incorrectos!</p>
+                    <p class="text-danger">Usuario o contraseña incorrectos!</p>
+                </c:if>
+                 <c:if test="${error != null && error == 2}">
+                    <p class="text-danger">No estas registrado en requisciones!</p>
                 </c:if>
                 <div class="checkbox mb-3">
                     <a href="${pageContext.servletContext.contextPath}/Login?accion=recover&opc=b19498e29da193d545f4072e58687845a894bcd6" class="float-left text-muted">¿Olvidaste tu contraseña?</a>
                     </br>
                 </div>
-                
+
                 <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
                 <p class="mt-4 mb-2 text-muted text-center">&copy; 2019-2020</p>
             </form>
@@ -58,5 +64,16 @@
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script>
+            var checkbox = document.getElementById("ifcheckbox");
+            checkbox.addEventListener("change", function () {
+
+                if (checkbox.checked) {
+                    checkbox.setAttribute("value", "true");
+                } else {
+                    checkbox.setAttribute("value", "false");
+                }
+            });
+        </script>
     </body>
 </html>

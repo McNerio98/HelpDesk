@@ -179,20 +179,26 @@
                     <!-- Table row -->
                     <div class="col-md-12" id="nofound"></div>
 
-                    <div class="col-md-12 table-responsive">
-                        <table class="display" id="table_emp">
-                            <thead>
+                    <div class="card col-12">
+                        <div class="card-header">
+                            <h3 class="card-title">Lista de Empleados</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
 
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombres</th>
-                                    <th>Apellidos</th>
-                                    <th>Email</th>
-                                    <th>Seleccionar</th>
-                                </tr>
-                            </thead>
-                            <input id="path" type="hidden" value="${pageContext.servletContext.contextPath}">
-                            <tbody>
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-striped table-bordered" id="table_emp">
+                                    <thead>
+
+                                        <tr>
+                                            <th>Nombres</th>
+                                            <th>Apellidos</th>
+                                            <th>Email</th>
+                                            <th><i class="fas fa-check-square"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <input id="path" type="hidden" value="${pageContext.servletContext.contextPath}">
+                                    <tbody>
 
 
 
@@ -201,126 +207,128 @@
 
 
 
-                            </tbody>
-                        </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
                     </div>
                 </div>
 
+
+
+                <!-- /.No quitar esto, copiar en todos los demas -->          
             </div>
-        </div>
+            <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
 
+            <script>
 
-
-        <!-- /.No quitar esto, copiar en todos los demas -->          
-    </div>
-    <!-- /.container-fluid -->
-</section>
-<!-- /.content -->
-
-<script>
-
-    function formatear(inv) {
-        let dia = inv[0] + inv[1];
-        let mes = inv[3] + inv[4];
-        let anio = inv[6] + inv[7] + inv[8] + inv[9];
-        return anio + "-" + mes + "-" + dia;
-    }
-
-    var titulo, clasificacion, prioridad, descripcion, tecnico, finalDate, auxDate;
-    titulo = document.getElementById('txtTitle');
-    clasificacion = document.getElementById('slcClasificacion');
-    prioridad = document.getElementById('slcPrioridad');
-    descripcion = document.getElementById('txtDescripcion');
-    depto = document.getElementById('slcDeptoIncidence');
-    tecnico = document.getElementById('idReceptor');
-    fechaFinal = document.getElementById('dateFechaFinal');
-    hiddenReceptorId = document.getElementById('idReceptor');
-    auxDate = document.getElementById('auxDate');
-
-
-
-    // metodo para validar 
-    function validar() {
-        if (hiddenReceptorId.value.length == 0) {
-            alert("Debe seleccionar un Tecnico");
-            return false;
-        }else if(clasificacion.value.length == 0){
-            alert("Debe registrar al menos una Clasificacion");
-            return false;
-        }
-
-        if (auxDate.value.length > 0) {
-            fechaFinal.value = formatear(auxDate.value);
-        }
-
-        return true;
-    }
-
-    var accion = "${accionProcess}";
-    clId = 1;
-    if (accion == 'update') {
-        titulo.disabled = true;
-        clasificacion.disabled = true;
-        clasificacion.value = "${ie.idClassification}";
-        prioridad.disabled = true;
-        prioridad.value = "${ie.priority}";
-        descripcion.disabled = true;
-        if (depto != null) {
-            depto.disabled = true;
-            depto.value = "${ie.idDepto}";
-        }
-        fechaFinal.disabled = true;
-        fechaFinal.value = "<fmt:formatDate value="${ie.finalDate}" pattern="yyyy-MM-dd"/>";
-    }
-
-</script>
-
-<%@include file="_endPanel.jsp" %>
-<script src="js/filtrarPorRol&Depto.js"></script>
-<script>
-    $('#table_emp').DataTable({
-        responsive: true,
-        language:
-                {
-                    "sProcessing": "Procesando...",
-                    "sLengthMenu": "Mostrar _MENU_ registros",
-                    "sZeroRecords": "No se encontraron resultados",
-                    "sEmptyTable": "Ningun dato disponible en esta tabla",
-                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Buscar:",
-                    "sUrl": "",
-                    "sInfoThousands": ",",
-                    "sLoadingRecords": "Ningun dato disponible en esta tabla",
-                    "oPaginate": {
-                        "sFirst": "Primero",
-                        "sLast": "\DAltimo",
-                        "sNext": "Siguiente",
-                        "sPrevious": "Anterior"
-                    },
-                    "oAria": {
-                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    },
-                    "buttons": {
-                        "copy": "Copiar",
-                        "colvis": "Visibilidad"
-                    }
+                function formatear(inv) {
+                    let dia = inv[0] + inv[1];
+                    let mes = inv[3] + inv[4];
+                    let anio = inv[6] + inv[7] + inv[8] + inv[9];
+                    return anio + "-" + mes + "-" + dia;
                 }
-    });
 
-</script>
+                var titulo, clasificacion, prioridad, descripcion, tecnico, finalDate, auxDate;
+                titulo = document.getElementById('txtTitle');
+                clasificacion = document.getElementById('slcClasificacion');
+                prioridad = document.getElementById('slcPrioridad');
+                descripcion = document.getElementById('txtDescripcion');
+                depto = document.getElementById('slcDeptoIncidence');
+                tecnico = document.getElementById('idReceptor');
+                fechaFinal = document.getElementById('dateFechaFinal');
+                hiddenReceptorId = document.getElementById('idReceptor');
+                auxDate = document.getElementById('auxDate');
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#datepicker-group").datepicker({
-            format: "dd/mm/yyyy",
-            todayHighlight: true,
-            autoclose: true,
-            clearBtn: true
-        });
-    });
 
-</script>
+
+                // metodo para validar 
+                function validar() {
+                    if (hiddenReceptorId.value.length == 0) {
+                        alert("Debe seleccionar un Tecnico");
+                        return false;
+                    } else if (clasificacion.value.length == 0) {
+                        alert("Debe registrar al menos una Clasificacion");
+                        return false;
+                    }
+
+                    if (auxDate.value.length > 0) {
+                        fechaFinal.value = formatear(auxDate.value);
+                    }
+
+                    return true;
+                }
+
+                var accion = "${accionProcess}";
+                clId = 1;
+                if (accion == 'update') {
+                    titulo.disabled = true;
+                    clasificacion.disabled = true;
+                    clasificacion.value = "${ie.idClassification}";
+                    prioridad.disabled = true;
+                    prioridad.value = "${ie.priority}";
+                    descripcion.disabled = true;
+                    if (depto != null) {
+                        depto.disabled = true;
+                        depto.value = "${ie.idDepto}";
+                    }
+                    fechaFinal.disabled = true;
+                    fechaFinal.value = "<fmt:formatDate value="${ie.finalDate}" pattern="yyyy-MM-dd"/>";
+                }
+
+            </script>
+
+            <%@include file="_endPanel.jsp" %>
+            <script src="js/filtrarPorRol&Depto.js"></script>
+            <script>
+                $('#table_emp').DataTable({
+                    responsive: true,
+                    language:
+                            {
+                                "sProcessing": "Procesando...",
+                                "sLengthMenu": "Mostrar _MENU_ registros",
+                                "sZeroRecords": "No se encontraron resultados",
+                                "sEmptyTable": "Ningun dato disponible en esta tabla",
+                                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                "sInfoPostFix": "",
+                                "sSearch": "Buscar:",
+                                "sUrl": "",
+                                "sInfoThousands": ",",
+                                "sLoadingRecords": "Ningun dato disponible en esta tabla",
+                                "oPaginate": {
+                                    "sFirst": "Primero",
+                                    "sLast": "\DAltimo",
+                                    "sNext": "Siguiente",
+                                    "sPrevious": "Anterior"
+                                },
+                                "oAria": {
+                                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                },
+                                "buttons": {
+                                    "copy": "Copiar",
+                                    "colvis": "Visibilidad"
+                                }
+                            }
+                });
+
+            </script>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#datepicker-group").datepicker({
+                        format: "dd/mm/yyyy",
+                        todayHighlight: true,
+                        autoclose: true,
+                        clearBtn: true
+                    });
+                });
+
+            </script>

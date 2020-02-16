@@ -43,27 +43,41 @@
                         <h3>Llene todos los campos</h3>
                         <div class="form-row mt-3">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Nombres" name="txtNombres" required> 
+                                <input type="text" class="form-control" placeholder="Nombres" name="txtNombres" required="true" maxlength="20"> 
                             </div>
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Apellidos" name="txtApellidos" required>
+                                <input type="text" class="form-control" placeholder="Apellidos" name="txtApellidos" required="true" maxlength="20">
                             </div>
                         </div>                      
                         <div class="form-group mt-3">
                             <label for="exampleInputEmail1">Nombre del Usuario</label>
-                            <input type="text" class="form-control" id="txtUser" style="text-transform:uppercase;" name="txtUser" required>
+                            <input type="text" class="form-control" id="txtUser" style="text-transform:uppercase;" name="txtUser" required="true" maxlength="20"> 
                             <small id="emailHelp" class="form-text text-muted">Para iniciar sesion tambien podras utilizar tu correo electronico</small>
                             <p class="text-danger d-none" id="userExist">El Usuario ya existe</p>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect1">Departamento Asignado</label>
-                            <select class="form-control" id="depto" name="depto">
-                                <option value="0">---SELECIONAR DEPARTAMENTO---</option>
-                                <c:forEach var="Iterador" items="${DeptosList}">
-                                    <option value="${Iterador.getIdDepto()}">${Iterador.getDeptoName()}</option>
-                                </c:forEach>   
-                            </select>
-                        </div>                                        
+                        <div class="custom-control custom-checkbox mr-sm-2">
+                            <input class="custom-control-input" type="checkbox" name="requisicion" id="ifcheckbox" value="true">
+                            <label class="custom-control-label" for="ifcheckbox">Requisicion Cheque</label>
+                        </div>
+                        <hr/>
+                        <div class="form-row mt-3">
+                            <div class="form-group col-md-6" id="pnlSelectEmpresa" style="display:none;">
+                                <label for="exampleFormControlSelect1">Empresa Asignada</label>
+                                <select class="form-control" id="empresa" name="empresa">
+                                    <option value="0">-- SELECIONAR EMPRESA --</option>
+                                </select>
+                            </div>                                                         
+                            <div class="form-group col-md-12" id="pnlSelectDepto">
+                                <label for="exampleFormControlSelect1">Departamento Asignado</label>
+                                <select class="form-control" id="depto" name="depto">
+                                    <option value="0">-- SELECIONAR DEPTTO --</option>
+                                    <c:forEach var="Iterador" items="${DeptosList}">
+                                        <option value="${Iterador.getIdDepto()}">${Iterador.getDeptoName()}</option>
+                                    </c:forEach>   
+                                </select>
+                            </div>                             
+                        </div>
+
                     </div>
                     <div class="col-md-6 mt-5">
                         <label for="exampleFormControlInput1">Credenciales de Seguridad</label>
@@ -77,12 +91,12 @@
                         </div>                     
                         <div class="form-group mt-3">
                             <label for="exampleFormControlInput1">Correo Electronico</label>
-                            <input type="email" class="form-control" id="txtEmail" placeholder="name@example.com" name="txtEmail" required>
+                            <input type="email" class="form-control" id="txtEmail" placeholder="name@example.com" name="txtEmail" required="true" maxlength="60">
                             <p class="text-danger d-none" id="emailExist">El correo ya esta en uso!</p>                         
                         </div>                    
                         <div class="form-group mt-3">
                             <label for="exampleFormControlInput1">Numero de Contacto</label>
-                            <input type="text" class="form-control" id="" name="txtTelephone" required>
+                            <input type="text" class="form-control" id="" name="txtTelephone" required="true" maxlength="20">
                         </div>
                         <button type="submit" class="btn btn-primary" id="btnSubmit">Aceptar</button>
                         <a href="${pageContext.servletContext.contextPath}/Login" class="btn btn-secondary">Cancelar</a> 
@@ -110,41 +124,52 @@
 
                     return true;
                 }
-                
+
                 $(document).ready(function () {
-                    $('#txtUser').change(function(){
-                       $.ajax({
-                           type: 'POST',
-                           data: {usName: $(this).val()},
-                           url: '${pageContext.servletContext.contextPath}/Login?accion=consultar_usuario',
-                           success: function(result){
-                               if(result=='true'){
-                                   $('#userExist').removeClass('d-none');
-                                   $("#btnSubmit").prop('disabled', true);
-                               }else{
-                                   $('#userExist').addClass('d-none');
-                                   $("#btnSubmit").prop('disabled', false);
-                               }
-                           }
-                       });
+                    $('#txtUser').change(function () {
+                        $.ajax({
+                            type: 'POST',
+                            data: {usName: $(this).val()},
+                            url: '${pageContext.servletContext.contextPath}/Login?accion=consultar_usuario',
+                            success: function (result) {
+                                if (result == 'true') {
+                                    $('#userExist').removeClass('d-none');
+                                    $("#btnSubmit").prop('disabled', true);
+                                } else {
+                                    $('#userExist').addClass('d-none');
+                                    $("#btnSubmit").prop('disabled', false);
+                                }
+                            }
+                        });
+                    });
+
+                    $('#txtEmail').change(function () {
+                        $.ajax({
+                            type: 'POST',
+                            data: {usEmail: $(this).val()},
+                            url: '${pageContext.servletContext.contextPath}/Login?accion=consultar_correo',
+                            success: function (result) {
+                                if (result == 'true') {
+                                    $('#emailExist').removeClass('d-none');
+                                    $("#btnSubmit").prop('disabled', true);
+                                } else {
+                                    $('#emailExist').addClass('d-none');
+                                    $("#btnSubmit").prop('disabled', false);
+                                }
+                            }
+                        });
                     });
                     
-                    $('#txtEmail').change(function(){
-                       $.ajax({
-                           type: 'POST',
-                           data: {usEmail: $(this).val()},
-                           url: '${pageContext.servletContext.contextPath}/Login?accion=consultar_correo',
-                           success: function(result){
-                               if(result=='true'){
-                                   $('#emailExist').removeClass('d-none');
-                                   $("#btnSubmit").prop('disabled', true);
-                               }else{
-                                   $('#emailExist').addClass('d-none');
-                                   $("#btnSubmit").prop('disabled', false);
-                               }
-                           }
-                       });
-                    });                    
+                    $('#ifcheckbox').on('change',function(){
+                        if($(this).prop('checked')){
+                            $('#pnlSelectEmpresa').css('display','block');
+                            $('#pnlSelectDepto').removeClass('col-md-12').addClass('col-md-6');
+                            
+                        }else{
+                            $('#pnlSelectEmpresa').css('display','none');
+                            $('#pnlSelectDepto').removeClass('col-md-6').addClass('col-md-12');
+                        }
+                    })
                 });
         </script>         
     </body>

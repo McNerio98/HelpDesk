@@ -41,5 +41,20 @@ public class Enums {
         public static final int MEDIA = 2;
         public static final int ALTA = 3;
     }
+    
+    public static final class ROL{
+        // ROLES DE MODULO DE HELPDESK 
+        public static final int GERENTE = 1;
+        public static final int LIDER = 2;
+        public static final int RECEPTOR = 3;
+        public static final int EMPLEADO = 4;
+        
+        // ROLES DE MODULO DE REQUISICIONES
+        public static final int GERENTE_REQ = 5;
+        public static final int LIDER_REQ = 6;
+        public static final int RECEPTOR_REQ = 7;
+        public static final int EMPLEADO_REQ = 8;
+        public static final int CONTADOR_REQ = 9;
+    }
 
 }

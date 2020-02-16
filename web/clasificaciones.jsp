@@ -19,7 +19,7 @@
             <div class="col-sm- col-lg-12">
                 <div class="col-sm-6 col-md-6">
 
-                    <h2 class=" text-dark">Lista de Clasificaciones</h2>
+                    
 
                 </div><!-- /.col -->
 
@@ -43,26 +43,34 @@
 <section class="content">
     <div class="container-fluid">
 
-        <!--Table-->
-        <div class="col-md-12 table-responsive">
-            <table class="display" id="table-class">
-                <thead>
+        <div class="card col-12">
+            <div class="card-header">
+                <h3 class="card-title">Lista de Categorias</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!--Table-->
+                <div class="col-md-12 table-responsive">
+                    <table class="table table-striped table-bordered" id="table-class">
+                        <thead>
 
-                    <tr>
-                        <th>ID</th>
-                        <th>Clasificacion</th>
-                        <th>Descripcion</th>
-                        <th>Opcion</th>
-                    </tr>
-                </thead>
-                <tbody>
+                            <tr>
+                                <th>ID</th>
+                                <th>Clasificacion</th>
+                                <th>Descripcion</th>
+                                <th>Opcion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
 
 
 
 
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
 

@@ -56,6 +56,18 @@
         <servlet-name>Perfil</servlet-name>
         <servlet-class>com.helpdesk.controladores.Perfil</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PrincipalRequisicion</servlet-name>
+        <servlet-class>com.helpdesk.controladores.PrincipalRequisicion</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Solicitudes</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Solicitudes</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Empresas</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Empresas</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -103,6 +115,18 @@
     <servlet-mapping>
         <servlet-name>Perfil</servlet-name>
         <url-pattern>/Perfil</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrincipalRequisicion</servlet-name>
+        <url-pattern>/PrincipalRequisicion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Solicitudes</servlet-name>
+        <url-pattern>/Solicitudes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Empresas</servlet-name>
+        <url-pattern>/Empresas</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
