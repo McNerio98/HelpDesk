@@ -81,9 +81,85 @@ public class Empresas extends HttpServlet {
                     }
                     break;
                 }
+                case "actualizar": {
+                    String empresaname = request.getParameter("empresaname");
+                    String addres = request.getParameter("address");
+                    int idemp = Integer.parseInt(request.getParameter("IdEmpresa"));
+                    if (empresaname.length() > 20 || addres.length() >= 200) {
+                        request.setAttribute("errorCharacters", "crear");
+                        request.getRequestDispatcher("empresas.jsp").forward(request, response);
+                    } else {
+                        Empresa enterprise = new Empresa();
+                        enterprise.setNombre(empresaname);
+                        enterprise.setDireccion(addres);
+                        try {
+                            ConexionPool conn = new ConexionPool();
+                            conn.conectar();
+                            Operaciones.abrirConexion(conn);
+                            Operaciones.iniciarTransaccion();
+                            Operaciones.actualizar(idemp, enterprise);
+                            Operaciones.commit();
+                            response.sendRedirect(request.getContextPath() + "/Empresas");
+                        } catch (Exception ex) {
+                            try {
+                                Operaciones.rollback();
+
+                            } catch (SQLException ex1) {
+                                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+                            }
+                        } finally {
+                            try {
+                                Operaciones.cerrarConexion();
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                    break;
+                }
             }
 
         }
+    }
+
+    private boolean deleteDeptoInEmpresa(int iddep, int idemp) {
+        boolean ok = false;
+        try {
+            ConexionPool conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
+            EmpresaByDepto emp = new EmpresaByDepto();
+            String query = "select idebd from empresasbydeptos where iddepto = " + iddep + " and idempresa =" + idemp;
+
+            String array[][] = Operaciones.consultar(query, null);
+
+            if (array != null) {
+                for (int i = 0; i < array[0].length; i++) {
+                    emp = Operaciones.get(Integer.parseInt(array[0][i]), new EmpresaByDepto());
+                }
+                Operaciones.eliminar(emp.getIdEBD(), new EmpresaByDepto());
+                Operaciones.commit();
+                ok = true;
+            } else {
+                ok = false;
+            }
+        } catch (Exception ex) {
+            ok = false;
+            try {
+                Operaciones.rollback();
+
+            } catch (SQLException ex1) {
+                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return ok;
     }
 
     private boolean insertDeptoInEmpresa(int iddep, int idemp) {
@@ -158,12 +234,22 @@ public class Empresas extends HttpServlet {
                 }
                 break;
             }
-            case "insertDeptoToEmpresa":{
+            case "insertDeptoToEmpresa": {
                 int idemp = Integer.parseInt(request.getParameter("idemp"));
                 int iddep = Integer.parseInt(request.getParameter("iddep"));
-                if(this.insertDeptoInEmpresa(iddep, idemp)){
+                if (this.insertDeptoInEmpresa(iddep, idemp)) {
                     out.print("true");
-                }else{
+                } else {
+                    out.print("false");
+                }
+                break;
+            }
+            case "deleteDeptoInEmpresa": {
+                int idemp = Integer.parseInt(request.getParameter("idemp"));
+                int iddep = Integer.parseInt(request.getParameter("iddep"));
+                if (this.deleteDeptoInEmpresa(iddep, idemp)) {
+                    out.print("true");
+                } else {
                     out.print("false");
                 }
                 break;

@@ -24,7 +24,7 @@ function updateDepto(id) {
 
 function updateEmpresa(id) {
     var array = document.getElementById(id).getElementsByTagName('td');
-    document.getElementById('IdDepto').setAttribute('value', array[0].textContent);
+    document.getElementById('IdEmpresa').setAttribute('value', array[0].textContent);
     document.getElementById('inputName').setAttribute('value', array[1].textContent);
     document.getElementById('inputDescription').innerHTML = array[2].textContent;
     $('#modaltoUpdateDepto').modal('show');
@@ -42,8 +42,8 @@ function fetchTable(root,id){
                         document.getElementById("bodyTable").innerHTML += `
                         <tr id="deptr`+data[i].idDepto+`">
                             <td>`+data[i].idDepto+`</td>
-                            <td>`+data[i].deptoName+`</td>
-                            <td><a href="#" onclick="deleteNode(`+data[i].idDepto+`)">Eliminar</a><td>
+                            <td>` + data[i].deptoName + `</td>
+                            <td><a href="#" onclick="deleteNode(`+data[i].idDepto+`,`+id+`)">Eliminar</a><td>
                         </tr>
                         `;
                     }

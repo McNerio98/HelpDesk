@@ -2,6 +2,12 @@
 
 <%@include file="_startPanel.jsp" %>
 <script src="js/departamento.js"></script> 
+<style>
+    #modaltoAddingDeptoToEnterprise .modal-content
+    {
+        min-height:500px;
+    }
+</style>
 
 <!-- Content Header (Page header) Esto dependera de cada pagina-->
 <div class="content-header">
@@ -15,7 +21,7 @@
         </div>
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Lista de Empresas</h1>              
+
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -36,7 +42,7 @@
 
         <div class="card col-12">
             <div class="card-header">
-                <h3 class="card-title">Lista de Empleados</h3>
+                <h3 class="card-title">Lista de Empresas</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -65,7 +71,7 @@
             </div>
         </div>
 
-        <!--Modal for New Departamento-->
+        <!--Modal for New Empresa-->
         <div id="modaltoNewDepto" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -104,7 +110,7 @@
 
 
 
-        <!--Modal for Update Departamento-->
+        <!--Modal for Update Empresa-->
         <div id="modaltoUpdateDepto" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -116,20 +122,20 @@
                     </div>
                     <div class="modal-body">
 
-                        <form action="${pageContext.servletContext.contextPath}/Departamentos?accion=actualizar" method="post">
-                            <input type="hidden" value="" id="IdDepto" name="iddepto">
+                        <form action="${pageContext.servletContext.contextPath}/Empresas?accion=actualizar" method="post">
+                            <input type="hidden" value="" id="IdEmpresa" name="IdEmpresa">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Nombre</label>
                                 <br>
                                 <span class="text-danger" id="alertInput2"></span>
-                                <input onkeyup="validarCaracteres('inputName', 50, 'btnSaveChanges', 'alertInput2')" name="deptoname" type="text" class="form-control" id="inputName" value="" >
+                                <input onkeyup="validarCaracteres('inputName', 20, 'btnSaveChanges', 'alertInput2')" name="empresaname" type="text" class="form-control" id="inputName" value="" >
 
                             </div>
                             <div class="form-group">
-                                <label for="exampleFormControlTextarea1">Agrega una descripcion general</label>
+                                <label for="exampleFormControlTextarea1">Agrega una direccion</label>
                                 <br>
                                 <span class="text-danger" id="alertArea2"></span>
-                                <textarea onkeyup="validarCaracteres('inputDescription', 500, 'btnSaveChanges', 'alertArea2')" name="descripcion" class="form-control" id="inputDescription" rows="3"></textarea>
+                                <textarea onkeyup="validarCaracteres('inputDescription', 200, 'btnSaveChanges', 'alertArea2')" name="address" class="form-control" id="inputDescription" rows="3"></textarea>
                             </div>
 
                             <div class="modal-footer">
@@ -225,8 +231,23 @@
         //html.style.display = "none";
         document.getElementById("alertDepto").innerHTML = "";
     }
-    function deleteNode(id) {
-        $("#deptr" + id).remove();
+    function deleteNode(iddep,idemp) {
+        fetch("${pageContext.servletContext.contextPath}/Empresas?accion=deleteDeptoInEmpresa&idemp=" + idemp+ "&iddep=" + iddep)
+                .then((response) => response.text())
+                .then((responseText) => {
+                    console.log(responseText);
+                    if (responseText != "true") {
+                        document.getElementById("alertDepto").innerHTML = "Error, no se pudo hacer la peticion";
+                    } else {
+                       fetchTable('${pageContext.servletContext.contextPath}', idemp);
+                    }
+
+
+                })
+                .catch((error) => {
+
+                    console.log(error);
+                });
     }
     function Addtable(iddep) {
 
