@@ -37,11 +37,9 @@ public class RequisicionPago {
     @AutoIncrement
     private int idRequisicion;
     @NotNull
-    private int idCreador;
-    @NotNull
-    private int idAutorizador;
-    @NotNull
-    private int idContador;
+    private Integer idCreador;
+    private Integer idAutorizador;
+    private Integer idContador;
     @NotNull
     private Timestamp Fecha;
     @NotNull
@@ -70,42 +68,42 @@ public class RequisicionPago {
     /**
      * @return the idCreador
      */
-    public int getIdCreador() {
+    public Integer getIdCreador() {
         return idCreador;
     }
 
     /**
      * @param idCreador the idCreador to set
      */
-    public void setIdCreador(int idCreador) {
+    public void setIdCreador(Integer idCreador) {
         this.idCreador = idCreador;
     }
 
     /**
      * @return the idAutorizador
      */
-    public int getIdAutorizador() {
+    public Integer getIdAutorizador() {
         return idAutorizador;
     }
 
     /**
      * @param idAutorizador the idAutorizador to set
      */
-    public void setIdAutorizador(int idAutorizador) {
+    public void setIdAutorizador(Integer idAutorizador) {
         this.idAutorizador = idAutorizador;
     }
 
     /**
      * @return the idContador
      */
-    public int getIdContador() {
+    public Integer getIdContador() {
         return idContador;
     }
 
     /**
      * @param idContador the idContador to set
      */
-    public void setIdContador(int idContador) {
+    public void setIdContador(Integer idContador) {
         this.idContador = idContador;
     }
 
