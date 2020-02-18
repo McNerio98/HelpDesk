@@ -14,7 +14,7 @@ import com.helpdesk.anotaciones.PrimaryKey;
  *
  * @author ALEX
  */
-@Entity(table = "contadorByEmpresas")
+@Entity(table = "USUARIOREQBYEMPRESAS")
 public class UsuarioReqByEmpresa {
     @PrimaryKey
     @AutoIncrement
@@ -27,46 +27,30 @@ public class UsuarioReqByEmpresa {
     public UsuarioReqByEmpresa(){
         
     }
-    /**
-     * @return the idcbe
-     */
+
     public int getIdure() {
         return idure;
     }
 
-    /**
-     * @param idcbe the idcbe to set
-     */
-    public void setIdcbe(int idcbe) {
-        this.idure = idcbe;
+    public void setIdure(int idure) {
+        this.idure = idure;
     }
 
-    /**
-     * @return the idContador
-     */
-    public int getIdContador() {
+    public int getIdUsuario() {
         return idUsuario;
     }
 
-    /**
-     * @param idContador the idContador to set
-     */
-    public void setIdContador(int idUsuario) {
+    public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    /**
-     * @return the idEmpresa
-     */
     public int getIdEmpresa() {
         return idEmpresa;
     }
 
-    /**
-     * @param idEmpresa the idEmpresa to set
-     */
     public void setIdEmpresa(int idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
     
+
 }

@@ -14,6 +14,7 @@ import com.helpdesk.entidades.DeptoPorUsuario;
 import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioReqByEmpresa;
 import com.helpdesk.entidades.UsuarioRequisicion;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
@@ -246,10 +247,15 @@ public class Login extends HttpServlet {
                         u.setIdRole(Enums.ROL.EMPLEADO_REQ);
                         u = Operaciones.insertar(u);
                         UsuarioRequisicion ur = new UsuarioRequisicion();
-                        ur.setIdEmpresa(Integer.parseInt("1")); //Modificar luego
                         ur.setIdUsuario(u.getIdUser());
                         ur.setIdRol(Enums.ROL.EMPLEADO_REQ);
                         ur = Operaciones.insertar(ur);
+                        
+                        UsuarioReqByEmpresa urb = new UsuarioReqByEmpresa();
+                        urb.setIdUsuario(u.getIdUser());
+                        urb.setIdEmpresa(Integer.parseInt("1"));
+                        urb = Operaciones.insertar(urb);
+                        
                     } else {
                         u = Operaciones.insertar(u);
                     }
@@ -357,6 +363,11 @@ public class Login extends HttpServlet {
                         s.setAttribute("MenuPrincipal", MenuPrincipal);
                         response.sendRedirect("PrincipalRequisicion");
                     } else {
+                        if(u.getIdRole() >= 5 && u.getIdRole() <= 9){
+                            request.setAttribute("error", 2);
+                            request.getRequestDispatcher("login.jsp").forward(request, response);
+                            return;                            
+                        }                        
                         s.setAttribute("Rol", u.getIdRole());
                         s.setAttribute("typeSession", "HD");
                         MenuPrincipal = getPermisos(u.getIdRole());

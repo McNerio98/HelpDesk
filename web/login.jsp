@@ -49,7 +49,7 @@
                     <p class="text-danger">Usuario o contraseña incorrectos!</p>
                 </c:if>
                  <c:if test="${error != null && error == 2}">
-                    <p class="text-danger">No estas registrado en requisciones!</p>
+                    <p class="text-danger">No estas registrado para esta opcion!</p>
                 </c:if>
                 <div class="checkbox mb-3">
                     <a href="${pageContext.servletContext.contextPath}/Login?accion=recover&opc=b19498e29da193d545f4072e58687845a894bcd6" class="float-left text-muted">¿Olvidaste tu contraseña?</a>
