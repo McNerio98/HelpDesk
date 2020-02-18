@@ -5,6 +5,7 @@
  */
 package com.helpdesk.entidades;
 
+import com.helpdesk.anotaciones.AutoIncrement;
 import com.helpdesk.anotaciones.Entity;
 import com.helpdesk.anotaciones.NotNull;
 import com.helpdesk.anotaciones.PrimaryKey;
@@ -18,10 +19,10 @@ import java.math.BigDecimal;
 public class DetalleRequisicion {
 
     @PrimaryKey
-    @NotNull
+    @AutoIncrement
     private int idDetalle;
     @NotNull
-    private int Descripcion;
+    private String Descripcion;
     @NotNull
     private BigDecimal Monto;
     @NotNull
@@ -44,14 +45,14 @@ public class DetalleRequisicion {
     /**
      * @return the Descripcion
      */
-    public int getDescripcion() {
+    public String getDescripcion() {
         return Descripcion;
     }
 
     /**
      * @param Descripcion the Descripcion to set
      */
-    public void setDescripcion(int Descripcion) {
+    public void setDescripcion(String Descripcion) {
         this.Descripcion = Descripcion;
     }
 

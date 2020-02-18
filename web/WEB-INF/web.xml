@@ -68,6 +68,10 @@
         <servlet-name>Empresas</servlet-name>
         <servlet-class>com.helpdesk.controladores.Empresas</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Requisiciones</servlet-name>
+        <servlet-class>com.helpdesk.controladores.Requisiciones</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -127,6 +131,10 @@
     <servlet-mapping>
         <servlet-name>Empresas</servlet-name>
         <url-pattern>/Empresas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Requisiciones</servlet-name>
+        <url-pattern>/Requisiciones</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
