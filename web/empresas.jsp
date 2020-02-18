@@ -96,7 +96,19 @@
                                 <label for="exampleFormControlTextarea1">Agrega la direccion correspondiente</label>
                                 <br>
                                 <span id="alertArea" class="text-danger"></span>
-                                <textarea onkeyup="validarCaracteres('exampleFormControlTextarea1', 200, 'btnCreate', 'alertArea')" name="address" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <input type="text" onkeyup="validarCaracteres('exampleFormControlTextarea1', 200, 'btnCreate', 'alertArea')" name="address" class="form-control" id="exampleFormControlTextarea1">
+                                <br>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Contador</label>
+                                    </div>
+                                    <select class="custom-select" id="inputGroupSelect01">
+                                        <option selected value="0">Choose...</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <button id="btnCreate" type="submit" class="btn btn-primary float-right">Crear</button>
@@ -231,15 +243,15 @@
         //html.style.display = "none";
         document.getElementById("alertDepto").innerHTML = "";
     }
-    function deleteNode(iddep,idemp) {
-        fetch("${pageContext.servletContext.contextPath}/Empresas?accion=deleteDeptoInEmpresa&idemp=" + idemp+ "&iddep=" + iddep)
+    function deleteNode(iddep, idemp) {
+        fetch("${pageContext.servletContext.contextPath}/Empresas?accion=deleteDeptoInEmpresa&idemp=" + idemp + "&iddep=" + iddep)
                 .then((response) => response.text())
                 .then((responseText) => {
                     console.log(responseText);
                     if (responseText != "true") {
                         document.getElementById("alertDepto").innerHTML = "Error, no se pudo hacer la peticion";
                     } else {
-                       fetchTable('${pageContext.servletContext.contextPath}', idemp);
+                        fetchTable('${pageContext.servletContext.contextPath}', idemp);
                     }
 
 

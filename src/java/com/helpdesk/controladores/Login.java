@@ -11,6 +11,7 @@ import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.DeptoPorUsuario;
+import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.entidades.UsuarioRequisicion;
@@ -57,8 +58,11 @@ public class Login extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else if (accion.equals("registro")) {
             ArrayList<Departamento> Deptos = new ArrayList<Departamento>();
+            ArrayList<Empresa> empresas = new ArrayList<>();
+            empresas = DataList.getAllEmpresas();
             Deptos = DataList.getAllDeptos();
             request.setAttribute("DeptosList", Deptos);
+            request.setAttribute("EmpresasList", empresas);
             request.getRequestDispatcher("registro.jsp").forward(request, response);
         } else if (accion.equals("recover")) {
             String opc = request.getParameter("opc");

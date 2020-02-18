@@ -7,7 +7,6 @@ package com.helpdesk.utilerias;
 
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
-import com.helpdesk.controladores.Empresas;
 import com.helpdesk.controladores.Login;
 import com.helpdesk.entidades.Clasificacion;
 import com.helpdesk.entidades.Departamento;
@@ -104,6 +103,7 @@ public class DataList {
         return exists;
     }
 
+    
     public static ArrayList<Departamento> getAllDeptos() {
         ArrayList<Departamento> deptos = new ArrayList<>();
         try {
