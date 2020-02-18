@@ -37,6 +37,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="framework/js/demo.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
+<script src="js/dataTableBootstrap.js"></script>
 
 <script>
     function validarCaracteres(input, max, btn, alert) {

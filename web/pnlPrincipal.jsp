@@ -240,20 +240,36 @@
 
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <input type="hidden" id="path" value="${pageContext.servletContext.contextPath}">
-                    <div class="table-responsive">
-                        <table id="table_incidences" class="display table">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Incidencia</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody id="Incidencias">
+                    <div class="card col-12">
+                        <div class="card-header">
+                            <h3 class="card-title">Lista de Incidencias</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
 
-                            </tbody>
-                        </table>
+                            <div class="table-responsive">
+                                <table id="table_incidences" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Incidencia</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="Incidencias">
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
                     </div>
+
+
+
+
+
+
                 </div>
 
 
@@ -287,7 +303,7 @@
                                                     "sLengthMenu": "Mostrar _MENU_ registros",
                                                     "sZeroRecords": "No se encontraron resultados",
                                                     "sEmptyTable": "Ningun dato disponible en esta tabla",
-                                                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                                    "sInfo": "_START_ al _END_ de un total de _TOTAL_ registros",
                                                     "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
                                                     "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
                                                     "sInfoPostFix": "",

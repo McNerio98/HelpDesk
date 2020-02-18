@@ -20,9 +20,6 @@ public class UsuarioRequisicion {
     @PrimaryKey
     private int idUsuario;
     @NotNull
-    private int idEmpresa;
-    
-    @NotNull
     private int idRol;
 
     public UsuarioRequisicion() {
@@ -36,13 +33,6 @@ public class UsuarioRequisicion {
         this.idUsuario = idUsuario;
     }
 
-    public int getIdEmpresa() {
-        return idEmpresa;
-    }
-
-    public void setIdEmpresa(int idEmpresa) {
-        this.idEmpresa = idEmpresa;
-    }
 
     public int getIdRol() {
         return idRol;

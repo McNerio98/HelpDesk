@@ -45,7 +45,7 @@ function displayDatatables(url,idCase){
         },
         columns: [
             
-            {data: 'id'},
+            
             {data: 'name'},
             {data: 'lastname'},
             {data: 'email'},
@@ -134,8 +134,8 @@ function userChecked(id) {
 
     var isChecked = document.getElementById('isCheck' + id).checked;
     if (isChecked) {
-        document.getElementById("idReceptor").setAttribute("value", array2[0].textContent);
-        document.getElementById("Receptor").setAttribute("value", array2[1].textContent + " " + array2[2].textContent);
+        document.getElementById("idReceptor").setAttribute("value", id);
+        document.getElementById("Receptor").setAttribute("value", array2[0].textContent + " " + array2[1].textContent);
         for (i = 0; i < array.length; i++) {
             if (array[i].value != ("input" + id)) {
                 //array[i].setAttribute('disabled', true);
