@@ -142,6 +142,7 @@ public class DataList {
         return list;
     }
 
+    //El metodo getIdDepto y getIdEmpresa deben estar dentro una  estructura de conexion 
     public static Integer getIdDepto(Integer idUsuario) throws Exception {
         Integer idDepto = 0;
 
@@ -154,6 +155,19 @@ public class DataList {
 
         return idDepto;
     }
+    
+    public static Integer getIdEmpresa(Integer idUsuario) throws Exception {
+        Integer idEmpresa = 0;
+
+        String sql = "select idempresa from usuarioreqbyempresas where idusuario = ?";
+        List<Object> params = new ArrayList();
+        params.add(idUsuario);
+
+        String[][] rs = Operaciones.consultar(sql, params);
+        idEmpresa = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
+        return idEmpresa;
+    }
+    
 
     /*Esta funcion trae todos los usuarios que tienen el rol de empleado*/
     public static ArrayList<listarEmpleado> getEmpleados(int id) {

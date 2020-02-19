@@ -56,5 +56,13 @@ public class Enums {
         public static final int EMPLEADO_REQ = 8;
         public static final int CONTADOR_REQ = 9;
     }
+    
+    public static final class ESTADO_REQ{
+        public static final int SOLICITADA = 1;
+        public static final int REVISION = 2;
+        public static final int ACEPTADA = 3;
+        public static final int RECHAZADA = 4;
+        public static final int FINALIZADA = 5;
+    }
 
 }

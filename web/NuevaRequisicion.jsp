@@ -97,15 +97,15 @@
                                 </p>
                                 <div class="form-group">
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Fecha:
-                                        <span class="text-custom1"> ${fecha}</span> </label>
+                                        <span class="text-custom1"> ${DataGeneral.fecha}</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Empresa:
-                                        <span class="text-custom1">Nexus S.A. de C.V</span> </label>
+                                        <span class="text-custom1">${DataGeneral.empresa}</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
-                                        Departamento: <span class="text-custom1">Control de Calidad</span></label>
+                                        Departamento: <span class="text-custom1">${DataGeneral.depto}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
-                                        Solicitante: <span class="text-custom1">Jorge Zavala</span></label>
+                                        Solicitante: <span class="text-custom1">${DataGeneral.solicitante}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
-                                        Autorizador: <span class="text-custom1">Lorena Serrano</span></label>
+                                        Autorizador: <span class="text-custom1">${DataGeneral.superior}</span></label>
                                     <div style="text-align: right;">
                                         <button type="submit" class="btn btn-success">Solicitar</button>
                                         <button type="button" class="btn btn-secondary">Cancelar</button>

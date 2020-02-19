@@ -52,14 +52,19 @@ public class FiltroPrincipal implements Filter {
             return;
         }
 
-        if (request.getSession().getAttribute("Usuario") != null || request.getRequestURI().equals(request.getContextPath() + "/Login")) {
+        if ((request.getSession().getAttribute("Usuario") !=null && request.getSession().getAttribute("idUsuario")!=null) || request.getRequestURI().equals(request.getContextPath() + "/Login")) {
             boolean encontrado = true;
             String url = request.getRequestURI().toString();
             String context = request.getContextPath();
 
-            String pathPrincipal = request.getContextPath() + "/Principal";
+            
+            String panelPrincipal = "";
+            
+            //Hasta aqui hay ya estan los datos en la sesion 
+            String tipoSesion = (String)request.getSession().getAttribute("typeSession");
+            panelPrincipal = (tipoSesion!=null && tipoSesion.equals("HD"))?"Principal":"PrincipalRequisicion";
 
-            if (request.getParameter("accion") == null && !url.equals(pathPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Informacion") && !url.equals(context + "/Perfil")) {
+            if (request.getParameter("accion") == null && !url.equals("/"+panelPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Informacion") && !url.equals(context + "/Perfil")) {
                 List<Menu> permisos = (List<Menu>) request.getSession().getAttribute("MenuPrincipal");
                 encontrado = false;
                 int cont = 0;
@@ -76,12 +81,7 @@ public class FiltroPrincipal implements Filter {
             if (encontrado) {
                 chain.doFilter(request, response);
             } else {
-                String rol = request.getParameter("typeSession");
-                if(rol.equals("REQ")){
-                    response.sendRedirect("PrincipalRequisicion");
-                }else{
-                    response.sendRedirect("Principal");
-                }
+                response.sendRedirect(panelPrincipal);
             }
 
         } else {

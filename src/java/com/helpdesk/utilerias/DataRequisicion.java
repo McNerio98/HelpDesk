@@ -15,6 +15,7 @@ public class DataRequisicion {
     private String depto;
     private String solicitante;
     private String superior;
+    private String estado;
 
     public DataRequisicion() {
         this.superior = "--No Asignado--";
@@ -59,7 +60,32 @@ public class DataRequisicion {
     public void setSuperior(String superior) {
         this.superior = superior;
     }
-    
-    
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer es) {
+        String NuevoEstado = "";
+        switch(es){
+            case 1: 
+                NuevoEstado = "Solicitud";
+                break;
+            case 2:
+                NuevoEstado = "Revision";
+                break;
+            case 3:
+                NuevoEstado = "Aceptada";
+                break;
+            case 4:
+                NuevoEstado = "Rechazada";
+                break;
+            case 5:
+                NuevoEstado = "Finalizada";
+                break;
+        }
+        
+        this.estado = NuevoEstado;
+    }
     
 }
