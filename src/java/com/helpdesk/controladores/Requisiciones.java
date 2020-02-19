@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +51,29 @@ public class Requisiciones extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
         if (accion == null) {
+            
+            try{
+                Conexion conn = new ConexionPool();
+                conn.conectar();
+                Operaciones.abrirConexion(conn);
+                String cmd = "select to_char(current_date,'dd-MM-yyyy') actual,concat(u.firstname, ' ',u.lastname) solicitante , \n"
+                            +"e.nombre, d.deptoname from empresas e, users u, usuarioreqbyempresas uem, deptobyusers du, departments d \n"
+                            +"where ? = uem.idusuario and uem.idempresa = e.idempresa and d.iddepto = du.iddepto and ? = du.iduser";
+            
+            Integer id = (Integer)request.getSession().getAttribute("idUsuario");
+            List<Object> params = new ArrayList();
+            params.add(id); 
+            
+            String[][] rs = Operaciones.consultar(cmd, params);
+            
+            
+            }catch(Exception e){
+                
+            }
+            
+            
+            SimpleDateFormat patron = new SimpleDateFormat("dd-MM-yyyy");
+            request.setAttribute("fecha", patron.format(new Date()));
             request.getRequestDispatcher("NuevaRequisicion.jsp").forward(request, response);
         }
 

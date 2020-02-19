@@ -65,6 +65,23 @@
                                             <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                         </div>
                                     </div>
+                                    <div class="row registro">
+                                        <div class="input-group mb-3 col-sm-8">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-angle-right"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
+                                                   maxlength="200">
+                                        </div>
+                                        <div class="input-group mb-3 col-sm-4">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
+                                        </div>
+                                    </div>                                    
 
                                 </div>
 
@@ -80,7 +97,7 @@
                                 </p>
                                 <div class="form-group">
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Fecha:
-                                        <span class="text-custom1"> <fmt:formatDate type = "date" value = "${now}" /></span> </label>
+                                        <span class="text-custom1"> ${fecha}</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Empresa:
                                         <span class="text-custom1">Nexus S.A. de C.V</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
