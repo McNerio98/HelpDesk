@@ -6,6 +6,7 @@ package com.helpdesk.controladores;
  */
 package com.helpdesk.controladores;
 
+import com.google.gson.Gson;
 import com.helpdesk.utilerias.Hash;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
@@ -51,6 +52,13 @@ public class Login extends HttpServlet {
         return generatedString;
     }
 
+    public String getAllDeptosInEmpresas(int id) {
+        ArrayList list = DataList.getDeptosByEmpresa(id);
+
+        String json = new Gson().toJson(list);
+        return json;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -65,12 +73,16 @@ public class Login extends HttpServlet {
             request.setAttribute("DeptosList", Deptos);
             request.setAttribute("EmpresasList", empresas);
             request.getRequestDispatcher("registro.jsp").forward(request, response);
+        } else if (accion.equals("getDeptosByEmpresa")) {
+            PrintWriter out = response.getWriter();
+            int idemp = Integer.parseInt(request.getParameter("id"));
+            out.print(this.getAllDeptosInEmpresas(idemp));
         } else if (accion.equals("recover")) {
             String opc = request.getParameter("opc");
             HttpSession s = request.getSession();
-            PrintWriter out = response.getWriter();
 
             switch (opc) {
+
                 //Cuando el usuario entre a la vista cambiar password
                 case "b19498e29da193d545f4072e58687845a894bcd6": {
                     s.setAttribute("recoverCase", 1);
@@ -80,7 +92,7 @@ public class Login extends HttpServlet {
                 //cuando se capta el correo y se le envia un link con una key hash al mismo
                 case "49381d2042ac93bb15942ecc3b2c1830d29ecdfa": {
                     String email = request.getParameter("email");
-
+                    PrintWriter out = response.getWriter();
                     if (!email.equals("")) {
                         if (this.verificarCorreo(email)) {
                             String key = this.generateRamdonString();
@@ -165,8 +177,9 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
-
+        PrintWriter out = response.getWriter();
         switch (accion) {
+            //Para mostrar los departamentos seleccionados a esa empresa
 
             case "saveNewPas": {
                 String usermail = request.getParameter("usermail");
@@ -250,12 +263,12 @@ public class Login extends HttpServlet {
                         ur.setIdUsuario(u.getIdUser());
                         ur.setIdRol(Enums.ROL.EMPLEADO_REQ);
                         ur = Operaciones.insertar(ur);
-                        
+
                         UsuarioReqByEmpresa urb = new UsuarioReqByEmpresa();
                         urb.setIdUsuario(u.getIdUser());
-                        urb.setIdEmpresa(Integer.parseInt("1"));
+                        urb.setIdEmpresa(Integer.parseInt(empresa));
                         urb = Operaciones.insertar(urb);
-                        
+
                     } else {
                         u = Operaciones.insertar(u);
                     }
@@ -291,7 +304,7 @@ public class Login extends HttpServlet {
             case "consultar_usuario": {
                 response.setContentType("text/plain");
                 String userName = request.getParameter("usName");
-                PrintWriter out = response.getWriter();
+                
                 if (verificarUsuario(userName.toUpperCase())) {
                     out.print("true");
                 } else {
@@ -302,7 +315,7 @@ public class Login extends HttpServlet {
             case "consultar_correo": {
                 response.setContentType("text/plain");
                 String em = request.getParameter("usEmail");
-                PrintWriter out = response.getWriter();
+                
                 if (verificarCorreo(em)) {
                     out.print("true");
                 } else {
@@ -363,11 +376,11 @@ public class Login extends HttpServlet {
                         s.setAttribute("MenuPrincipal", MenuPrincipal);
                         response.sendRedirect("PrincipalRequisicion");
                     } else {
-                        if(u.getIdRole() >= 5 && u.getIdRole() <= 9){
+                        if (u.getIdRole() >= 5 && u.getIdRole() <= 9) {
                             request.setAttribute("error", 2);
                             request.getRequestDispatcher("login.jsp").forward(request, response);
-                            return;                            
-                        }                        
+                            return;
+                        }
                         s.setAttribute("Rol", u.getIdRole());
                         s.setAttribute("typeSession", "HD");
                         MenuPrincipal = getPermisos(u.getIdRole());

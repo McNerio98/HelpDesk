@@ -6,10 +6,13 @@
 package com.helpdesk.controladores;
 
 import com.google.gson.Gson;
+import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.EmpresaByDepto;
+import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioReqByEmpresa;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
@@ -49,6 +52,8 @@ public class Empresas extends HttpServlet {
                 case "nuevo": {
                     String empresaname = request.getParameter("empresaname");
                     String addres = request.getParameter("address");
+                    String idcontador = request.getParameter("idcontador");
+                    
                     if (empresaname.length() > 20 || addres.length() >= 200) {
                         request.setAttribute("errorCharacters", "crear");
                         request.getRequestDispatcher("empresas.jsp").forward(request, response);
@@ -61,7 +66,11 @@ public class Empresas extends HttpServlet {
                             conn.conectar();
                             Operaciones.abrirConexion(conn);
                             Operaciones.iniciarTransaccion();
-                            Operaciones.insertar(enterprise);
+                            enterprise = Operaciones.insertar(enterprise);
+                            UsuarioReqByEmpresa ure = new UsuarioReqByEmpresa();
+                            ure.setIdUsuario(Integer.parseInt(idcontador));
+                            ure.setIdEmpresa(enterprise.getIdEmpresa());
+                            Operaciones.insertar(ure);
                             Operaciones.commit();
                             response.sendRedirect(request.getContextPath() + "/Empresas");
                         } catch (Exception ex) {
@@ -191,6 +200,36 @@ public class Empresas extends HttpServlet {
         }
         return ok;
     }
+    
+    private ArrayList<Usuario> getContadores(){
+        ArrayList<Usuario> list = new ArrayList<>();
+        try{
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            String query = "select  idusuario from usuariosrequisicion where idrol=9";
+            String array[][] = Operaciones.consultar(query, null);
+            if(array!=null){
+                for(int i=0;i<array[0].length;i++){
+                    Usuario user = new Usuario();
+                    user = Operaciones.get(Integer.parseInt(array[0][i]), new Usuario());
+                    list.add(user);
+                }
+            }else{
+                list = null;
+            }
+        }catch (Exception ex) {
+            list = null;
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return list;
+    }
 
     public String getAll() {
         ArrayList<Empresa> list = DataList.getAllEmpresas();
@@ -212,6 +251,7 @@ public class Empresas extends HttpServlet {
         PrintWriter out = response.getWriter();
         String accion = request.getParameter("accion");
         if (accion == null) {
+            request.setAttribute("ContadorList", this.getContadores());
             request.getRequestDispatcher("empresas.jsp").forward(request, response);
         }
         switch (accion) {
