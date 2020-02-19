@@ -60,11 +60,15 @@
                             <label class="custom-control-label" for="ifcheckbox">Requisicion Cheque</label>
                         </div>
                         <hr/>
+                        <span class="text-danger" id="alerEmpresa"></span>
                         <div class="form-row mt-3">
                             <div class="form-group col-md-6" id="pnlSelectEmpresa" style="display:none;">
                                 <label for="exampleFormControlSelect1">Empresa Asignada</label>
                                 <select class="form-control" id="empresa" name="empresa">
                                     <option value="0">-- SELECIONAR EMPRESA --</option>
+                                    <c:forEach var="Iterador" items="${EmpresasList}">
+                                        <option value="${Iterador.getIdEmpresa()}">${Iterador.getNombre()}</option>
+                                    </c:forEach> 
                                 </select>
                             </div>                                                         
                             <div class="form-group col-md-12" id="pnlSelectDepto">
@@ -110,6 +114,15 @@
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script>
+            var tags;
+            var jsonTags = [];
+            window.onload = function(){
+                 tags = comboboxdep.getElementsByTagName("option");
+                 for(var i=0;i<tags.length;i++){
+                     let jsonTemp = {id:tags[i].value,nombre:tags[i].label}
+                     jsonTags.push(jsonTemp);
+                 }
+            }
                 function validar() {
                     var clave1 = document.getElementById("txtPassword");
                     var clave2 = document.getElementById("txtPassword2");
@@ -159,18 +172,75 @@
                             }
                         });
                     });
-                    
-                    $('#ifcheckbox').on('change',function(){
-                        if($(this).prop('checked')){
-                            $('#pnlSelectEmpresa').css('display','block');
+
+                    $('#ifcheckbox').on('change', function () {
+                        if ($(this).prop('checked')) {
+                            $('#pnlSelectEmpresa').css('display', 'block');
                             $('#pnlSelectDepto').removeClass('col-md-12').addClass('col-md-6');
-                            
-                        }else{
-                            $('#pnlSelectEmpresa').css('display','none');
+
+                        } else {
+                            document.getElementById("btnSubmit").removeAttribute("disabled");
+                            comboboxdep.innerHTML = "";
+                            for(var i=0;i<jsonTags.length;i++){
+                                comboboxdep.innerHTML += `
+                                    <option value="`+jsonTags[i].id+`">`+jsonTags[i].nombre+`</option>
+                                `; 
+                            }
+                            combobox.getElementsByTagName("option")[0].selected;
+                            document.getElementById("alerEmpresa").innerHTML ="";
+                            comboboxdep.removeAttribute("disabled");
+                            $('#pnlSelectEmpresa').css('display', 'none');
                             $('#pnlSelectDepto').removeClass('col-md-6').addClass('col-md-12');
                         }
                     })
                 });
-        </script>         
+        </script>
+        <script>
+            var combobox = document.getElementById("empresa");
+            var comboboxdep = document.getElementById("depto");
+            
+            
+
+            combobox.addEventListener("change", function () {
+                
+                
+                
+                document.getElementById("btnSubmit").setAttribute("disabled","true");
+                document.getElementById("alerEmpresa").innerHTML ="";
+                comboboxdep.setAttribute("disabled","true");
+                
+                fetch("${pageContext.servletContext.contextPath}/Login?accion=getDeptosByEmpresa&id="+combobox.value
+                )
+                        .then((response) => response.text())
+                        .then((responseText) => {
+                            var json = JSON.parse(responseText);
+                            console.log(json);
+                            comboboxdep.innerHTML = "";
+                            if(json!=null){
+                                comboboxdep.removeAttribute("disabled");
+                                document.getElementById("btnSubmit").removeAttribute("disabled");
+                                for(var i=0;i<json.length;i++){
+                                comboboxdep.innerHTML += `
+                                    <option value=`+json[i].idDepto+`>
+                                       `+json[i].deptoName+`
+                                    </option>
+                                `;
+                                }
+                            }else{
+                                comboboxdep.innerHTML = "";
+                                comboboxdep.setAttribute("disabled","true");
+                                document.getElementById("btnSubmit").setAttribute("disabled","true");
+                                document.getElementById("alerEmpresa").innerHTML ="Esta empresa aun no tiene departamentos asignados";
+                            }
+                            
+                            
+                            
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+
+            });
+        </script>
     </body>
 </html>

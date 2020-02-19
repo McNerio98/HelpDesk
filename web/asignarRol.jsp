@@ -89,6 +89,7 @@
                 </p>
                 <form action="${pageContext.servletContext.contextPath}/Empleados?accion=updateRolDepto" method="post">
                     <input id="inputuser" type="hidden" value="" name="iduser">
+                    <input type="hidden" value="${typeSession}" name="sessiontype">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Departamentos</label>
@@ -154,11 +155,18 @@
 <%@include file="_endPanel.jsp" %>
 
 <script>
+    var sesion = '${typeSession}';
+    console.log(sesion);
+    var idCaseSesion = 0;
+    if(sesion != "HD"){
+        idCaseSesion = 1;
+    }
+    console.log("CASE: "+idCaseSesion);
     $(document).ready(function () {
         $('#table_empleados').DataTable({
             responsive: true,
             ajax: {
-                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll',
+                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll&idcase='+idCaseSesion,
                 dataSrc: ''
             },
             "createdRow": function (row, data, index) {

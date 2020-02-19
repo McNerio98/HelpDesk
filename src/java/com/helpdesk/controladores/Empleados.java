@@ -11,6 +11,7 @@ import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.DeptoPorUsuario;
 import com.helpdesk.entidades.Rol;
 import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioRequisicion;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.listarEmpleado;
@@ -55,6 +56,9 @@ public class Empleados extends HttpServlet {
             if (accion == null) {
                 if (rolss == 1) {
                     s.setAttribute("requestEmpleado", DataList.getEmpleados(0));
+                } 
+                if(rolss == 5){
+                    s.setAttribute("requestEmpleado", DataList.getEmpleados(1));
                 }
                 if (rolss == 2) {
                     s.setAttribute("requestIncidencia", DataList.getIncidenciasSolicitadas(idUserSession));
@@ -90,6 +94,7 @@ public class Empleados extends HttpServlet {
                         int rol = Integer.parseInt(request.getParameter("rol"));
                         int depto = Integer.parseInt(request.getParameter("depto"));
                         int iduser = Integer.parseInt(request.getParameter("iduser"));
+                        String sessiontype = request.getParameter("sessiontype");
                         Usuario user = new Usuario();
                         try {
                             ConexionPool conexion = new ConexionPool();
@@ -99,6 +104,9 @@ public class Empleados extends HttpServlet {
                             /*se setean los valores*/
                             user = Operaciones.get(iduser, new Usuario());
                             user.setIdRole(rol);
+                            
+                            UsuarioRequisicion userReq = Operaciones.get(iduser, new UsuarioRequisicion());
+                            userReq.setIdRol(rol);
 
                             String query = "select updateDepto(?,?)";
 
@@ -109,7 +117,13 @@ public class Empleados extends HttpServlet {
                             String[][] iddep = Operaciones.consultar(query, params);
 
                             /*se actualiza respectivamente cada entidad*/
-                            Operaciones.actualizar(user.getIdUser(), user);
+                            if(sessiontype.equals("HD")){
+                                
+                                Operaciones.actualizar(user.getIdUser(), user);
+                            }else{
+                                Operaciones.actualizar(userReq.getIdUsuario(), userReq);
+                            }
+                            
 
                             Operaciones.commit();
                             response.sendRedirect(request.getContextPath() + "/Empleados");
@@ -277,7 +291,8 @@ public class Empleados extends HttpServlet {
                     
                     case "getAll":
                     {
-                        this.getAllEmpleados(response);
+                        int idcase = Integer.parseInt(request.getParameter("idcase"));
+                        this.getAllEmpleados(response,idcase);
                         break;
                     }
                 }
@@ -285,7 +300,7 @@ public class Empleados extends HttpServlet {
         }
     }
 
-    public void getAllEmpleados(HttpServletResponse response) {
+    public void getAllEmpleados(HttpServletResponse response, int idcase) {
 
         ArrayList<Usuario> lstUsers = new ArrayList<>();
         ArrayList<listarEmpleado> lstEmpleado = new ArrayList<>();
@@ -294,7 +309,24 @@ public class Empleados extends HttpServlet {
             conn.conectar();
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
-            lstUsers = Operaciones.getTodos(new Usuario());
+            String query = "select iduser from users where idrole < 5";
+            
+            if(idcase==0){
+                String array[][] = Operaciones.consultar(query, null);
+                for(int i=0;i<array[0].length;i++){
+                    Usuario usertmp = Operaciones.get(Integer.parseInt(array[0][i]), new Usuario());
+                    lstUsers.add(usertmp);
+                }
+            }else{
+                
+                ArrayList<UsuarioRequisicion> userReq = Operaciones.getTodos(new UsuarioRequisicion());
+                for(int i=0;i<userReq.size();i++){
+                    Usuario urq = Operaciones.get(userReq.get(i).getIdUsuario(), new Usuario());
+                    urq.setIdRole(userReq.get(i).getIdRol());
+                    lstUsers.add(urq);
+                }
+            }
+            
             
             for(int i=0;i<lstUsers.size();i++){
                 listarEmpleado lst = new listarEmpleado();

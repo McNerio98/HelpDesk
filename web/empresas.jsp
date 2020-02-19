@@ -102,11 +102,11 @@
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="inputGroupSelect01">Contador</label>
                                     </div>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected value="0">Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <select class="custom-select" id="inputGroupSelect01" name="idcontador">
+                                        <option selected value="0">Elegir...</option>
+                                        <c:forEach var="Iterador" items="${ContadorList}">
+                                            <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
+                                        </c:forEach> 
                                     </select>
                                 </div>
                             </div>
