@@ -20,6 +20,8 @@ import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.DetalleRequisicion;
 import com.helpdesk.entidades.RequisicionPago;
+import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioRequisicion;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.DataRequisicion;
@@ -66,7 +68,9 @@ public class Requisiciones extends HttpServlet {
                 
                 Integer id = (Integer) request.getSession().getAttribute("idUsuario");
                 List<Object> params = new ArrayList();
-                params.add(id);                
+                params.add(id);
+                
+                Usuario contador = Operaciones.get(DataList.getIdContador(DataList.getIdEmpresa(id)), new Usuario());
                 
                 String[][] rs = Operaciones.consultar(cmd, params);
                 DataRequisicion dr = new DataRequisicion();
@@ -74,6 +78,9 @@ public class Requisiciones extends HttpServlet {
                 dr.setSolicitante(rs[1][0]);
                 dr.setEmpresa(rs[2][0]);
                 dr.setDepto(rs[3][0]);
+                if(contador.getIdUser() != 0){
+                    dr.setContador(contador.getFirsName()+" "+contador.getLastName());
+                }
                 request.setAttribute("DataGeneral", dr);
 
                 
@@ -154,6 +161,7 @@ public class Requisiciones extends HttpServlet {
             rg.setIdDepto(DataList.getIdDepto(idU));
             rg.setTotal(montoTotal);
             rg.setPrioridad(prioridad);
+            rg.setIdContador(DataList.getIdContador(DataList.getIdEmpresa(idU)));
             
             rg = Operaciones.insertar(rg);
             

@@ -64,11 +64,7 @@
                                     <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
                                         <h5 class="description-header text-success">Monto Total</h5>
                                         <span class="description-text">$ ${generalData.montoTotal}</span>
-                                    </div>
-                                    <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
-                                        <h5 class="description-header text-success">Total Registros</h5>
-                                        <span class="description-text">${generalData.numRegistros}</span>
-                                    </div>                        
+                                    </div>                    
                                     <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
                                         <h5 class="description-header text-success">Prioridad</h5>
                                         <span class="description-text">${generalData.prioridad}</span>
@@ -170,8 +166,7 @@
                             </div>
 
                             <div style="text-align: right;">
-                                <button type="submit" class="btn btn-dark">Aceptar</button>                    
-                                <button type="button" class="btn btn-warning">Rechazar</button>                      
+
                             </div>            
 
                         </div>

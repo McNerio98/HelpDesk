@@ -96,7 +96,7 @@
                                     <strong>Datos Generales</strong>
                                 </p>
                                 <div class="form-group">
-                                    <select class="form-control form-control-lg" name="slcPrioridad" id="slcPrioridad">
+                                    <select class="form-control" name="slcPrioridad" id="slcPrioridad">
                                         <option value="0">--SELECIONE PRIORIDAD--</option>
                                         <option value="1">BAJA</option>
                                         <option value="2">MEDIA</option>
@@ -112,6 +112,8 @@
                                         Solicitante: <span class="text-custom1">${DataGeneral.solicitante}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
                                         Autorizador: <span class="text-custom1">${DataGeneral.superior}</span></label>
+                                    <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
+                                        Contador: <span class="text-custom1">${DataGeneral.contador}</span></label>                                        
                                     <div style="text-align: right;">
                                         <button type="submit" class="btn btn-success">Solicitar</button>
                                         <button type="button" class="btn btn-secondary">Cancelar</button>

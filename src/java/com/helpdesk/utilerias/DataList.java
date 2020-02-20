@@ -215,6 +215,20 @@ public class DataList {
         return idEmpresa;
     }
     
+    public static Integer getIdContador(Integer idEmpresa)throws Exception{ 
+        Integer idContador = 0;
+            String sql = "select ue.idusuario from usuarioreqbyempresas ue, usuariosrequisicion rq \n" 
+                         +"where ue.idusuario = rq.idusuario and rq.idrol = 9 and ue.idempresa = ? ";
+            List<Object> params = new ArrayList();
+            params.add(idEmpresa);
+            
+            String[][] rs = Operaciones.consultar(sql, params);
+            idContador = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
+
+        return idContador;
+    }
+    
+    
 
     /*Esta funcion trae todos los usuarios que tienen el rol de empleado*/
     public static ArrayList<listarEmpleado> getEmpleados(int id) {

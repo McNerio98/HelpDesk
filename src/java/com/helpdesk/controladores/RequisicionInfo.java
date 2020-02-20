@@ -44,9 +44,12 @@ public class RequisicionInfo extends HttpServlet {
                 //Informacion General 
                 ArrayList<DetalleAux> LstDetalles = getListDetalles(idRequisicion);
                 DataRequisicion dataGeneral = DataList.getGeneralData(idRequisicion);
-                dataGeneral.setNumRegistros(String.valueOf(LstDetalles.size()));
-                //Detalles de Requisicion
+                RequisicionPago pg = getRequisicion(idRequisicion);
+                
+                // Este objeto se usara para validar las acciones 
+
                 //Comentarios 
+                request.setAttribute("pg", pg);
                 request.setAttribute("generalData", dataGeneral);
                 request.setAttribute("LstDetalles", LstDetalles);
                 request.getRequestDispatcher("Def_Requisicion.jsp").forward(request, response);
@@ -63,7 +66,25 @@ public class RequisicionInfo extends HttpServlet {
             throws ServletException, IOException {
     }
 
-
+    private RequisicionPago getRequisicion(Integer idRequisicion){
+            RequisicionPago pg = new RequisicionPago();
+                try{
+                    Conexion conn = new ConexionPool();
+                    conn.conectar();
+                    Operaciones.abrirConexion(conn);
+                    pg = Operaciones.get(idRequisicion, new RequisicionPago());
+                }catch(Exception e){
+                    Logger.getLogger(RequisicionInfo.class.getName()).log(Level.SEVERE, null, e);   
+                    pg = null;
+                }finally{
+                    try {
+                        Operaciones.cerrarConexion();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RequisicionInfo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }        
+    return pg;            
+    }
     
     private ArrayList<DetalleAux> getListDetalles(Integer idReq){
             ArrayList<DetalleAux> LstDetalles = new ArrayList<>();
