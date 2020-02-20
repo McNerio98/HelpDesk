@@ -166,7 +166,18 @@
                             </div>
 
                             <div style="text-align: right;">
-
+                                <c:choose>
+                                    <c:when test = "${(pg.idCreador == idUsuario) && (pg.estado == 1 || pg.estado == 2)}">
+                                        <a href="#" class="btn btn-warning">Modificar</a>
+                                    </c:when>
+                                    <c:when test = "${Rol == 6 && pg.estado == 1}">
+                                        <a href="#" class="btn btn-warning">Revision</a>
+                                        <a href="#" class="btn btn btn-dark">Regresarr</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        No comment sir...
+                                    </c:otherwise>
+                                </c:choose>
                             </div>            
 
                         </div>

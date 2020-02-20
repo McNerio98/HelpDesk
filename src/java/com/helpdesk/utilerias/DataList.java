@@ -308,7 +308,7 @@ public class DataList {
                     grant = true; //Tiene acceso a todas las requisiciones 
                     break;
                 case 6:  //lider req Para el lider podra si el la acepto sin importar en desenlace que tuvo 
-                    if(pg.getIdAutorizador()!=null && pg.getIdAutorizador() == IdUs){grant = true;}
+                    if(pg.getEstado()== 1 || (pg.getEstado()==2 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==IdUs)){grant = true;}
                     break;
                 case 7: //receptor 
                     if(pg.getIdCreador() == IdUs){grant = true;} // Siempre estara el creador 
