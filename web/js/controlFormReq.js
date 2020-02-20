@@ -115,8 +115,10 @@ $(document).ready(function () {
         for (let i = 0; i < contador; i++) {
           desc = $(arrayRegistro[i]).find('.txtDescripcion').val();
           sum = $(arrayRegistro[i]).find('.txtMonto').val();
-          var obj = { descripcion: desc, monto: sum };
-          jsonMtx.push(obj);
+          if(desc.length > 0 && sum.length > 0){
+            var obj = { descripcion: desc, monto: sum };
+            jsonMtx.push(obj);              
+          }
         }
 
         $('#JsonReq').val(JSON.stringify(jsonMtx));

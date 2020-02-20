@@ -7,11 +7,13 @@ package com.helpdesk.utilerias;
 
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.controladores.Informacion;
 import com.helpdesk.controladores.Login;
 import com.helpdesk.entidades.Clasificacion;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.Incidencia;
+import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.entidades.Rol;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
@@ -228,7 +230,48 @@ public class DataList {
         list = receptor.getIncidenciaSolicitada();
         return list;
     }
-
+    public static boolean permisosSobreRequisicion(int idReq, HttpSession sesion){
+        boolean grant = false;
+        Integer Rol = (int) sesion.getAttribute("Rol");
+        Integer IdUs = (int) sesion.getAttribute("idUsuario");        
+        
+        try{
+            ConexionPool conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            RequisicionPago pg = Operaciones.get(idReq, new RequisicionPago());
+            if(pg.getIdRequisicion() == 0){
+                throw new Exception("No se recupero o no existe la requisicion");
+            }
+            
+            switch(Rol){
+                case 5:// gerente req
+                    grant = true; //Tiene acceso a todas las requisiciones 
+                    break;
+                case 6:  //lider req Para el lider podra si el la acepto sin importar en desenlace que tuvo 
+                    if(pg.getIdAutorizador()!=null && pg.getIdAutorizador() == IdUs){grant = true;}
+                    break;
+                case 7: //receptor 
+                    if(pg.getIdCreador() == IdUs){grant = true;} // Siempre estara el creador 
+                    break;
+                case 9: // Contador
+                    if(pg.getIdContador()!=null && pg.getIdContador() == IdUs){grant = true;}
+                    break;
+            }          
+        }catch(Exception e){
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return grant;
+    }
+    
+   
+    
     public static boolean permisosSobreIncidencia(int idIncidencia, HttpSession sesion) {
         boolean grant = false;
         Integer Rol = (int) sesion.getAttribute("Rol");

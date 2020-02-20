@@ -219,12 +219,6 @@
 
 
 
-                <!-- /.No quitar esto, copiar en todos los demas -->          
-            </div>
-            <!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
-
             <script>
 
                 function formatear(inv) {

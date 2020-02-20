@@ -26,6 +26,13 @@ public class Menu {
     public Menu() {
     }
 
+    public Menu(int idMenu, String menu, String controller) {
+        this.idMenu = idMenu;
+        this.menu = menu;
+        this.controller = controller;
+    }
+    
+
     public int getIdMenu() {
         return idMenu;
     }

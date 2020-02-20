@@ -87,6 +87,11 @@ public class Requisiciones extends HttpServlet {
                     Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            if(request.getSession().getAttribute("resultado")!=null){
+                request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
+                request.getSession().removeAttribute("resultado");
+            }
+            
             request.getRequestDispatcher("NuevaRequisicion.jsp").forward(request, response);
         }
         
@@ -103,7 +108,7 @@ public class Requisiciones extends HttpServlet {
                 } else {
                     request.getSession().setAttribute("resultado", 2); //No se inserto   
                 }
-                request.getRequestDispatcher("NuevaRequisicion.jsp").forward(request, response);
+                response.sendRedirect("Requisiciones");
                 break;
             }
         }

@@ -64,9 +64,21 @@ public class FiltroPrincipal implements Filter {
             String tipoSesion = (String)request.getSession().getAttribute("typeSession");
             panelPrincipal = (tipoSesion!=null && tipoSesion.equals("HD"))?"Principal":"PrincipalRequisicion";
 
-            if (request.getParameter("accion") == null && !url.equals("/"+panelPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Informacion") && !url.equals(context + "/Perfil")) {
+            if (request.getParameter("accion") == null && !url.equals("/"+panelPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Perfil")) {
+                
+               
+                //Manejando controller unicos y que no estan en los menus a partir del tipo de sesion 
                 List<Menu> permisos = (List<Menu>) request.getSession().getAttribute("MenuPrincipal");
+                
                 encontrado = false;
+                
+                if(tipoSesion.equals("HD") && url.equals(context + "/Informacion")){
+                   encontrado = true;
+                }else if(tipoSesion.equals("REQ") && url.equals(context + "/RequisicionInfo")){
+                   encontrado = true; 
+                }
+                
+                
                 int cont = 0;
                 
                 while (cont < permisos.size() && !encontrado) {
