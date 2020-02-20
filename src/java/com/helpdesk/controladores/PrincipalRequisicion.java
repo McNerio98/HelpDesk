@@ -3,18 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.helpdesk.controladores;
 
 import com.google.gson.Gson;
+import com.helpdesk.conexion.Conexion;
+import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.RequisicionPago;
+import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataEmpresa;
 import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.DataRequisicion;
 import com.helpdesk.utilerias.Enums;
 import com.helpdesk.utilerias.RequisicionByRol;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,11 +48,10 @@ public class PrincipalRequisicion extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            /*request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);*/
+ /*request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);*/
         }
     }
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -54,25 +60,25 @@ public class PrincipalRequisicion extends HttpServlet {
         String accion = request.getParameter("accion");
         int idUserSession = (int) s.getAttribute("idUsuario");
         int rol = (int) s.getAttribute("Rol");
-        if(accion == null){
-            if(rol == Enums.ROL.LIDER_REQ){
+        if (accion == null) {
+            if (rol == Enums.ROL.LIDER_REQ) {
                 RequisicionByRol r = new RequisicionByRol(idUserSession);
                 ArrayList<RequisicionPago> list = r.getAllRequisiciones();
                 ArrayList<DataRequisicion> datalist = new ArrayList<>();
-                if(list!=null){
-                   for(int i=0;i<list.size();i++){
-                       datalist.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
-                   }
-                   s.setAttribute("listRequisiciones", datalist);
-                }else{
-                   s.setAttribute("listRequisiciones", null); 
-                }      
-                
+                if (list != null) {
+                    for (int i = 0; i < list.size(); i++) {
+                        datalist.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
+                    }
+                    s.setAttribute("listRequisiciones", datalist);
+                } else {
+                    s.setAttribute("listRequisiciones", null);
+                }
+
             }
-            if(rol == Enums.ROL.GERENTE_REQ){
+            if (rol == Enums.ROL.GERENTE_REQ) {
                 s.setAttribute("requestEmpleado", DataList.getEmpleados(1));
             }
-            if(rol == Enums.ROL.RECEPTOR_REQ){
+            if (rol == Enums.ROL.RECEPTOR_REQ) {
                 /// RequisicionInfo?idReq=1
                 RequisicionByRol rbr = new RequisicionByRol(idUserSession);
                 s.setAttribute("todasDiv", rbr.getAllRequisiciones());
@@ -82,74 +88,119 @@ public class PrincipalRequisicion extends HttpServlet {
 
                 s.setAttribute("processDiv", rbr.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION));
                 s.setAttribute("pendingDiv", rbr.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA));
+
+            }if(rol == Enums.ROL.CONTADOR_REQ){
+                ArrayList<Empresa> listEmp = this.getListEmpresaByContador(idUserSession);
+                ArrayList<DataEmpresa> listData = new ArrayList<>();
                 
+                if(listEmp!=null){
+                    for(int i=0;i<listEmp.size();i++){
+                        DataEmpresa data = new DataEmpresa();
+                        data.setEmpresa(listEmp.get(i));
+                        data.setListDeptos(DataList.getDeptosByEmpresa(listEmp.get(i).getIdEmpresa()));
+                        listData.add(data);
+                    }
+                }else{
+                    listData = null;
+                }
+                s.setAttribute("ListEmpresas", listData);
             }
             request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
-        }else{
+        } else {
             PrintWriter out = response.getWriter();
             RequisicionByRol r = new RequisicionByRol(idUserSession);
-            switch(accion){
-                case "solicitadas":{
-                    if(r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA)!=null){
+            switch (accion) {
+                case "solicitadas": {
+                    if (r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA) != null) {
                         String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA));
                         out.print(json);
-                    }else{
+                    } else {
                         out.print("null");
                     }
                     break;
                 }
-                case "todas":{
-                    if(r.getAllRequisiciones()!=null){
+                case "todas": {
+                    if (r.getAllRequisiciones() != null) {
                         String json = new Gson().toJson(r.getAllRequisiciones());
                         out.print(json);
-                    }else{
+                    } else {
                         out.print("null");
                     }
                     break;
                 }
-                case "enproceso":{
-                    if(r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION)!=null){
+                case "enproceso": {
+                    if (r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION) != null) {
                         String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION));
                         out.print(json);
-                    }else{
+                    } else {
                         out.print("null");
                     }
                     break;
                 }
-                case "pending":{
-                    if(r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA)!=null){
+                case "pending": {
+                    if (r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA) != null) {
                         String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA));
                         out.print(json);
-                    }else{
+                    } else {
                         out.print("null");
                     }
                     break;
                 }
-                case "finalizadas":{
-                    if(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA)!=null){
+                case "finalizadas": {
+                    if (r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA) != null) {
                         String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA));
                         out.print(json);
-                    }else{
+                    } else {
                         out.print("null");
                     }
                     break;
                 }
-                case "refuse":{
-                    if(r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA)!=null){
+                case "refuse": {
+                    if (r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA) != null) {
                         String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA));
                         out.print(json);
-                    }else{
+                    } else {
                         out.print("null");
                     }
                     break;
                 }
-                
+
             }
         }
-        
+
     }
-    
-    
+
+    public ArrayList<Empresa> getListEmpresaByContador(int id) {
+        ArrayList<Empresa> list = new ArrayList<>();
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            String query = "select a.idempresa\n"
+                    + "from empresas a, usuariosrequisicion b, usuarioreqbyempresas c\n"
+                    + "where \n"
+                    + "a.idempresa=c.idempresa and b.idusuario=c.idusuario and b.idrol = 9 and b.idusuario="+id;
+
+            String array[][] = Operaciones.consultar(query, null);
+            if(array!=null){
+                for(int i = 0;i<array[0].length;i++){
+                    list.add(Operaciones.get(Integer.parseInt(array[0][i]), new Empresa()));
+                }
+            }else{
+                list = null;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+
+        return list;
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.

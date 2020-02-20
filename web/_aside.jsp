@@ -1,4 +1,5 @@
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="${pageContext.servletContext.contextPath}/Principal" class="brand-link">
@@ -46,36 +47,36 @@
                     </li>
                 </c:forEach>
                 <c:if test="${typeSession == 'REQ'}"> 
-                    <c:if test="${Rol == 6 || Rol == 9}">
+                    <c:if test="${Rol == 9}">
+                        <div class="input-group input-group-sm" style="border-radius: 7px; overflow: hidden;">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Buscar" aria-label="Buscar" style="background-color: #f2f4f6;">
+                            <div class="input-group-append" style="background-color: #f2f4f6;">
+                                <button class="btn btn-navbar" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <c:forEach var="iterador" items="${ListEmpresas}">
                         <li class="nav-item has-treeview pb-1">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-city"></i>
                                 <p>
-                                    La Fabrica Enterprise
+                                    ${iterador.getEmpresa().getNombre()}
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview" style="display: none;">
+                                <c:forEach var="deptos" items="${iterador.getListDeptos()}">
                                 <li class="nav-item">
                                     <a href="charts/chartjs.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Tecnologia</p>
+                                        <p>${deptos.getDeptoName()}</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="charts/flot.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Diseño</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="charts/inline.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Control de Calidad</p>
-                                    </a>
-                                </li>
+                                </c:forEach>
                             </ul>
                         </li>
+                        </c:forEach>
                     </c:if>
                 </c:if>
             </ul>
