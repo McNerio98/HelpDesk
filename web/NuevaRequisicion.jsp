@@ -124,7 +124,7 @@
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-eye"></i></span>
                                     <h5 class="description-header text-success">ESTADO</h5>
-                                    <span class="description-text">Revision</span>
+                                    <span class="description-text">Solicitada</span>
                                 </div>
                                 <!-- /.description-block -->
                             </div>
