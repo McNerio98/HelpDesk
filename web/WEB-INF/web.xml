@@ -85,6 +85,10 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>ProcesosReq</servlet-name>
+        <servlet-class>com.helpdesk.controladores.ProcesosReq</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -156,6 +160,10 @@
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProcesosReq</servlet-name>
+        <url-pattern>/ProcesosReq</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

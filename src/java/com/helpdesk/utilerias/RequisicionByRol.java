@@ -90,6 +90,8 @@ public class RequisicionByRol {
                     RequisicionPago inctmp = new RequisicionPago();
                     inctmp = Operaciones.get(Integer.parseInt(array[0][i]), new RequisicionPago());
                     list.add(inctmp);
+                    
+                    
                 }
 
             } else {

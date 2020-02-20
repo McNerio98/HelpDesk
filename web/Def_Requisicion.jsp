@@ -170,13 +170,18 @@
                                     <c:when test = "${(pg.idCreador == idUsuario) && (pg.estado == 1 || pg.estado == 2)}">
                                         <a href="#" class="btn btn-warning">Modificar</a>
                                     </c:when>
-                                    <c:when test = "${Rol == 6 && pg.estado == 1}">
-                                        <a href="#" class="btn btn-warning">Revision</a>
-                                        <a href="#" class="btn btn btn-dark">Regresarr</a>
+                                    <c:when test = "${Rol == 6 && pg.estado == 1 ||  pg.estado == 2}">
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=revision" class="btn btn-warning">Revision</a>
+                                        <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
                                     </c:when>
-                                    <c:otherwise>
-                                        No comment sir...
-                                    </c:otherwise>
+                                    <c:when test = "${Rol == 6 && pg.estado == 2 && pg.idAutorizador == idUsuario}">
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=conceder" class="btn btn-warning">Conceder</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=denegar" class="btn btn btn-dark">Denegar</a>
+                                    </c:when>
+                                    <c:when test = "${Rol == 9 && pg.estado == 3 && pg.idContador == idUsuario}">
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=finalizar" class="btn btn-warning">Finalizar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
+                                    </c:when>                                        
                                 </c:choose>
                             </div>            
 
