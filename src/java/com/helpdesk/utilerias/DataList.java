@@ -48,7 +48,7 @@ public class DataList {
         }
         return clasf;
     }
-
+    
     public static ArrayList<Departamento> getDeptosByEmpresa(int id) {
         ArrayList<Departamento> list = new ArrayList<>();
         try {
