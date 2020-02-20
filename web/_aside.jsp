@@ -68,7 +68,7 @@
                             <ul class="nav nav-treeview" style="display: none;">
                                 <c:forEach var="deptos" items="${iterador.getListDeptos()}">
                                 <li class="nav-item">
-                                    <a href="charts/chartjs.html" class="nav-link">
+                                    <a href="#" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>${deptos.getDeptoName()}</p>
                                     </a>
