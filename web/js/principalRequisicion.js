@@ -6,40 +6,43 @@
 
 var root = document.getElementById("path");
 
-function getIncidences(opc) {
+function getRequisiciones(opc) {
+    
     switch (opc) {
         case 1:
         {
-            displayDataTables(root.value + "/Principal?accion=todas");
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=todas");
             break;
         }
         case 2:
         {
-            displayDataTables(root.value + "/Principal?accion=enproceso");
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=enproceso");
             break;
         }
         case 3:
         {
             //Pendientes
-            displayDataTables(root.value + "/Principal?accion=pending");
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=pending");
             break;
         }
         case 4:
         {
 
-            displayDataTables(root.value + "/Principal?accion=finalizadas");
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=finalizadas");
             break;
         }
         case 5:
         {
             ///Solicitadas
-            displayDataTables(root.value + "/Principal?accion=solicitadas");
+            //alert("Hello");
+            console.log(root.value + "/PrincipalRequisicion?accion=solicitadas");
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=solicitadas");
             break;
         }
         case 6:
         {
             ///Rechazadas
-            displayDataTables(root.value + "/Principal?accion=refuse");
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=refuse");
             break;
         }
 
@@ -49,25 +52,23 @@ function getIncidences(opc) {
 
 function displayDataTables(url) {
     $.fn.dataTable.ext.errMode = 'throw';
-    $("#table_incidences").dataTable().fnDestroy()
-    $('#table_incidences').DataTable({
+    $("#table-requisicion").dataTable().fnDestroy()
+    $('#table-requisicion').DataTable({
         ajax: {
             url: url,
             dataSrc: ''
         },
         
         columns: [
-            {data: 'id'},
             {
                 data: null,
                 render: function (data, type, row) {
                     // Combine the first and last names into a single table field
-                    return `<a href="` + root.value + "/Informacion?idIncidencia=" + data.id + `">` + data.name + `</a>
-                                        `;
+                    return `<a href="`+root.value+`/RequisicionInfo?idReq=`+data.idRequisicion+`">Numero - `+data.idRequisicion+`</a>`;
                 }
 
-            },
-            {data: 'status'}
+            }
+            
         ],
         language:
                 {
@@ -98,6 +99,7 @@ function displayDataTables(url) {
                         "colvis": "Visibilidad"
                     }
                 }
-
     });
 }
+
+

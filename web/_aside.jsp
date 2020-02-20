@@ -45,6 +45,39 @@
                         </a>
                     </li>
                 </c:forEach>
+                <c:if test="${typeSession == 'REQ'}"> 
+                    <c:if test="${Rol == 6 || Rol == 9}">
+                        <li class="nav-item has-treeview pb-1">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-city"></i>
+                                <p>
+                                    La Fabrica Enterprise
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="display: none;">
+                                <li class="nav-item">
+                                    <a href="charts/chartjs.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Tecnologia</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="charts/flot.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Diseño</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="charts/inline.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Control de Calidad</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </c:if>
+                </c:if>
             </ul>
         </nav>
     </div>

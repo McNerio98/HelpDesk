@@ -7,13 +7,19 @@ package com.helpdesk.controladores;
 
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.DataRequisicion;
+import com.helpdesk.utilerias.DetalleAux;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +39,16 @@ public class RequisicionInfo extends HttpServlet {
         if (idRequisicion == null) {
             response.sendRedirect("PrincipalRequisicion");
         } else {
-            boolean grant = DataList.permisosSobreIncidencia(idRequisicion, request.getSession());
+            boolean grant = DataList.permisosSobreRequisicion(idRequisicion, request.getSession());
             if (grant) {
                 //Informacion General 
-                DataRequisicion dataGeneral = getGeneralData(idRequisicion);
+                ArrayList<DetalleAux> LstDetalles = getListDetalles(idRequisicion);
+                DataRequisicion dataGeneral = DataList.getGeneralData(idRequisicion);
+                dataGeneral.setNumRegistros(String.valueOf(LstDetalles.size()));
                 //Detalles de Requisicion
                 //Comentarios 
+                request.setAttribute("generalData", dataGeneral);
+                request.setAttribute("LstDetalles", LstDetalles);
                 request.getRequestDispatcher("Def_Requisicion.jsp").forward(request, response);
             } else {
                 //No tiene permisos o no existe 
@@ -53,25 +63,40 @@ public class RequisicionInfo extends HttpServlet {
             throws ServletException, IOException {
     }
 
-    private DataRequisicion getGeneralData(Integer idReq) {
+
+    
+    private ArrayList<DetalleAux> getListDetalles(Integer idReq){
+            ArrayList<DetalleAux> LstDetalles = new ArrayList<>();
         
-        String sql = "";
-
+        String cmd = "select descripcion,monto from detallesrequisiciones where idrequisicion = ? order by iddetalle asc";
         List<Object> params = new ArrayList();
-        params.add(idReq);
-
-        DataRequisicion dt = new DataRequisicion();
-        try {
+        params.add(idReq);                    
+        
+        
+        try{
+        
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
-            String[][] rs = Operaciones.consultar(sql, params);
-            
-        } catch (Exception e) {
-
+            String[][] rs = Operaciones.consultar(cmd, params);                                    
+            for(int i=0 ; i< rs[0].length; i++){
+                DetalleAux detalle = new DetalleAux();
+                detalle.setDescripcion(rs[0][i]);
+                detalle.setMonto(new BigDecimal(rs[1][i]));
+                LstDetalles.add(detalle);
+            }
+        }catch(Exception e){
+            Logger.getLogger(RequisicionInfo.class.getName()).log(Level.SEVERE, null, e);
+            LstDetalles = null;
+        }finally{
+                try {
+                    Operaciones.cerrarConexion();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RequisicionInfo.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
-
-        return dt;
+        
+        return LstDetalles;
     }
 
     /**

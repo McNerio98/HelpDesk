@@ -96,6 +96,12 @@
                                     <strong>Datos Generales</strong>
                                 </p>
                                 <div class="form-group">
+                                    <select class="form-control form-control-lg" name="slcPrioridad" id="slcPrioridad">
+                                        <option value="0">--SELECIONE PRIORIDAD--</option>
+                                        <option value="1">BAJA</option>
+                                        <option value="2">MEDIA</option>
+                                        <option value="3">ALTA</option>
+                                    </select>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Fecha:
                                         <span class="text-custom1"> ${DataGeneral.fecha}</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Empresa:
@@ -124,7 +130,7 @@
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-eye"></i></span>
                                     <h5 class="description-header text-success">ESTADO</h5>
-                                    <span class="description-text">Revision</span>
+                                    <span class="description-text">Solicitada</span>
                                 </div>
                                 <!-- /.description-block -->
                             </div>

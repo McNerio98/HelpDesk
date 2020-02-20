@@ -15,7 +15,12 @@ public class DataRequisicion {
     private String depto;
     private String solicitante;
     private String superior;
+    private String contador;
     private String estado;
+    private String numRegistros;
+    private String montoTotal;
+    private String prioridad;
+    
 
     public DataRequisicion() {
         this.superior = "--No Asignado--";
@@ -58,7 +63,12 @@ public class DataRequisicion {
     }
 
     public void setSuperior(String superior) {
-        this.superior = superior;
+        if(superior == null){
+            this.superior = "--No Asignado--";
+        }else{
+            this.superior = superior;    
+        }
+        
     }
 
     public String getEstado() {
@@ -86,6 +96,53 @@ public class DataRequisicion {
         }
         
         this.estado = NuevoEstado;
+    }
+
+    public String getNumRegistros() {
+        return numRegistros;
+    }
+
+    public void setNumRegistros(String numRegistros) {
+        this.numRegistros = numRegistros;
+    }
+
+    public String getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(String montoTotal) {
+        this.montoTotal = montoTotal;
+    }
+
+    public String getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int priori) {
+        String newPrioridad = "";
+        switch(priori){
+            case 1:
+                newPrioridad = "Baja";
+                break;
+            case 2:
+                newPrioridad = "Media";
+                break;
+            case 3:
+                newPrioridad = "Alta";
+                break;
+            default:
+                newPrioridad = "Baja";
+                break;                
+        }
+        this.prioridad = newPrioridad;
+    }
+
+    public String getContador() {
+        return contador;
+    }
+
+    public void setContador(String contador) {
+        this.contador = contador;
     }
     
 }

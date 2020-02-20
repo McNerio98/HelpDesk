@@ -119,6 +119,7 @@ public class Requisiciones extends HttpServlet {
         boolean estado = false;
         String jsonReq = request.getParameter("JsonReq");
         Integer idU = (Integer)request.getSession().getAttribute("idUsuario");
+        Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
         
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -134,8 +135,6 @@ public class Requisiciones extends HttpServlet {
             
             for (int i = 0; i < listDetallesAux.size(); i++) {
                 montoTotal = montoTotal.add(listDetallesAux.get(i).getMonto());
-                System.out.println("montoTotal = " + montoTotal);
-                System.out.println("montoUnit = " + listDetallesAux.get(i).getMonto());
             }
             
             Conexion conn = new ConexionPool();
@@ -154,6 +153,7 @@ public class Requisiciones extends HttpServlet {
             rg.setIdEmpresa(DataList.getIdEmpresa(idU));
             rg.setIdDepto(DataList.getIdDepto(idU));
             rg.setTotal(montoTotal);
+            rg.setPrioridad(prioridad);
             
             rg = Operaciones.insertar(rg);
             

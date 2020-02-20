@@ -50,6 +50,8 @@ public class RequisicionPago {
     private int idEmpresa;
     @NotNull
     private int idDepto;
+    @NotNull
+    private int prioridad;
 
     /**
      * @return the idRequisicion
@@ -162,4 +164,13 @@ public class RequisicionPago {
     public void setIdDepto(int idDepto) {
         this.idDepto = idDepto;
     }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+    
 }
