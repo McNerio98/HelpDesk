@@ -43,7 +43,7 @@ function fetchTable(root,id){
                         <tr id="deptr`+data[i].idDepto+`">
                             <td>`+data[i].idDepto+`</td>
                             <td>` + data[i].deptoName + `</td>
-                            <td><a href="#" onclick="deleteNode(`+data[i].idDepto+`,`+id+`)">Eliminar</a><td>
+                            <td><a href="#" onclick="deleteNode(`+data[i].idDepto+`,`+id+`)">Quitar</a><td>
                         </tr>
                         `;
                     }

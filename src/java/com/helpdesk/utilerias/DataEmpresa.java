@@ -7,6 +7,7 @@ package com.helpdesk.utilerias;
 
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.Empresa;
+import com.helpdesk.entidades.Usuario;
 import java.util.ArrayList;
 
 /**
@@ -16,9 +17,19 @@ import java.util.ArrayList;
 public class DataEmpresa {
     private Empresa emp;
     private ArrayList<Departamento> listDepto;
+    private Usuario contador;
     public DataEmpresa(){
         this.emp = new Empresa();
         this.listDepto = new ArrayList<>();
+        this.contador = new Usuario();
+    }
+    
+    public void setContador(Usuario u){
+        this.contador = u;
+    }
+    
+    public Usuario getContador(){
+        return this.contador;
     }
     
     public void setEmpresa(Empresa e){

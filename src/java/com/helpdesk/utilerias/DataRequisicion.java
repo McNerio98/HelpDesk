@@ -10,6 +10,7 @@ package com.helpdesk.utilerias;
  * @author ZEUS
  */
 public class DataRequisicion {
+    private int id;
     private String fecha;
     private String empresa;
     private String depto;
@@ -24,6 +25,14 @@ public class DataRequisicion {
 
     public DataRequisicion() {
         this.superior = "--No Asignado--";
+    }
+    
+    public void setId(int i){
+        this.id = i;
+    }
+    
+    public int getId(){
+        return this.id;
     }
 
     public String getFecha() {

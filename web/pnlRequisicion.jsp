@@ -57,7 +57,7 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <a class="float-left pl-3" href="${pageContext.servletContext.contextPath}/RequisicionInfo?idReq=1" data-toggle="tooltip" data-placement="top" title="Ver Detalles">
+                                                <a class="float-left pl-3" href="${pageContext.servletContext.contextPath}/RequisicionInfo?idReq=${list.getId()}" data-toggle="tooltip" data-placement="top" title="Ver Detalles">
                                                     <i class="fas fa-link"></i>
                                                 </a>
                                             </td>

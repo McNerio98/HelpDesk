@@ -175,6 +175,8 @@
 
                     $('#ifcheckbox').on('change', function () {
                         if ($(this).prop('checked')) {
+                            document.getElementById("btnSubmit").setAttribute("disabled","true");
+                            comboboxdep.setAttribute("disabled","true");
                             $('#pnlSelectEmpresa').css('display', 'block');
                             $('#pnlSelectDepto').removeClass('col-md-12').addClass('col-md-6');
 
@@ -186,7 +188,8 @@
                                     <option value="`+jsonTags[i].id+`">`+jsonTags[i].nombre+`</option>
                                 `; 
                             }
-                            combobox.getElementsByTagName("option")[0].selected;
+                            
+                            combobox.getElementsByTagName("option")[0].selected = "selected";
                             document.getElementById("alerEmpresa").innerHTML ="";
                             comboboxdep.removeAttribute("disabled");
                             $('#pnlSelectEmpresa').css('display', 'none');
@@ -204,7 +207,7 @@
             combobox.addEventListener("change", function () {
                 
                 
-                
+                comboboxdep.removeAttribute("disabled");
                 document.getElementById("btnSubmit").setAttribute("disabled","true");
                 document.getElementById("alerEmpresa").innerHTML ="";
                 comboboxdep.setAttribute("disabled","true");
