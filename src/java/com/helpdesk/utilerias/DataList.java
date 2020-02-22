@@ -52,6 +52,7 @@ public class DataList {
     public static DataRequisicion getGeneralData(Integer idReq) {
         
         DataRequisicion dt = new DataRequisicion();
+        dt.setId(idReq);
         try {
             Conexion conn = new ConexionPool();
             conn.conectar();

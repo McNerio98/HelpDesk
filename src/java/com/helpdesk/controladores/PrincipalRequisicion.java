@@ -89,18 +89,19 @@ public class PrincipalRequisicion extends HttpServlet {
                 s.setAttribute("processDiv", rbr.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION));
                 s.setAttribute("pendingDiv", rbr.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA));
 
-            }if(rol == Enums.ROL.CONTADOR_REQ){
+            }
+            if (rol == Enums.ROL.CONTADOR_REQ) {
                 ArrayList<Empresa> listEmp = this.getListEmpresaByContador(idUserSession);
                 ArrayList<DataEmpresa> listData = new ArrayList<>();
-                
-                if(listEmp!=null){
-                    for(int i=0;i<listEmp.size();i++){
+
+                if (listEmp != null) {
+                    for (int i = 0; i < listEmp.size(); i++) {
                         DataEmpresa data = new DataEmpresa();
                         data.setEmpresa(listEmp.get(i));
                         data.setListDeptos(DataList.getDeptosByEmpresa(listEmp.get(i).getIdEmpresa()));
                         listData.add(data);
                     }
-                }else{
+                } else {
                     listData = null;
                 }
                 s.setAttribute("ListEmpresas", listData);
@@ -164,10 +165,98 @@ public class PrincipalRequisicion extends HttpServlet {
                     }
                     break;
                 }
+                case "load": {
+                    int idemp = Integer.parseInt(request.getParameter("idemp"));
+                    int iddep = Integer.parseInt(request.getParameter("iddep"));
+                    ArrayList<Object> main = this.loadRequisiciones(request, response, idemp, iddep);
+
+                    ArrayList<RequisicionPago> listBaja = (ArrayList<RequisicionPago>) main.get(0);
+                    ArrayList<RequisicionPago> listMedia = (ArrayList<RequisicionPago>) main.get(1);
+                    ArrayList<RequisicionPago> listAlta = (ArrayList<RequisicionPago>) main.get(2);
+
+                    s.setAttribute("listBaja", listBaja);
+                    s.setAttribute("listMedia", listMedia);
+                    s.setAttribute("listAlta", listAlta);
+                    request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
+
+                    break;
+                }
 
             }
         }
 
+    }
+
+    public ArrayList<Object> loadRequisiciones(HttpServletRequest request, HttpServletResponse response, int idemp, int iddep) {
+
+        HttpSession s = request.getSession();
+        ArrayList<Object> mainlist = new ArrayList<>();
+        ArrayList<RequisicionPago> listBaja = new ArrayList<>();
+        ArrayList<RequisicionPago> listMedia = new ArrayList<>();
+        ArrayList<RequisicionPago> listAlta = new ArrayList<>();
+
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+
+            for (int i = 1; i < 4; i++) {
+                String query = "select idrequisicion \n"
+                        + "from requisicionespagos \n"
+                        + "where idempresa = " + idemp + " and iddepto = " + iddep + " and estado = 1 and prioridad =" + i;
+                if (i == 1) {
+                    String array[][] = Operaciones.consultar(query, null);
+                    if (array != null) {
+                        for (int j = 0; j < array[0].length; j++) {
+                            RequisicionPago rp = new RequisicionPago();
+                            rp = Operaciones.get(Integer.parseInt(array[0][j]), new RequisicionPago());
+                            listBaja.add(rp);
+                        }
+
+                    } else {
+                        listBaja = null;
+                    }
+
+                } else if (i == 2) {
+                    String array[][] = Operaciones.consultar(query, null);
+                    if (array != null) {
+                        for (int j = 0; j < array[0].length; j++) {
+                            RequisicionPago rp = new RequisicionPago();
+                            rp = Operaciones.get(Integer.parseInt(array[0][j]), new RequisicionPago());
+                            listMedia.add(rp);
+                        }
+
+                    } else {
+                        listMedia = null;
+                    }
+
+                } else {
+                    String array[][] = Operaciones.consultar(query, null);
+                    if (array != null) {
+                        for (int j = 0; j < array[0].length; j++) {
+                            RequisicionPago rp = new RequisicionPago();
+                            rp = Operaciones.get(Integer.parseInt(array[0][j]), new RequisicionPago());
+                            listAlta.add(rp);
+                        }
+
+                    } else {
+                        listAlta = null;
+                    }
+                }
+            }
+            mainlist.add(listBaja);
+            mainlist.add(listMedia);
+            mainlist.add(listAlta);
+        } catch (Exception ex) {
+            Logger.getLogger(PrincipalRequisicion.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(PrincipalRequisicion.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return mainlist;
     }
 
     public ArrayList<Empresa> getListEmpresaByContador(int id) {
@@ -179,14 +268,14 @@ public class PrincipalRequisicion extends HttpServlet {
             String query = "select a.idempresa\n"
                     + "from empresas a, usuariosrequisicion b, usuarioreqbyempresas c\n"
                     + "where \n"
-                    + "a.idempresa=c.idempresa and b.idusuario=c.idusuario and b.idrol = 9 and b.idusuario="+id;
+                    + "a.idempresa=c.idempresa and b.idusuario=c.idusuario and b.idrol = 9 and b.idusuario=" + id;
 
             String array[][] = Operaciones.consultar(query, null);
-            if(array!=null){
-                for(int i = 0;i<array[0].length;i++){
+            if (array != null) {
+                for (int i = 0; i < array[0].length; i++) {
                     list.add(Operaciones.get(Integer.parseInt(array[0][i]), new Empresa()));
                 }
-            }else{
+            } else {
                 list = null;
             }
         } catch (Exception ex) {

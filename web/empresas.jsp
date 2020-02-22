@@ -85,24 +85,24 @@
                         <!--Formulario Nuevo-->
 
 
-                        <form action="${pageContext.servletContext.contextPath}/Empresas?accion=nuevo" method="post">
+                        <form id="CrearEmpresa" action="${pageContext.servletContext.contextPath}/Empresas?accion=nuevo" method="post">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Nombre</label>
                                 <br>
                                 <span id="alertInput" class="text-danger"></span>
-                                <input onkeyup="validarCaracteres('exampleInputEmail1', 20, 'btnCreate', 'alertInput')" name="empresaname" type="text" class="form-control" id="exampleInputEmail1" placeholder="Ingrese el nombre de la empresa">
+                                <input required onkeyup="validarCaracteres('exampleInputEmail1', 20, 'btnCreate', 'alertInput')" name="empresaname" type="text" class="form-control" id="exampleInputEmail1" placeholder="Ingrese el nombre de la empresa">
                             </div>
                             <div class="form-group">
                                 <label for="exampleFormControlTextarea1">Agrega la direccion correspondiente</label>
                                 <br>
                                 <span id="alertArea" class="text-danger"></span>
-                                <input type="text" onkeyup="validarCaracteres('exampleFormControlTextarea1', 200, 'btnCreate', 'alertArea')" name="address" class="form-control" id="exampleFormControlTextarea1">
+                                <input required type="text" onkeyup="validarCaracteres('exampleFormControlTextarea1', 200, 'btnCreate', 'alertArea')" name="address" class="form-control" id="exampleFormControlTextarea1">
                                 <br>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="inputGroupSelect01">Contador</label>
                                     </div>
-                                    <select class="custom-select" id="inputGroupSelect01" name="idcontador">
+                                    <select required class="custom-select" id="inputGroupSelect01" name="idcontador">
                                         <option selected value="0">Elegir...</option>
                                         <c:forEach var="Iterador" items="${ContadorList}">
                                             <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
@@ -235,10 +235,21 @@
 </section>
 <%@include file="_endPanel.jsp" %>
 <script>
+    var btnCreate = document.getElementById("btnCreate");
     var searchDepto = document.getElementById("searchDepto");
     var html = document.getElementById("contentResult");
     var bodyTable = document.getElementById("bodyTable");
     var idEmpresa = document.getElementById("IdEmpresa");
+    
+    btnCreate.addEventListener("click",function(e){
+        e.preventDefault();
+        if(document.getElementById("inputGroupSelect01").value=="0"){
+         document.getElementById("alertInput").innerHTML = "No ha seleccionado contador";   
+        }else{
+            document.getElementById("CrearEmpresa").submit();
+        }
+    });
+    
     function displayNone() {
         //html.style.display = "none";
         document.getElementById("alertDepto").innerHTML = "";
@@ -248,10 +259,12 @@
                 .then((response) => response.text())
                 .then((responseText) => {
                     console.log(responseText);
-                    if (responseText != "true") {
+                    if (responseText == "false") {
                         document.getElementById("alertDepto").innerHTML = "Error, no se pudo hacer la peticion";
-                    } else {
+                    } else if(responseText == "true") {
                         fetchTable('${pageContext.servletContext.contextPath}', idemp);
+                    }else{
+                        document.getElementById("alertDepto").innerHTML = "Error, este departamento tiene requisiciones";
                     }
 
 

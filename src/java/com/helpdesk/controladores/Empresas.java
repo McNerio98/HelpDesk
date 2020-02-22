@@ -14,6 +14,7 @@ import com.helpdesk.entidades.EmpresaByDepto;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.entidades.UsuarioReqByEmpresa;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataEmpresa;
 import com.helpdesk.utilerias.DataList;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -53,7 +54,7 @@ public class Empresas extends HttpServlet {
                     String empresaname = request.getParameter("empresaname");
                     String addres = request.getParameter("address");
                     String idcontador = request.getParameter("idcontador");
-                    
+
                     if (empresaname.length() > 20 || addres.length() >= 200) {
                         request.setAttribute("errorCharacters", "crear");
                         request.getRequestDispatcher("empresas.jsp").forward(request, response);
@@ -131,6 +132,34 @@ public class Empresas extends HttpServlet {
         }
     }
 
+    private boolean canIDeleteDeptoFromEmpresa(int iddep, int idemp) {
+        boolean ok = false;
+        try {
+            ConexionPool conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
+            String query = "select * from requisicionespagos where iddepto = " + iddep + " and idempresa =" + idemp;
+
+            String array[][] = Operaciones.consultar(query, null);
+
+            if (array == null) {
+                ok = true;
+            }
+
+        } catch (Exception ex) {
+            ok = false;
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return ok;
+    }
+
     private boolean deleteDeptoInEmpresa(int iddep, int idemp) {
         boolean ok = false;
         try {
@@ -200,25 +229,25 @@ public class Empresas extends HttpServlet {
         }
         return ok;
     }
-    
-    private ArrayList<Usuario> getContadores(){
+
+    private ArrayList<Usuario> getContadores() {
         ArrayList<Usuario> list = new ArrayList<>();
-        try{
+        try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
             String query = "select  idusuario from usuariosrequisicion where idrol=9";
             String array[][] = Operaciones.consultar(query, null);
-            if(array!=null){
-                for(int i=0;i<array[0].length;i++){
+            if (array != null) {
+                for (int i = 0; i < array[0].length; i++) {
                     Usuario user = new Usuario();
                     user = Operaciones.get(Integer.parseInt(array[0][i]), new Usuario());
                     list.add(user);
                 }
-            }else{
+            } else {
                 list = null;
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             list = null;
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -287,11 +316,16 @@ public class Empresas extends HttpServlet {
             case "deleteDeptoInEmpresa": {
                 int idemp = Integer.parseInt(request.getParameter("idemp"));
                 int iddep = Integer.parseInt(request.getParameter("iddep"));
-                if (this.deleteDeptoInEmpresa(iddep, idemp)) {
-                    out.print("true");
-                } else {
-                    out.print("false");
+                if (this.canIDeleteDeptoFromEmpresa(iddep, idemp)) {
+                    if (this.deleteDeptoInEmpresa(iddep, idemp)) {
+                        out.print("true");
+                    } else {
+                        out.print("false");
+                    }
+                }else{
+                    out.print("cannot");
                 }
+
                 break;
             }
         }
