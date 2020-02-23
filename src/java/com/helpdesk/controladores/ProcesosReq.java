@@ -29,11 +29,20 @@ public class ProcesosReq extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            String idReq = request.getParameter("idReq");
+            String accion = request.getParameter("accion");
 
-        if (request.getParameter("accion") == null || request.getParameter("idReq") == null) {
+        if (accion == null ||  idReq == null) {
             response.sendRedirect("PrincipalRequisicion");
         } else {
             boolean seteado = this.setProceso(request, response);
+            if(seteado){
+                request.getSession().setAttribute("resultado", 1);
+            }else{
+                request.getSession().setAttribute("resultado", 2);
+            }
+            response.sendRedirect("RequisicionInfo?idReq="+idReq);
+            
         }
 
     }
@@ -51,24 +60,24 @@ public class ProcesosReq extends HttpServlet {
         Integer myRol = (Integer) request.getSession().getAttribute("Rol");
         Integer myIdUsuario = (Integer) request.getSession().getAttribute("idUsuario");
 
-        Integer proceso = 0;
+        Integer nuevoEstado = 0;
 
         switch (accion) {
             case "revision":
-                proceso = Enums.ESTADO_REQ.REVISION;
+                nuevoEstado = Enums.ESTADO_REQ.REVISION;
                 break;
             case "conceder":
-                proceso = Enums.ESTADO_REQ.ACEPTADA;
+                nuevoEstado = Enums.ESTADO_REQ.ACEPTADA;
                 break;
             case "denegar":
-                proceso = Enums.ESTADO_REQ.RECHAZADA;
+                nuevoEstado = Enums.ESTADO_REQ.RECHAZADA;
                 break;
             case "cerrar":
-                proceso = Enums.ESTADO_REQ.FINALIZADA;
+                nuevoEstado = Enums.ESTADO_REQ.FINALIZADA;
                 break;
         }
 
-        if (proceso == 0) { //No establecio ningun proceso especifico
+        if (nuevoEstado == 0) { //No establecio ningun proceso especifico
             return seteado;
         }
 
@@ -79,8 +88,43 @@ public class ProcesosReq extends HttpServlet {
             Operaciones.iniciarTransaccion();
 
             RequisicionPago pg = Operaciones.get(idReq, new RequisicionPago());
-
-            Operaciones.commit();;
+            switch(nuevoEstado){
+                case Enums.ESTADO_REQ.REVISION:{
+                    if(myRol == 6 && pg.getEstado()==Enums.ESTADO_REQ.SOLICITADA){
+                        pg.setEstado(nuevoEstado);
+                        pg.setIdAutorizador(myIdUsuario);
+                        seteado = true;
+                    }
+                    break;
+                }
+                case Enums.ESTADO_REQ.ACEPTADA: {
+                    if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
+                        //Generar doc PDF
+                        pg.setEstado(nuevoEstado);
+                        seteado = true;
+                    }
+                    break;
+                }
+                case Enums.ESTADO_REQ.RECHAZADA: {
+                    if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
+                        pg.setEstado(nuevoEstado);
+                        seteado = true;
+                    }
+                    break;                    
+                }
+                case Enums.ESTADO_REQ.FINALIZADA: {
+                    if(myRol ==9 && pg.getIdContador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.ACEPTADA){
+                        pg.setEstado(nuevoEstado);
+                        seteado = true;
+                    }
+                    break;                    
+                }                
+            }
+            
+            if(seteado){
+                pg = Operaciones.actualizar(pg.getIdRequisicion(), pg);
+                Operaciones.commit();;
+            }
 
         } catch (Exception e) {
             try {

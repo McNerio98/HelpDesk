@@ -52,6 +52,13 @@ public class RequisicionInfo extends HttpServlet {
                 request.setAttribute("pg", pg);
                 request.setAttribute("generalData", dataGeneral);
                 request.setAttribute("LstDetalles", LstDetalles);
+                request.setAttribute("idReq", idRequisicion);
+                
+                if(request.getSession().getAttribute("resultado")!=null){
+                    request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
+                    request.getSession().removeAttribute("resultado");
+                }
+                
                 request.getRequestDispatcher("Def_Requisicion.jsp").forward(request, response);
             } else {
                 //No tiene permisos o no existe 
@@ -64,6 +71,13 @@ public class RequisicionInfo extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String accion = request.getParameter("accion");
+        
+        if(accion==null){
+            response.getWriter().print("false");
+        }else if(accion.equals("getAllMsg")){
+            request.getRequestDispatcher("_loadChat.jsp").forward(request, response);
+        }
     }
 
     private RequisicionPago getRequisicion(Integer idRequisicion){
