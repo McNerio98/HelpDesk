@@ -113,7 +113,12 @@ public class PrincipalRequisicion extends HttpServlet {
             switch (accion) {
                 case "solicitadas": {
                     if (r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA) != null) {
-                        String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA));
+                        ArrayList<DataRequisicion> data = new ArrayList<>();
+                        for (int i = 0; i < (r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA)).size(); i++) {
+                            DataRequisicion d = DataList.getGeneralData(r.getRequisicionByStatus(Enums.ESTADO_REQ.SOLICITADA).get(i).getIdRequisicion());
+                            data.add(d);
+                        }
+                        String json = new Gson().toJson(data);
                         out.print(json);
                     } else {
                         out.print("null");
@@ -122,7 +127,12 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 case "todas": {
                     if (r.getAllRequisiciones() != null) {
-                        String json = new Gson().toJson(r.getAllRequisiciones());
+                        ArrayList<DataRequisicion> data = new ArrayList<>();
+                        for (int i = 0; i < (r.getAllRequisiciones()).size(); i++) {
+                            DataRequisicion d = DataList.getGeneralData(r.getAllRequisiciones().get(i).getIdRequisicion());
+                            data.add(d);
+                        }
+                        String json = new Gson().toJson(data);
                         out.print(json);
                     } else {
                         out.print("null");
@@ -131,7 +141,12 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 case "enproceso": {
                     if (r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION) != null) {
-                        String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION));
+                        ArrayList<DataRequisicion> data = new ArrayList<>();
+                        for (int i = 0; i < (r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION)).size(); i++) {
+                            DataRequisicion d = DataList.getGeneralData(r.getRequisicionByStatus(Enums.ESTADO_REQ.REVISION).get(i).getIdRequisicion());
+                            data.add(d);
+                        }
+                        String json = new Gson().toJson(data);
                         out.print(json);
                     } else {
                         out.print("null");
@@ -140,7 +155,12 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 case "pending": {
                     if (r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA) != null) {
-                        String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA));
+                        ArrayList<DataRequisicion> data = new ArrayList<>();
+                        for (int i = 0; i < (r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA)).size(); i++) {
+                            DataRequisicion d = DataList.getGeneralData(r.getRequisicionByStatus(Enums.ESTADO_REQ.ACEPTADA).get(i).getIdRequisicion());
+                            data.add(d);
+                        }
+                        String json = new Gson().toJson(data);
                         out.print(json);
                     } else {
                         out.print("null");
@@ -149,7 +169,12 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 case "finalizadas": {
                     if (r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA) != null) {
-                        String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA));
+                        ArrayList<DataRequisicion> data = new ArrayList<>();
+                        for (int i = 0; i < (r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA)).size(); i++) {
+                            DataRequisicion d = DataList.getGeneralData(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA).get(i).getIdRequisicion());
+                            data.add(d);
+                        }
+                        String json = new Gson().toJson(data);
                         out.print(json);
                     } else {
                         out.print("null");
@@ -158,7 +183,12 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 case "refuse": {
                     if (r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA) != null) {
-                        String json = new Gson().toJson(r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA));
+                        ArrayList<DataRequisicion> data = new ArrayList<>();
+                        for (int i = 0; i < (r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA)).size(); i++) {
+                            DataRequisicion d = DataList.getGeneralData(r.getRequisicionByStatus(Enums.ESTADO_REQ.RECHAZADA).get(i).getIdRequisicion());
+                            data.add(d);
+                        }
+                        String json = new Gson().toJson(data);
                         out.print(json);
                     } else {
                         out.print("null");
@@ -173,12 +203,51 @@ public class PrincipalRequisicion extends HttpServlet {
                     ArrayList<RequisicionPago> listBaja = (ArrayList<RequisicionPago>) main.get(0);
                     ArrayList<RequisicionPago> listMedia = (ArrayList<RequisicionPago>) main.get(1);
                     ArrayList<RequisicionPago> listAlta = (ArrayList<RequisicionPago>) main.get(2);
+                    String prt = request.getParameter("priority");
+                    if (prt != null) {
+                        switch (Integer.parseInt(prt)) {
+                            case 1: {
+                                ArrayList<DataRequisicion> data = new ArrayList<>();
+                                for (int i = 0; i < listBaja.size(); i++) {
+                                    DataRequisicion d = DataList.getGeneralData(listBaja.get(i).getIdRequisicion());
+                                    data.add(d);
+                                }
+                                String json = new Gson().toJson(data);
+                                out.print(json);
+                                break;
+                            }
+                            case 2: {
+                                ArrayList<DataRequisicion> data = new ArrayList<>();
+                                for (int i = 0; i < listMedia.size(); i++) {
+                                    DataRequisicion d = DataList.getGeneralData(listMedia.get(i).getIdRequisicion());
+                                    data.add(d);
+                                }
+                                String json = new Gson().toJson(data);
+                                out.print(json);
+                                break;
+                            }
+                            case 3: {
+                                ArrayList<DataRequisicion> data = new ArrayList<>();
+                                for (int i = 0; i < listAlta.size(); i++) {
+                                    DataRequisicion d = DataList.getGeneralData(listAlta.get(i).getIdRequisicion());
+                                    data.add(d);
+                                }
+                                String json = new Gson().toJson(data);
+                                out.print(json);
+                                break;
+                            }
+                            default: {
+                                out.print("undefined");
+                                break;
+                            }
+                        }
+                    } else {
 
-                    s.setAttribute("listBaja", listBaja);
-                    s.setAttribute("listMedia", listMedia);
-                    s.setAttribute("listAlta", listAlta);
-                    request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
-
+                        s.setAttribute("listBaja", listBaja);
+                        s.setAttribute("listMedia", listMedia);
+                        s.setAttribute("listAlta", listAlta);
+                        request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
+                    }
                     break;
                 }
 
