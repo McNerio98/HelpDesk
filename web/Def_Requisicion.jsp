@@ -11,10 +11,10 @@
                 <h1 class="m-0 text-dark">Definicion de Requisicion</h1>
                 <c:if test="${resultado!=null}">
                     <c:if test="${resultado==1}">
-                        <p class="text-danger m-0" ><strong>Problemas al registrar!</strong></p>
+                        <p class="text-success m-0" ><strong>Accion exitosa!</strong></p>
                     </c:if>
                     <c:if test="${resultado==2}">
-                        <p class="text-success m-0"><strong>Se ha registro con exito</strong></p>
+                        <p class="text-danger m-0"><strong>Accion Fallida!</strong></p>
                     </c:if>
                 </c:if>                
             </div><!-- /.col -->
@@ -112,56 +112,26 @@
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
-                                <div class="card-body" style="overflow: overflow-y; height: 400px;">
-                                    <!-- Conversations are loaded here -->
-                                    <div class="direct-chat-messages">
-                                        <!-- Message. Default to the left -->
-                                        <div class="direct-chat-msg">
-                                            <div class="direct-chat-infos clearfix">
-                                                <span class="direct-chat-name float-left">Alexander Pierce</span>
-                                                <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                                            </div>
-                                            <!-- /.direct-chat-infos -->
-                                            <img class="direct-chat-img" src="framework/img/user1-128x128.jpg" alt="Message User Image">
-                                            <!-- /.direct-chat-img -->
-                                            <div class="direct-chat-text">
-                                                Is this template really for free? That's unbelievable!
-                                            </div>
-                                            <!-- /.direct-chat-text -->
-                                        </div>
-                                        <!-- /.direct-chat-msg -->
-
-                                        <!-- Message to the right -->
-                                        <div class="direct-chat-msg right">
-                                            <div class="direct-chat-infos clearfix">
-                                                <span class="direct-chat-name float-right">Sarah Bullock</span>
-                                                <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                                            </div>
-                                            <!-- /.direct-chat-infos -->
-                                            <img class="direct-chat-img" src="framework/img/user3-128x128.jpg" alt="Message User Image">
-                                            <!-- /.direct-chat-img -->
-                                            <div class="direct-chat-text">
-                                                You better believe it!
-                                            </div>
-                                            <!-- /.direct-chat-text -->
-                                        </div>
-                                        <!-- /.direct-chat-msg -->
+                                <div class="card-body" style="overflow: overflow-y; height: 400px;" id="bodyMesagges">
+                                    <div class="cnt-loading">
+                                        <div class="spinner-border" role="status" style="width: 4rem !important; height: 4rem !important;">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>                                        
                                     </div>
-                                    <!--/.direct-chat-messages-->
-
-                                    <!-- /.direct-chat-pane -->
                                 </div>
                                 <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <form action="#" method="post">
-                                        <div class="input-group">
-                                            <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control">
-                                            <span class="input-group-append">
-                                                <button type="submit" class="btn btn-success">Enviar</button>
-                                            </span>
-                                        </div>
-                                    </form>
-                                </div>
+                                <c:if  test="${(idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado!=1}">
+                                    <div class="card-footer">
+                                        <form action="#" method="post">
+                                            <div class="input-group">
+                                                <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg">
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-success" id="btnSendMsg">Enviar</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </div>                                    
+                                </c:if>
                                 <!-- /.card-footer-->
                             </div>
 
@@ -170,16 +140,16 @@
                                     <c:when test = "${(pg.idCreador == idUsuario) && (pg.estado == 1 || pg.estado == 2)}">
                                         <a href="#" class="btn btn-warning">Modificar</a>
                                     </c:when>
-                                    <c:when test = "${Rol == 6 && pg.estado == 1 ||  pg.estado == 2}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=revision" class="btn btn-warning">Revision</a>
+                                    <c:when test = "${Rol == 6 && pg.estado == 1}">
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=revision" class="btn btn-warning">Revision</a>
                                         <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
                                     </c:when>
                                     <c:when test = "${Rol == 6 && pg.estado == 2 && pg.idAutorizador == idUsuario}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=conceder" class="btn btn-warning">Conceder</a>
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=denegar" class="btn btn btn-dark">Denegar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=conceder" class="btn btn-warning">Conceder</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=denegar" class="btn btn btn-dark">Denegar</a>
                                     </c:when>
                                     <c:when test = "${Rol == 9 && pg.estado == 3 && pg.idContador == idUsuario}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?accion=finalizar" class="btn btn-warning">Finalizar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=finalizar" class="btn btn-warning">Finalizar</a>
                                         <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
                                     </c:when>                                        
                                 </c:choose>
@@ -198,5 +168,29 @@
     </div>
     <!-- /.container-fluid -->
 </section>
-<!-- /.content -->        
+<!-- /.content -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function refreshMessages() {
+
+            $.ajax({
+                type: 'POST',
+                url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
+                success: function (result) {
+                    $('#bodyMesagges').html(result);
+                    
+                }
+            });
+        }
+
+        refreshMessages();
+
+
+    })
+
+
+
+
+</script>
 <%@include file="_endPanel.jsp" %>
