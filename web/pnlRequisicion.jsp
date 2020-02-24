@@ -28,9 +28,9 @@
         <c:if test="${typeSession == 'REQ'}"> 
             <c:if test="${Rol == 9}">
                 <div class="row">
-                    <div class=" col-lg-6 col-md-12 col-sm-12">
+                    <div class=" col-lg-12 col-md-12 col-sm-12">
                         <c:if test="${listBaja != null}">
-                            <div class="col-lg-4  col-md-4 col-6 float-left">
+                            <div class="col-lg-3  col-md-6 col-6 float-left">
                                 <!-- small box -->
                                 <div class="small-box bg-info">
                                     <div class="inner">
@@ -41,13 +41,14 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
+
                                     <a onclick="getReq(1)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
                         </c:if>
                         <c:if test="${listBaja == null}">
-                            <div class="col-lg-4  col-md-4  col-6 float-left">
+                            <div class="col-lg-3  col-md-6  col-6 float-left">
                                 <!-- small box -->
                                 <div class="small-box bg-info">
                                     <div class="inner">
@@ -64,7 +65,7 @@
                             <!-- ./col -->        
                         </c:if>
                         <c:if test="${listMedia != null}">
-                            <div class="col-lg-4 col-md-4  col-6 float-left">
+                            <div class="col-lg-3 col-md-6  col-6 float-left">
                                 <!-- small box -->
                                 <div class="small-box bg-warning">
                                     <div class="inner">
@@ -81,7 +82,7 @@
                             <!-- ./col -->        
                         </c:if>
                         <c:if test="${listMedia == null}">
-                            <div class="col-lg-4  col-md-4  col-6 float-left">
+                            <div class="col-lg-3  col-md-6  col-6 float-left">
                                 <!-- small box -->
                                 <div class="small-box bg-warning">
                                     <div class="inner">
@@ -100,7 +101,7 @@
 
 
                         <c:if test="${listAlta != null}">
-                            <div class="col-lg-4  col-md-4  col-6 float-left">
+                            <div class="col-lg-3  col-md-6  col-6 float-left">
                                 <!-- small box -->
                                 <div class="small-box bg-danger">
                                     <div class="inner">
@@ -117,7 +118,7 @@
                             <!-- ./col -->        
                         </c:if>
                         <c:if test="${listAlta == null}">
-                            <div class="col-lg-4  col-md-4  col-6 float-left">
+                            <div class="col-lg-3  col-md-6  col-6 float-left">
                                 <!-- small box -->
                                 <div class="small-box bg-danger">
                                     <div class="inner">
@@ -133,9 +134,43 @@
                             </div>
                             <!-- ./col -->        
                         </c:if>
+                        <c:if test="${listFinish != null}">
+                            <div class="col-lg-3  col-md-6  col-6 float-left">
+                                <!-- small box -->
+                                <div class="small-box bg-gray">
+                                    <div class="inner">
+                                        <h3>${fn:length(listFinish)}</h3>
+
+                                        <p>Finalizadas</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-traffic-light"></i>
+                                    </div>
+                                    <a onclick="getReq(4)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->        
+                        </c:if>
+                        <c:if test="${listFinish == null}">
+                            <div class="col-lg-3  col-md-6  col-6 float-left">
+                                <!-- small box -->
+                                <div class="small-box bg-gray">
+                                    <div class="inner">
+                                        <h3>0</h3>
+
+                                        <p>Finalizadas</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-traffic-light"></i>
+                                    </div>
+                                    <a onclick="getReq(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->        
+                        </c:if>
                     </div>
 
-                    <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
                         <input type="hidden" id="path" value="${pageContext.servletContext.contextPath}">
                         <div class="card col-12">
                             <div class="card-header">
@@ -153,8 +188,10 @@
 
                                             </tr>
                                         </thead>
-                                        <tbody id="Requisiciones">
+                                        <tbody >
+                                        <div class="list-group" id="Requisiciones">
 
+                                        </div>
                                         </tbody>
                                     </table>
                                 </div>
@@ -496,6 +533,8 @@
 
 <%@include file="_endPanel.jsp" %>
 <script src="js/principalRequisicion.js"></script>
+
+
 
 <script>
                                         $(function () {
