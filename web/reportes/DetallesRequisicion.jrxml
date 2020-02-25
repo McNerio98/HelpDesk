@@ -3,8 +3,11 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="ID_Req" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select descripcion,concat('$',' ',monto) monto from detallesrequisiciones where idrequisicion = 3 order by iddetalle asc;]]>
+		<![CDATA[select descripcion,concat('$',' ',monto) monto from detallesrequisiciones where idrequisicion = $P{ID_Req} order by iddetalle asc;]]>
 	</queryString>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="monto" class="java.lang.String"/>
