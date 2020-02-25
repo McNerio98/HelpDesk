@@ -18,6 +18,11 @@
                     Error al ${errorCharacters} el registro. Uno o ambos de los campos sobrepasan la longitud de caracteres
                 </div>
             </c:if>
+            <c:if test="${error!=null}">
+                <div id="erroralert" class="alert alert-danger" role="alert">
+                   ${error}
+                </div>
+            </c:if>
         </div>
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -99,17 +104,6 @@
                                 <span id="alertArea" class="text-danger"></span>
                                 <input required type="text" onkeyup="validarCaracteres('exampleFormControlTextarea1', 200, 'btnCreate', 'alertArea')" name="address" class="form-control" id="exampleFormControlTextarea1">
                                 <br>
-                                <!--<div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="inputGroupSelect01">Contador</label>
-                                    </div>
-                                    <select required class="custom-select" id="inputGroupSelect01" name="idcontador">
-                                        <option selected value="0">Elegir...</option>
-                                <c:forEach var="Iterador" items="${ContadorList}">
-                                    <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
-                                </c:forEach>  
-                            </select>
-                        </div>-->
                             </div>
 
                             <button id="btnCreate" type="submit" class="btn btn-primary float-right">Crear</button>
@@ -149,6 +143,19 @@
                                 <br>
                                 <span class="text-danger" id="alertArea2"></span>
                                 <textarea onkeyup="validarCaracteres('inputDescription', 200, 'btnSaveChanges', 'alertArea2')" name="address" class="form-control" id="inputDescription" rows="3"></textarea>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Contador</label>
+                                </div>
+                                
+                                <input type="hidden" value="" id="idcon" name="idconActual">
+                                <select required class="custom-select" id="inputGroupSelect01" name="idcontador">
+                                    <option selected value="0">Elegir...</option>
+                                    <c:forEach var="Iterador" items="${ContadorList}">
+                                        <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
+                                    </c:forEach>  
+                                </select>
                             </div>
 
                             <div class="modal-footer">
@@ -304,11 +311,11 @@
     var bodyTable = document.getElementById("bodyTable");
     var idEmpresa = document.getElementById("IdEmpresa");
 
-    btnSaveChanges.addEventListener('click',function(e){
+    btnSaveChanges.addEventListener('click', function (e) {
         e.preventDefault();
-        if(document.getElementById("inputGroupSelect011").value==0){
+        if (document.getElementById("inputGroupSelect011").value == 0) {
             alert("Debe asociar un contador");
-        }else{
+        } else {
             document.getElementById("formcontador").submit();
         }
     });
@@ -452,10 +459,14 @@
                     data: null,
                     render: function (data, type, row) {
                         // Combine the first and last names into a single table field
-                        return `
-                                <button data-toggle="tooltip" data-placement="top" title="Actualizar"  type="button" class="btn btn-info" onclick="updateEmpresa('id` + data.emp.idEmpresa + `')"><i class="fas fa-pen-square"></i></button>
+                        return (data.contador.firstName == "null") ? `
+                                <button data-toggle="tooltip" data-placement="top" title="Actualizar"  type="button" class="btn btn-info" onclick="updateEmpresa('id` + data.emp.idEmpresa + `', `+data.contador.idUser+`)"><i class="fas fa-pen-square"></i></button>
                                 <button data-toggle="tooltip" data-placement="top" title="Agregar Departamento" type="button" class="btn btn-info" onclick="addDeptoToEnterprise('${pageContext.servletContext.contextPath}','id` + data.emp.idEmpresa + `')"><i class="fas fa-plus-square"></i></button>
                                 <button data-toggle="tooltip" data-placement="top" title="Asociar Contador" type="button" class="btn btn-info" onclick="addContador('id` + data.emp.idEmpresa + `')"><i class="fas fa-user-plus"></i></button>
+                        ` : `
+                                <button data-toggle="tooltip" data-placement="top" title="Actualizar"  type="button" class="btn btn-info" onclick="updateEmpresa('id` + data.emp.idEmpresa + `', `+data.contador.idUser+`)"><i class="fas fa-pen-square"></i></button>
+                                <button data-toggle="tooltip" data-placement="top" title="Agregar Departamento" type="button" class="btn btn-info" onclick="addDeptoToEnterprise('${pageContext.servletContext.contextPath}','id` + data.emp.idEmpresa + `')"><i class="fas fa-plus-square"></i></button>
+                                <button disabled data-toggle="tooltip" data-placement="top" title="Contador Asignado" type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
                         `;
                     }
 

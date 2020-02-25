@@ -86,6 +86,7 @@ public class Empleados extends HttpServlet {
                         Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
                     }
                 }
+                
                 request.setAttribute("listDepto", listDepto);
                 request.setAttribute("listRol", listRol);
                 request.setAttribute("listEmpleados", DataList.getEmpleados(0));
@@ -124,7 +125,7 @@ public class Empleados extends HttpServlet {
                                 Operaciones.actualizar(user.getIdUser(), user);
                             }else{
                                 //Si es actualizado para contador
-                                if(rol == Enums.ROL.CONTADOR_REQ){
+                                if(rol != Enums.ROL.CONTADOR_REQ){
                                     //Si el contador tiene requisiciones pendientes
                                     String query2 = "select * from requisicionespagos where idcontador = "+userReq.getIdUsuario()+" and estado = 3";
                                     if((Operaciones.consultar(query2, null))!=null){
@@ -154,10 +155,10 @@ public class Empleados extends HttpServlet {
                                 
                             }
                             
-
+ 
                             Operaciones.commit();
                             response.sendRedirect(request.getContextPath() + "/Empleados");
-
+                            //request.getRequestDispatcher("asignarRol.jsp").forward(request, response);
                         } catch (Exception ex) {
 
                             try {

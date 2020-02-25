@@ -29,10 +29,11 @@ function updateDepto(id) {
     $('#modaltoUpdateDepto').modal('show');
 }
 
-function updateEmpresa(id) {
+function updateEmpresa(id,idcon) {
     var array = document.getElementById(id).getElementsByTagName('td');
     document.getElementById('IdEmpresa').setAttribute('value', array[0].textContent);
     document.getElementById('inputName').setAttribute('value', array[1].textContent);
+    document.getElementById('idcon').setAttribute('value', idcon);
     document.getElementById('inputDescription').innerHTML = array[2].textContent;
     $('#modaltoUpdateDepto').modal('show');
 }

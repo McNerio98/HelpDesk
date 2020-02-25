@@ -11,7 +11,7 @@
             <div class="col-sm-6">
                 <c:if test="${error!=null}">
                     <div class="alert alert-danger" role="alert">
-                        ${errorCharacters}
+                        ${error}
                     </div>
                 </c:if>
             </div><!-- /.col -->
