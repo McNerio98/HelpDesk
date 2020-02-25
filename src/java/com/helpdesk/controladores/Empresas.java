@@ -53,9 +53,8 @@ public class Empresas extends HttpServlet {
                 case "nuevo": {
                     String empresaname = request.getParameter("empresaname");
                     String addres = request.getParameter("address");
-                    String idcontador = request.getParameter("idcontador");
 
-                    if (empresaname.length() > 20 || addres.length() >= 200) {
+                    if (empresaname.length() > 20 || addres.length() >= 200 || empresaname == null || addres == null) {
                         request.setAttribute("errorCharacters", "crear");
                         request.getRequestDispatcher("empresas.jsp").forward(request, response);
                     } else {
@@ -68,10 +67,6 @@ public class Empresas extends HttpServlet {
                             Operaciones.abrirConexion(conn);
                             Operaciones.iniciarTransaccion();
                             enterprise = Operaciones.insertar(enterprise);
-                            UsuarioReqByEmpresa ure = new UsuarioReqByEmpresa();
-                            ure.setIdUsuario(Integer.parseInt(idcontador));
-                            ure.setIdEmpresa(enterprise.getIdEmpresa());
-                            Operaciones.insertar(ure);
                             Operaciones.commit();
                             response.sendRedirect(request.getContextPath() + "/Empresas");
                         } catch (Exception ex) {
@@ -125,6 +120,38 @@ public class Empresas extends HttpServlet {
                             }
                         }
                     }
+                    break;
+                }
+                case "addContador": {
+                    String idemp = request.getParameter("IdEmpresa");
+                    String idcontador = request.getParameter("idcontador");
+                    try {
+                        Conexion conn = new ConexionPool();
+                        conn.conectar();
+                        Operaciones.abrirConexion(conn);
+                        Operaciones.iniciarTransaccion();
+                        UsuarioReqByEmpresa urbe = new UsuarioReqByEmpresa();
+                        urbe.setIdEmpresa(Integer.parseInt(idemp));
+                        urbe.setIdUsuario(Integer.parseInt(idcontador));
+
+                        Operaciones.insertar(urbe);
+                        Operaciones.commit();
+                        response.sendRedirect(request.getContextPath() + "/Empresas");
+                    } catch (Exception ex) {
+                        try {
+                            Operaciones.rollback();
+
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                    } finally {
+                        try {
+                            Operaciones.cerrarConexion();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
                     break;
                 }
             }
@@ -262,7 +289,39 @@ public class Empresas extends HttpServlet {
 
     public String getAll() {
         ArrayList<Empresa> list = DataList.getAllEmpresas();
-        String json = new Gson().toJson(list);
+        ArrayList<DataEmpresa> empresalist = new ArrayList<>();
+
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            for (int i = 0; i < list.size(); i++) {
+                Usuario contador = new Usuario();
+                DataEmpresa em = new DataEmpresa();
+                em.setEmpresa(list.get(i));
+                if (DataList.getIdContador(list.get(i).getIdEmpresa()) != 0) {
+                    contador = Operaciones.get(DataList.getIdContador(list.get(i).getIdEmpresa()), new Usuario());
+                    em.setContador(contador);
+                } else {
+                    contador.setFirsName("null");
+                    contador.setLastName("null");
+                    em.setContador(contador);
+                }
+
+                empresalist.add(em);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+
+        String json = new Gson().toJson(empresalist);
 
         return json;
     }
@@ -322,7 +381,7 @@ public class Empresas extends HttpServlet {
                     } else {
                         out.print("false");
                     }
-                }else{
+                } else {
                     out.print("cannot");
                 }
 

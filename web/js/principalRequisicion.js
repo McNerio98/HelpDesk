@@ -132,6 +132,9 @@ function displayDataTables(url) {
     $.fn.dataTable.ext.errMode = 'throw';
     $("#table-requisicion").dataTable().fnDestroy()
     $('#table-requisicion').DataTable({
+        "scrollY":        "200px",
+        "scrollCollapse": true,
+        "paging":         false,
         ajax: {
             url: url,
             dataSrc: ''
@@ -143,13 +146,16 @@ function displayDataTables(url) {
                 render: function (data, type, row) {
                     // Combine the first and last names into a single table field
                     return `
-                        <a href="`+root.value+`/RequisicionInfo?idReq=`+data.id+`" class="list-group-item list-group-item-action">
+                        <a href="` + root.value + `/RequisicionInfo?idReq=` + data.id + `" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                              <h5 class="mb-1">`+data.solicitante+`</h5>
-                              <small>`+data.fecha+`</small>
+                              <p style="font-size: 15px;font-weight:bold" class="mb-1">` + data.solicitante + `</p>
+                              <small>` + data.fecha + `</small>
                             </div>
-                            <p class="mb-1">$`+data.montoTotal+`</p>
-                            <small>Autorizador - `+data.superior+`</small>
+                            <div class="badge badge-primary text-wrap" style="width: 6rem;">
+                                <p class="mb-1">$` + data.montoTotal + `</p>
+                            </div>
+                            
+                            <small class="d-none d-xl-block d-lg-block d-xl-none float-right">Autorizador - ` + data.superior + `</small>
                           </a>
                         
                         `;

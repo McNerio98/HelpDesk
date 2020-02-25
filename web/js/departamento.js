@@ -5,6 +5,13 @@
  * and open the template in the editor.
  */
 
+function addContador(id){
+    var array = document.getElementById(id).getElementsByTagName('td');
+    document.getElementById('IdEmpresas').setAttribute('value', array[0].textContent);
+    document.getElementById('inputContador').setAttribute('value', array[1].textContent);
+    $('#modaltoAddContador').modal('show');
+}
+
 function newForm() {
 
     

@@ -56,6 +56,7 @@
                                 <th>ID</th>
                                 <th>Empresa</th>
                                 <th>Direccion</th>
+                                <th>Contador</th>
                                 <th>Opcion</th>
                             </tr>
                         </thead>
@@ -98,17 +99,17 @@
                                 <span id="alertArea" class="text-danger"></span>
                                 <input required type="text" onkeyup="validarCaracteres('exampleFormControlTextarea1', 200, 'btnCreate', 'alertArea')" name="address" class="form-control" id="exampleFormControlTextarea1">
                                 <br>
-                                <div class="input-group mb-3">
+                                <!--<div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" for="inputGroupSelect01">Contador</label>
                                     </div>
                                     <select required class="custom-select" id="inputGroupSelect01" name="idcontador">
                                         <option selected value="0">Elegir...</option>
-                                        <c:forEach var="Iterador" items="${ContadorList}">
-                                            <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
-                                        </c:forEach> 
-                                    </select>
-                                </div>
+                                <c:forEach var="Iterador" items="${ContadorList}">
+                                    <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
+                                </c:forEach>  
+                            </select>
+                        </div>-->
                             </div>
 
                             <button id="btnCreate" type="submit" class="btn btn-primary float-right">Crear</button>
@@ -153,6 +154,64 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button id="btnSaveChanges" type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Modal for Adding Contador to Empresa-->
+        <div id="modaltoAddContador" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar Contador</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="formcontador" action="${pageContext.servletContext.contextPath}/Empresas?accion=addContador" method="post">
+                            <input type="hidden" value="" id="IdEmpresas" name="IdEmpresa">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Empresa</label>
+                                <br>
+                                <span class="text-danger" id="alertInput2"></span>
+                                <input  name="empresaname" type="text" class="form-control" id="inputContador" value="" disabled>
+
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Contador</label>
+                                </div>
+                                <c:if test="${ContadorList != null}">
+                                    <select required class="custom-select" id="inputGroupSelect011" name="idcontador">
+                                        <option selected value="0">Elegir...</option>
+
+
+
+                                        <c:forEach var="Iterador" items="${ContadorList}">
+                                            <option value="${Iterador.getIdUser()}">${Iterador.getFirsName()} ${Iterador.getLastName()}</option>
+                                        </c:forEach>  
+                                    </select>
+                                </c:if> 
+                                <c:if test="${ContadorList == null}">
+                                    <select required class="custom-select" id="inputGroupSelect01" name="idcontador">
+                                        <option selected value="0">Aun no hay contadores</option>
+                                    </select>
+                                </c:if>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <c:if test="${ContadorList != null}">
+                                    <button id="btnnSaveChanges" type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                </c:if>
+                                <c:if test="${ContadorList == null}">
+                                    <button disabled id="btnSaveChanges"  class="btn btn-primary">Guardar Cambios</button>
+                                </c:if>
                             </div>
                         </form>
                     </div>
@@ -235,21 +294,25 @@
 </section>
 <%@include file="_endPanel.jsp" %>
 <script>
-    var btnCreate = document.getElementById("btnCreate");
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    var btnSaveChanges = document.getElementById("btnnSaveChanges");
     var searchDepto = document.getElementById("searchDepto");
     var html = document.getElementById("contentResult");
     var bodyTable = document.getElementById("bodyTable");
     var idEmpresa = document.getElementById("IdEmpresa");
-    
-    btnCreate.addEventListener("click",function(e){
+
+    btnSaveChanges.addEventListener('click',function(e){
         e.preventDefault();
-        if(document.getElementById("inputGroupSelect01").value=="0"){
-         document.getElementById("alertInput").innerHTML = "No ha seleccionado contador";   
+        if(document.getElementById("inputGroupSelect011").value==0){
+            alert("Debe asociar un contador");
         }else{
-            document.getElementById("CrearEmpresa").submit();
+            document.getElementById("formcontador").submit();
         }
     });
-    
+
     function displayNone() {
         //html.style.display = "none";
         document.getElementById("alertDepto").innerHTML = "";
@@ -261,9 +324,9 @@
                     console.log(responseText);
                     if (responseText == "false") {
                         document.getElementById("alertDepto").innerHTML = "Error, no se pudo hacer la peticion";
-                    } else if(responseText == "true") {
+                    } else if (responseText == "true") {
                         fetchTable('${pageContext.servletContext.contextPath}', idemp);
-                    }else{
+                    } else {
                         document.getElementById("alertDepto").innerHTML = "Error, este departamento tiene requisiciones";
                     }
 
@@ -370,19 +433,29 @@
 
                 // Add identity if it specified
 
-                row.id = "id" + data.idEmpresa;
+                row.id = "id" + data.emp.idEmpresa;
 
             },
             columns: [
-                {data: 'idEmpresa'},
-                {data: 'Nombre'},
-                {data: 'Direccion'},
+                {data: 'emp.idEmpresa'},
+                {data: 'emp.Nombre'},
+                {data: 'emp.Direccion'},
                 {
                     data: null,
                     render: function (data, type, row) {
                         // Combine the first and last names into a single table field
-                        return `<button type="button" class="btn btn-info" onclick="updateEmpresa('id` + data.idEmpresa + `')"><i class="fas fa-pen-square"></i></button>
-                                <button type="button" class="btn btn-info" onclick="addDeptoToEnterprise('${pageContext.servletContext.contextPath}','id` + data.idEmpresa + `')"><i class="fas fa-plus-square"></i></button>
+                        return (data.contador.firstName == "null") ? "No Asignado" : data.contador.firstName + " " + data.contador.lastName;
+                    }
+
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        // Combine the first and last names into a single table field
+                        return `
+                                <button data-toggle="tooltip" data-placement="top" title="Actualizar"  type="button" class="btn btn-info" onclick="updateEmpresa('id` + data.emp.idEmpresa + `')"><i class="fas fa-pen-square"></i></button>
+                                <button data-toggle="tooltip" data-placement="top" title="Agregar Departamento" type="button" class="btn btn-info" onclick="addDeptoToEnterprise('${pageContext.servletContext.contextPath}','id` + data.emp.idEmpresa + `')"><i class="fas fa-plus-square"></i></button>
+                                <button data-toggle="tooltip" data-placement="top" title="Asociar Contador" type="button" class="btn btn-info" onclick="addContador('id` + data.emp.idEmpresa + `')"><i class="fas fa-user-plus"></i></button>
                         `;
                     }
 

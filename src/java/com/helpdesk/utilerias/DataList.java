@@ -177,7 +177,15 @@ public class DataList {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
-            list = Operaciones.getTodos(new Empresa());
+            String query = "select idempresa from empresas where nombre !='x' and direccion !='x';";
+            String array[][] = Operaciones.consultar(query, null);
+            if(array!=null){
+                for(int i=0;i<array[0].length;i++){
+                    list.add(Operaciones.get(Integer.parseInt(array[0][i]), new Empresa()));
+                }
+            }else{
+                list = null;
+            }
         } catch (Exception ex) {
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -224,7 +232,10 @@ public class DataList {
             params.add(idEmpresa);
             
             String[][] rs = Operaciones.consultar(sql, params);
-            idContador = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
+            if(rs!=null){
+                idContador = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
+            }
+            
 
         return idContador;
     }
