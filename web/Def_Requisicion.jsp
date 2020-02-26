@@ -179,7 +179,7 @@
                 url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
                 success: function (result) {
                     $('#bodyMesagges').html(result);
-                    
+
                 }
             });
         }
@@ -187,7 +187,17 @@
         refreshMessages();
 
 
-    })
+        var generatePDF = "${pdfGenerate}";
+
+        if (generatePDF == "true") {
+            let URL = "${pageContext.servletContext.contextPath}/RequisicionPDF";
+            var win = window.open(URL, '_blank');
+            win.focus();
+        }
+
+
+
+    });
 
 
 
