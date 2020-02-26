@@ -369,7 +369,7 @@
                                             <th>Requisiciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="Requisiciones">
                                         <c:forEach var="list" items="${listRequisiciones}">
                                             <tr>
                                                 <td>

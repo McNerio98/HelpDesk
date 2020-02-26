@@ -175,7 +175,7 @@ function displayDataTables(url) {
                                                             <small>` + data.fecha + `</small>
                                                         </div>
 
-                                                        <p class="mb-1">` + data.empresa + " - " + data.depto + " - " + data.prioridad + `
+                                                        <p class="mb-1">` + data.empresa + " - " + data.depto + "<span class='d-none d-lg-block d-xl-none'> -" + data.prioridad + `</span>
                                                             <span class="text-wrap badge badge-primary float-right">
                                                             $`+data.montoTotal+`</p>
                                                         </span>
