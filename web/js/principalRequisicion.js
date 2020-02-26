@@ -2,7 +2,30 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ * 
  */
+
+function getPriority(opc) {
+    switch (opc) {
+        case 1:
+        {
+
+            displayDataTables("./PrincipalRequisicion?accion=priority&id=1");
+
+            break;
+        }
+        case 2:
+        {
+            displayDataTables("./PrincipalRequisicion?accion=priority&id=2");
+            break;
+        }
+        case 3:
+        {
+            displayDataTables("./PrincipalRequisicion?accion=priority&id=3");
+            break;
+        }
+    }
+}
 
 function getReq(opc) {
     switch (opc) {
@@ -132,9 +155,9 @@ function displayDataTables(url) {
     $.fn.dataTable.ext.errMode = 'throw';
     $("#table-requisicion").dataTable().fnDestroy()
     $('#table-requisicion').DataTable({
-        "scrollY":        "200px",
+        "scrollY": "200px",
         "scrollCollapse": true,
-        "paging":         false,
+        "paging": false,
         ajax: {
             url: url,
             dataSrc: ''
@@ -147,16 +170,16 @@ function displayDataTables(url) {
                     // Combine the first and last names into a single table field
                     return `
                         <a href="` + root.value + `/RequisicionInfo?idReq=` + data.id + `" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                              <p style="font-size: 15px;font-weight:bold" class="mb-1">` + data.solicitante + `</p>
-                              <small>` + data.fecha + `</small>
-                            </div>
-                            <div class="badge badge-primary text-wrap" style="width: 6rem;">
-                                <p class="mb-1">$` + data.montoTotal + `</p>
-                            </div>
-                            
-                            <small class="d-none d-xl-block d-lg-block d-xl-none float-right">Autorizador - ` + data.superior + `</small>
-                          </a>
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <p style="font-size: 15px;font-weight:bold" class="mb-1">` + data.solicitante + `</p>
+                                                            <small>` + data.fecha + `</small>
+                                                        </div>
+
+                                                        <p class="mb-1">` + data.empresa + " - " + data.depto + " - " + data.prioridad + `
+                                                            <span class="text-wrap badge badge-primary float-right">
+                                                            $`+data.montoTotal+`</p>
+                                                        </span>
+                                                    </a>
                         
                         `;
                 }

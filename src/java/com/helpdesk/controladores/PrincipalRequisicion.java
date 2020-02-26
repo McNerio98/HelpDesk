@@ -279,19 +279,43 @@ public class PrincipalRequisicion extends HttpServlet {
                     break;
                 }
                 case "priority": {
-                    String priority = request.getParameter("priority");
-                    switch(Integer.parseInt(priority)){
-                        case 1:{
+                    String priority = request.getParameter("id");
+                    ArrayList<Object> dataobject = r.getAllRequisicionesByContadorAndPriority();
+                    switch (Integer.parseInt(priority)) {
+                        case 1: {
+                            ArrayList<DataRequisicion> data = new ArrayList<>();
+                            ArrayList<RequisicionPago> list = (ArrayList<RequisicionPago>) dataobject.get(0);
+                            for (int i = 0; i < list.size(); i++) {
+                                DataRequisicion d = DataList.getGeneralData(list.get(i).getIdRequisicion());
+                                data.add(d);
+                            }
+                            String json = new Gson().toJson(data);
+                            out.print(json);
                             break;
                         }
-                        case 2:{
+                        case 2: {
+                            ArrayList<DataRequisicion> data = new ArrayList<>();
+                            ArrayList<RequisicionPago> list = (ArrayList<RequisicionPago>) dataobject.get(1);
+                            for (int i = 0; i < list.size(); i++) {
+                                DataRequisicion d = DataList.getGeneralData(list.get(i).getIdRequisicion());
+                                data.add(d);
+                            }
+                            String json = new Gson().toJson(data);
+                            out.print(json);
                             break;
                         }
-                        case 3:{
+                        case 3: {
+                            ArrayList<DataRequisicion> data = new ArrayList<>();
+                            ArrayList<RequisicionPago> list = (ArrayList<RequisicionPago>) dataobject.get(2);
+                            for (int i = 0; i < list.size(); i++) {
+                                DataRequisicion d = DataList.getGeneralData(list.get(i).getIdRequisicion());
+                                data.add(d);
+                            }
+                            String json = new Gson().toJson(data);
+                            out.print(json);
                             break;
                         }
                     }
-                    ArrayList<Object> dataobject = r.getAllRequisicionesByContadorAndPriority();
                     break;
                 }
 

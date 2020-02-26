@@ -43,7 +43,7 @@
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
 
-                                    <a onclick="getReq(1)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(1)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -60,7 +60,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(1)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(1)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -77,7 +77,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -94,7 +94,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(2)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(2)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -113,7 +113,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -130,7 +130,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(3)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(3)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -147,7 +147,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(4)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(4)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -164,7 +164,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
