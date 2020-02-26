@@ -59,7 +59,7 @@ public class RequisicionInfo extends HttpServlet {
                     request.getSession().removeAttribute("resultado");
                 }
                 if(request.getSession().getAttribute("idReqForPDF")!=null){
-                    request.getSession().setAttribute("pdfGenerate", "true");
+                    request.setAttribute("pdfGenerate", "true");
                 }
                 
                 request.getRequestDispatcher("Def_Requisicion.jsp").forward(request, response);

@@ -26,6 +26,8 @@ public class Comentario {
     private Timestamp fecha;
     @NotNull
     private int idCreador;
+    @NotNull
+    private int idRequisicion;
 
     public Comentario() {
     }
@@ -61,8 +63,13 @@ public class Comentario {
     public void setIdCreador(int idCreador) {
         this.idCreador = idCreador;
     }
-    
-    
-            
+
+    public int getIdRequisicion() {
+        return idRequisicion;
+    }
+
+    public void setIdRequisicion(int idRequisicion) {
+        this.idRequisicion = idRequisicion;
+    }   
     
 }

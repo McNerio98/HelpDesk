@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
-                                <c:if  test="${(idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
+                                <c:if  test="${(pg.idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
                                     <div class="card-footer">
                                         <form action="#" method="post">
                                             <div class="input-group">
@@ -194,16 +194,34 @@
             win.focus();
         }
 
-        function sendMessage() {
+        function sendMessage(){
+            let contentMsg = $('#txtContentMsg').val();
             $.ajax({
                 type: 'POST',
-                url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
-                success: function (result) {
-                    $('#bodyMesagges').html(result);
-
+                data: {msg: contentMsg},
+                url: '${pageContext.servletContext.contextPath}/ProcesosReq?accion=newMessage' + '&idReq=' + ${idReq},
+                success: function(result){
+                    if(result=='true'){
+                        refreshMessages();
+                        $('#txtContentMsg').val("");
+                    }else{
+                        console.log("ERROR en envio de mensaje");
+                    }                    
                 }
             });
         }
+        
+            
+        $('#btnSendMsg').click(function(){
+            let contentMsg = $('#txtContentMsg').val();
+            if(contentMsg.length==0){
+                alert("No hay mensajes");
+            }else{
+                sendMessage();
+            }
+        });
+        
+        
 
     });
 

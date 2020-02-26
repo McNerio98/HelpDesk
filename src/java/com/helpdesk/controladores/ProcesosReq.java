@@ -7,12 +7,14 @@ package com.helpdesk.controladores;
 
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.Comentario;
 import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -50,7 +52,60 @@ public class ProcesosReq extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Comentarios 
+        String accion = request.getParameter("accion");
+        if(accion.equals("newMessage")){
+            boolean status = sendMesagge(request,response);
+            if(status){
+                response.getWriter().print("true");
+            }else{
+                response.getWriter().print("false");
+            }
+        }
 
+    }
+    
+    private boolean sendMesagge(HttpServletRequest request, HttpServletResponse response){
+        boolean status = false;
+        String contenido = request.getParameter("msg");
+        String idReq = request.getParameter("idReq");
+        Integer idHolder = (Integer)request.getSession().getAttribute("idUsuario");
+        
+        try{
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
+            RequisicionPago rg = Operaciones.get(Integer.parseInt(idReq), new RequisicionPago());
+            
+            if(rg.getIdAutorizador() == idHolder || rg.getIdCreador() == idHolder){ //solo el lider y el receptor pueden comentar 
+                Comentario com = new Comentario();
+                com.setContenido(contenido);
+                com.setIdCreador(idHolder);
+                com.setIdRequisicion(Integer.parseInt(idReq));
+                com.setFecha(new Timestamp(System.currentTimeMillis()));
+                
+                com = Operaciones.insertar(com);
+                Operaciones.commit();
+                status = true;
+            }
+        }catch(Exception e){
+            Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, e);
+            try {
+                Operaciones.rollback();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex2) {
+                Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex2);
+            }
+        }
+        
+        
+        return status;
     }
 
     private boolean setProceso(HttpServletRequest request, HttpServletResponse response) {
