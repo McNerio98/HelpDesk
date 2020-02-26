@@ -54,7 +54,7 @@ public class RequisicionPDF extends HttpServlet {
 
             //Enlistar otros parametros
             Map params = new HashMap();
-            params.put("ID_Req", 3);
+            params.put("ID_Req", idRequisicion);
             params.put("SUBREPORT_DIR", pathSubSource);
 
             byte[] bytes = null;
