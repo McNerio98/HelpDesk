@@ -27,6 +27,7 @@
         <!-- Comienda el contenido principal -->
         <c:if test="${typeSession == 'REQ'}"> 
             <c:if test="${Rol == 9}">
+
                 <div class="row">
                     <div class=" col-lg-12 col-md-12 col-sm-12">
                         <c:if test="${listBaja != null}">
@@ -42,7 +43,7 @@
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
 
-                                    <a onclick="getReq(1)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(1)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -59,7 +60,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(1)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(1)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -76,7 +77,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -93,7 +94,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(2)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(2)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -112,7 +113,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -129,7 +130,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(3)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(3)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -146,7 +147,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(4)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(4)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -163,7 +164,7 @@
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
                                     </div>
-                                    <a onclick="getReq(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a onclick="getPriority(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -216,52 +217,182 @@
 
 
             <c:if test="${Rol == 6}">
-                <div class="card col-12">
-                    <div class="card-header">
-                        <h3 class="card-title">Requisiciones en solicitud</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="col-md-12 table-responsive">
-                            <table class="table table-striped table-bordered" id="table-requisicion">
-                                <thead>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <c:if test="${listRequisiciones != null}">
+                        <div class="col-lg-3 col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>${fn:length(listRequisiciones)}</h3>
 
-                                    <tr>
-                                        <th>Solicitado por</th>
-                                        <th>Empresa</th>
-                                        <th>Departamento</th>
-                                        <th>Prioridad</th>
-                                        <th>Opcion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="list" items="${listRequisiciones}">
+                                    <p>En solicitud</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <a onclick="getRequisiciones(5)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${listRequisiciones == null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>0</h3>
+
+                                    <p>En solicitud</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <a onclick="getRequisiciones(5)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${processDiv != null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>${fn:length(processDiv)}</h3>
+
+                                    <p>En revision</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <a onclick="getRequisiciones(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${processDiv == null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>0</h3>
+
+                                    <p>En revision</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <a onclick="getRequisiciones(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${pendingDiv != null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-light">
+                                <div class="inner">
+                                    <h3>${fn:length(pendingDiv)}</h3>
+
+                                    <p>Aceptadas</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-toolbox"></i>
+                                </div>
+                                <a onclick="getRequisiciones(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${pendingDiv == null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-light">
+                                <div class="inner">
+                                    <h3>0</h3>
+
+                                    <p>Aceptadas</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-toolbox"></i>
+                                </div>
+                                <a onclick="getRequisiciones(3)"    href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${finishDiv != null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-gray">
+                                <div class="inner">
+                                    <h3>${fn:length(finishDiv)}</h3>
+
+                                    <p>Finalizadas</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                                <a onclick="getRequisiciones(4)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                    <c:if test="${finishDiv == null}">
+                        <div class="col-lg-3  col-md-3  col-6 float-left">
+                            <!-- small box -->
+                            <div class="small-box bg-gray">
+                                <div class="inner">
+                                    <h3>0</h3>
+
+                                    <p>Finalizadas</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                                <a onclick="getRequisiciones(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->        
+                    </c:if>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card col-12">
+                        <input type="hidden" id="path" value="${pageContext.servletContext.contextPath}">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-striped table-bordered" id="table-requisicion">
+                                    <thead>
+
                                         <tr>
-                                            <td>${list.getSolicitante()}</td>
-                                            <td>${list.getEmpresa()}</td>
-                                            <td>${list.getDepto()}</td>
-                                            <td>
-                                                <a class="float-left pl-3" href="#">
-                                                    ${list.getPrioridad()}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="float-left pl-3" href="${pageContext.servletContext.contextPath}/RequisicionInfo?idReq=${list.getId()}" data-toggle="tooltip" data-placement="top" title="Ver Detalles">
-                                                    <i class="fas fa-link"></i>
-                                                </a>
-                                            </td>
+                                            <th>Requisiciones</th>
                                         </tr>
-                                    </c:forEach>
+                                    </thead>
+                                    <tbody id="Requisiciones">
+                                        <c:forEach var="list" items="${listRequisiciones}">
+                                            <tr>
+                                                <td>
+                                                    <a href="${pageContext.servletContext.contextPath}/RequisicionInfo?idReq=${list.getId()}" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <p style="font-size: 15px;font-weight:bold" class="mb-1">${list.getSolicitante()}</p>
+                                                            <small>${list.getFecha()}</small>
+                                                        </div>
 
-
-
-
-
-                                </tbody>
-                            </table>
+                                                        <p class="mb-1">${list.getEmpresa()} - ${list.getDepto()}
+                                                            <span class="text-wrap badge badge-primary float-right">
+                                                            ${list.getPrioridad()}</p>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </div>  
             </c:if> 
 
             <c:if test="${Rol == 7}">

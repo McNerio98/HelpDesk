@@ -9,7 +9,11 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-
+                <c:if test="${error!=null}">
+                    <div class="alert alert-danger" role="alert">
+                        ${error}
+                    </div>
+                </c:if>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -106,10 +110,22 @@
                             <label class="input-group-text" for="inputGroupSelect01">Roles</label>
                         </div>
                         <select name="rol" class="custom-select" id="inputGroupSelect02" value="">
+                            <c:if test="${typeSession == 'HD'}">
+                                <c:forEach var="listRol" items="${listRol}">
 
-                            <c:forEach var="listRol" items="${listRol}">
-                                <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
-                            </c:forEach>
+                                    <c:if test="${listRol.getIdRol() == 1 || listRol.getIdRol() == 2 || listRol.getIdRol() == 3 || listRol.getIdRol() == 4}">
+                                        <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${typeSession == 'REQ'}">
+                                <c:forEach var="listRol" items="${listRol}">
+
+                                    <c:if test="${listRol.getIdRol() == 5 || listRol.getIdRol() == 6 || listRol.getIdRol() == 7 || listRol.getIdRol() == 8 || listRol.getIdRol() == 9}">
+                                        <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -158,15 +174,15 @@
     var sesion = '${typeSession}';
     console.log(sesion);
     var idCaseSesion = 0;
-    if(sesion != "HD"){
+    if (sesion != "HD") {
         idCaseSesion = 1;
     }
-    console.log("CASE: "+idCaseSesion);
+    console.log("CASE: " + idCaseSesion);
     $(document).ready(function () {
         $('#table_empleados').DataTable({
             responsive: true,
             ajax: {
-                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll&idcase='+idCaseSesion,
+                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll&idcase=' + idCaseSesion,
                 dataSrc: ''
             },
             "createdRow": function (row, data, index) {

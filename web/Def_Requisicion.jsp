@@ -149,7 +149,7 @@
                                         <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=denegar" class="btn btn btn-dark">Denegar</a>
                                     </c:when>
                                     <c:when test = "${Rol == 9 && pg.estado == 3 && pg.idContador == idUsuario}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=finalizar" class="btn btn-warning">Finalizar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=cerrar" class="btn btn-warning">Finalizar</a>
                                         <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
                                     </c:when>                                        
                                 </c:choose>

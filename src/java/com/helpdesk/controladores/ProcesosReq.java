@@ -38,7 +38,7 @@ public class ProcesosReq extends HttpServlet {
             boolean seteado = this.setProceso(request, response);
             if(seteado){
                 if(request.getSession().getAttribute("idReqForPDF")!=null){
-                    request.getSession().setAttribute("pdfGenerate", "true");
+                    request.setAttribute("pdfGenerate", "true");
                 }
                 request.getSession().setAttribute("resultado", 1);
             }else{

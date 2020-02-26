@@ -27,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -48,86 +49,6 @@ public class Empresas extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String accion = request.getParameter("accion");
-            switch (accion) {
-                case "nuevo": {
-                    String empresaname = request.getParameter("empresaname");
-                    String addres = request.getParameter("address");
-                    String idcontador = request.getParameter("idcontador");
-
-                    if (empresaname.length() > 20 || addres.length() >= 200) {
-                        request.setAttribute("errorCharacters", "crear");
-                        request.getRequestDispatcher("empresas.jsp").forward(request, response);
-                    } else {
-                        Empresa enterprise = new Empresa();
-                        enterprise.setNombre(empresaname);
-                        enterprise.setDireccion(addres);
-                        try {
-                            ConexionPool conn = new ConexionPool();
-                            conn.conectar();
-                            Operaciones.abrirConexion(conn);
-                            Operaciones.iniciarTransaccion();
-                            enterprise = Operaciones.insertar(enterprise);
-                            UsuarioReqByEmpresa ure = new UsuarioReqByEmpresa();
-                            ure.setIdUsuario(Integer.parseInt(idcontador));
-                            ure.setIdEmpresa(enterprise.getIdEmpresa());
-                            Operaciones.insertar(ure);
-                            Operaciones.commit();
-                            response.sendRedirect(request.getContextPath() + "/Empresas");
-                        } catch (Exception ex) {
-                            try {
-                                Operaciones.rollback();
-
-                            } catch (SQLException ex1) {
-                                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
-                            }
-                        } finally {
-                            try {
-                                Operaciones.cerrarConexion();
-                            } catch (SQLException ex) {
-                                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }
-                    break;
-                }
-                case "actualizar": {
-                    String empresaname = request.getParameter("empresaname");
-                    String addres = request.getParameter("address");
-                    int idemp = Integer.parseInt(request.getParameter("IdEmpresa"));
-                    if (empresaname.length() > 20 || addres.length() >= 200) {
-                        request.setAttribute("errorCharacters", "crear");
-                        request.getRequestDispatcher("empresas.jsp").forward(request, response);
-                    } else {
-                        Empresa enterprise = new Empresa();
-                        enterprise.setNombre(empresaname);
-                        enterprise.setDireccion(addres);
-                        try {
-                            ConexionPool conn = new ConexionPool();
-                            conn.conectar();
-                            Operaciones.abrirConexion(conn);
-                            Operaciones.iniciarTransaccion();
-                            Operaciones.actualizar(idemp, enterprise);
-                            Operaciones.commit();
-                            response.sendRedirect(request.getContextPath() + "/Empresas");
-                        } catch (Exception ex) {
-                            try {
-                                Operaciones.rollback();
-
-                            } catch (SQLException ex1) {
-                                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
-                            }
-                        } finally {
-                            try {
-                                Operaciones.cerrarConexion();
-                            } catch (SQLException ex) {
-                                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
 
         }
     }
@@ -262,7 +183,39 @@ public class Empresas extends HttpServlet {
 
     public String getAll() {
         ArrayList<Empresa> list = DataList.getAllEmpresas();
-        String json = new Gson().toJson(list);
+        ArrayList<DataEmpresa> empresalist = new ArrayList<>();
+
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            for (int i = 0; i < list.size(); i++) {
+                Usuario contador = new Usuario();
+                DataEmpresa em = new DataEmpresa();
+                em.setEmpresa(list.get(i));
+                if (DataList.getIdContador(list.get(i).getIdEmpresa()) != 0) {
+                    contador = Operaciones.get(DataList.getIdContador(list.get(i).getIdEmpresa()), new Usuario());
+                    em.setContador(contador);
+                } else {
+                    contador.setFirsName("null");
+                    contador.setLastName("null");
+                    em.setContador(contador);
+                }
+
+                empresalist.add(em);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+
+        String json = new Gson().toJson(empresalist);
 
         return json;
     }
@@ -322,7 +275,7 @@ public class Empresas extends HttpServlet {
                     } else {
                         out.print("false");
                     }
-                }else{
+                } else {
                     out.print("cannot");
                 }
 
@@ -343,7 +296,156 @@ public class Empresas extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        processRequest(request, response);
+        //processRequest(request, response);
+        String accion = request.getParameter("accion");
+        switch (accion) {
+            case "nuevo": {
+                String empresaname = request.getParameter("empresaname");
+                String addres = request.getParameter("address");
+
+                if (empresaname.length() > 20 || addres.length() >= 200 || empresaname == null || addres == null) {
+                    request.setAttribute("errorCharacters", "crear");
+                    request.getRequestDispatcher("empresas.jsp").forward(request, response);
+                } else {
+                    Empresa enterprise = new Empresa();
+                    enterprise.setNombre(empresaname);
+                    enterprise.setDireccion(addres);
+                    try {
+                        ConexionPool conn = new ConexionPool();
+                        conn.conectar();
+                        Operaciones.abrirConexion(conn);
+                        Operaciones.iniciarTransaccion();
+                        enterprise = Operaciones.insertar(enterprise);
+                        Operaciones.commit();
+                        response.sendRedirect(request.getContextPath() + "/Empresas");
+                    } catch (Exception ex) {
+                        try {
+                            Operaciones.rollback();
+
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                    } finally {
+                        try {
+                            Operaciones.cerrarConexion();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                break;
+            }
+            case "actualizar": {
+                HttpSession s = request.getSession();
+                String empresaname = request.getParameter("empresaname");
+                String addres = request.getParameter("address");
+                String idcontador = request.getParameter("idcontador");
+                String idconActual = request.getParameter("idconActual");
+                System.out.println("######## VALOR :" + idcontador);
+
+                int idemp = Integer.parseInt(request.getParameter("IdEmpresa"));
+                if (empresaname.length() > 20 || addres.length() >= 200) {
+                    s.setAttribute("errorCharacters", "crear");
+                    request.getRequestDispatcher("empresas.jsp").forward(request, response);
+                } else {
+                    Empresa enterprise = new Empresa();
+                    enterprise.setNombre(empresaname);
+                    enterprise.setDireccion(addres);
+                    try {
+                        ConexionPool conn = new ConexionPool();
+                        conn.conectar();
+                        Operaciones.abrirConexion(conn);
+                        Operaciones.iniciarTransaccion();
+                        Operaciones.actualizar(idemp, enterprise);
+
+                        if (idcontador != null) {
+                            //Verificamos que el contador actual de la empresa no tenga requisiciones
+                            String query2 = "select * from requisicionespagos where idempresa = " + idemp + " and idcontador = " + idconActual + " and estado = 3";
+                            if ((Operaciones.consultar(query2, null)) != null) {
+                                request.setAttribute("error", "No se puede actualizar, el contador actual tiene requisiciones pendientes");
+                                request.setAttribute("ContadorList", this.getContadores());
+                                request.getRequestDispatcher("empresas.jsp").forward(request, response);
+                            } else {
+
+                                //s.setAttribute("error", idemp + " " + idcontador);
+                                //Se actualiza el nuevo contador a la empresa 
+                                String query3 = "select a.idure from usuarioreqbyempresas a, empresas b  where a.idempresa=b.idempresa and a.idempresa = " + idemp + " and b.nombre != 'x' and a.idusuario = " + idconActual;
+                                String array2[][] = Operaciones.consultar(query3, null);
+                                int ure = Integer.parseInt(array2[0][0]);
+
+                                UsuarioReqByEmpresa urbe = Operaciones.get(ure, new UsuarioReqByEmpresa());
+
+                                urbe.setIdUsuario(Integer.parseInt(idcontador));
+
+                                Operaciones.actualizar(ure, urbe);
+
+                            }
+
+                        }
+
+                        Operaciones.commit();
+                        response.sendRedirect(request.getContextPath() + "/Empresas");
+                    } catch (Exception ex) {
+                        out.print("Error servidor");
+                        try {
+                            Operaciones.rollback();
+                            out.print("Error servidor");
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                    } finally {
+                        try {
+                            Operaciones.cerrarConexion();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                break;
+            }
+            case "addContador": {
+                String idemp = request.getParameter("IdEmpresa");
+                String idcontador = request.getParameter("idcontador");
+                try {
+                    Conexion conn = new ConexionPool();
+                    conn.conectar();
+                    Operaciones.abrirConexion(conn);
+                    Operaciones.iniciarTransaccion();
+                    UsuarioReqByEmpresa urbe = new UsuarioReqByEmpresa();
+                    urbe.setIdEmpresa(Integer.parseInt(idemp));
+                    urbe.setIdUsuario(Integer.parseInt(idcontador));
+
+                    Operaciones.insertar(urbe);
+                    Operaciones.commit();
+                    response.sendRedirect(request.getContextPath() + "/Empresas");
+                } catch (Exception ex) {
+                    this.sendErrorRedirect(request, response, "errorservidor.jsp", ex);
+                    try {
+                        Operaciones.rollback();
+
+                    } catch (SQLException ex1) {
+                        Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                } finally {
+                    try {
+                        Operaciones.cerrarConexion();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+
+    protected void sendErrorRedirect(HttpServletRequest request, HttpServletResponse response, String errorPageURL, Throwable e) {
+        try {
+            request.setAttribute("javax.servlet.jsp.jspException", e);
+            getServletConfig().getServletContext().getRequestDispatcher(errorPageURL).forward(request, response);
+        } catch (Exception ex) {
+            
+        }
     }
 
     /**
