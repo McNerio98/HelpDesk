@@ -24,6 +24,10 @@ function getPriority(opc) {
             displayDataTables("./PrincipalRequisicion?accion=priority&id=3");
             break;
         }
+        case 4:{
+            displayDataTables("./PrincipalRequisicion?accion=priority&id=4");    
+            break;
+        }
     }
 }
 
