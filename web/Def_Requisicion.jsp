@@ -120,11 +120,11 @@
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
-                                <c:if  test="${(idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado!=1}">
+                                <c:if  test="${(idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
                                     <div class="card-footer">
                                         <form action="#" method="post">
                                             <div class="input-group">
-                                                <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg">
+                                                <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg" maxlength="50">
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-success" id="btnSendMsg">Enviar</button>
                                                 </span>
@@ -173,7 +173,6 @@
 <script>
     $(document).ready(function () {
         function refreshMessages() {
-
             $.ajax({
                 type: 'POST',
                 url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
@@ -195,7 +194,16 @@
             win.focus();
         }
 
+        function sendMessage() {
+            $.ajax({
+                type: 'POST',
+                url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
+                success: function (result) {
+                    $('#bodyMesagges').html(result);
 
+                }
+            });
+        }
 
     });
 
