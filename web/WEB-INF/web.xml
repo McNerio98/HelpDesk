@@ -89,6 +89,10 @@
         <servlet-name>ProcesosReq</servlet-name>
         <servlet-class>com.helpdesk.controladores.ProcesosReq</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RequisicionPDF</servlet-name>
+        <servlet-class>com.helpdesk.reportes.RequisicionPDF</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -165,13 +169,16 @@
         <servlet-name>ProcesosReq</servlet-name>
         <url-pattern>/ProcesosReq</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequisicionPDF</servlet-name>
+        <url-pattern>/RequisicionPDF</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
         <welcome-file>
             Login
         </welcome-file>

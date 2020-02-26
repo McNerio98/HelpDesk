@@ -6,8 +6,8 @@
 	<parameter name="ID_Req" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["E:\\Varios\\Para Pasantias\\Helpdesk\\web\\reportes\\"]]></defaultValueExpression>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select to_char(rq.fecha,'dd-MM-yy HH:MI') fecha, e.nombre empresa, d.deptoname depto,
@@ -133,10 +133,12 @@ where idrequisicion = $P{ID_Req}::Integer;]]>
 		</band>
 		<band height="50">
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="50" uuid="e5ce05cb-8563-4f86-a328-aeb65f4a5c2b"/>
-				<subreportParameter name="ID_Req"/>
+				<reportElement x="0" y="0" width="553" height="50" uuid="6af9fab0-22cf-4178-854f-6b89e026207a"/>
+				<subreportParameter name="ID_Req">
+					<subreportParameterExpression><![CDATA[$P{ID_Req}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["E:/Varios/Para Pasantias/Helpdesk/web/reportes/DetallesRequisicion.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "DetallesRequisicion.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

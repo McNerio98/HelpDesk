@@ -22,14 +22,19 @@
 
         <!--Icons Arrays-->
         <%
-            String[] icons = new String[7];
+
+            String[] icons = new String[11];
             icons[0] = "fas fa-columns";
-            icons[1] = "fas fa-calendar-plus";
-            icons[2] = "fas fa-users";
-            icons[3] = "fas fa-users-cog";
-            icons[4] = "fas fa-grip-horizontal";
-            icons[5] = "fas fa-layer-group";
-            icons[6] = "fas fa-chart-line";
+            icons[1] = "fas fa-book-reader";
+            icons[2] = "fas fa-book-reader";
+            icons[3] = "fas fa-calendar-plus";
+            icons[4] = "fas fa-users";
+            icons[5] = "fas fa-users-cog";
+            icons[6] = "fas fa-grip-horizontal";
+            icons[7] = "fas fa-layer-group";
+            icons[8] = "fas fa-chart-line";
+            icons[9] = "fas fa-chart-line";
+            icons[10] = "fas fa-chart-line";
 
             request.setAttribute("lcom", icons);
         %>
