@@ -37,6 +37,9 @@ public class ProcesosReq extends HttpServlet {
         } else {
             boolean seteado = this.setProceso(request, response);
             if(seteado){
+                if(request.getSession().getAttribute("idReqForPDF")!=null){
+                    request.setAttribute("pdfGenerate", "true");
+                }
                 request.getSession().setAttribute("resultado", 1);
             }else{
                 request.getSession().setAttribute("resultado", 2);
@@ -99,8 +102,7 @@ public class ProcesosReq extends HttpServlet {
                 }
                 case Enums.ESTADO_REQ.ACEPTADA: {
                     if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
-                        //Generar doc PDF
-                        //Gerenerar Notificacion al receptor y al contador
+                        request.getSession().setAttribute("idReqForPDF", pg.getIdRequisicion());
                         pg.setEstado(nuevoEstado);
                         seteado = true;
                     }
