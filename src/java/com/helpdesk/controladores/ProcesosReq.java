@@ -99,7 +99,7 @@ public class ProcesosReq extends HttpServlet {
                 }
                 case Enums.ESTADO_REQ.ACEPTADA: {
                     if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
-                        //Generar doc PDF
+                        request.getSession().setAttribute("idReqForPDF", pg.getIdRequisicion());
                         pg.setEstado(nuevoEstado);
                         seteado = true;
                     }

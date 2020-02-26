@@ -120,11 +120,11 @@
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
-                                <c:if  test="${(idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado!=1}">
+                                <c:if  test="${(idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
                                     <div class="card-footer">
                                         <form action="#" method="post">
                                             <div class="input-group">
-                                                <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg">
+                                                <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg" maxlength="50">
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-success" id="btnSendMsg">Enviar</button>
                                                 </span>
@@ -149,7 +149,7 @@
                                         <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=denegar" class="btn btn btn-dark">Denegar</a>
                                     </c:when>
                                     <c:when test = "${Rol == 9 && pg.estado == 3 && pg.idContador == idUsuario}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=finalizar" class="btn btn-warning">Finalizar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=cerrar" class="btn btn-warning">Finalizar</a>
                                         <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
                                     </c:when>                                        
                                 </c:choose>
@@ -173,13 +173,12 @@
 <script>
     $(document).ready(function () {
         function refreshMessages() {
-
             $.ajax({
                 type: 'POST',
                 url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
                 success: function (result) {
                     $('#bodyMesagges').html(result);
-                    
+
                 }
             });
         }
@@ -187,7 +186,26 @@
         refreshMessages();
 
 
-    })
+        var generatePDF = "${pdfGenerate}";
+
+        if (generatePDF == "true") {
+            let URL = "${pageContext.servletContext.contextPath}/RequisicionPDF";
+            var win = window.open(URL, '_blank');
+            win.focus();
+        }
+
+        function sendMessage() {
+            $.ajax({
+                type: 'POST',
+                url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
+                success: function (result) {
+                    $('#bodyMesagges').html(result);
+
+                }
+            });
+        }
+
+    });
 
 
 

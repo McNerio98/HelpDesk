@@ -61,10 +61,10 @@ public class RequisicionPDF extends HttpServlet {
 
             bytes = JasperRunManager.runReportToPdf(pathSource, params, conn);
 
-            //File DocPDF = new File(folderTemp + "/"+nameFile+".pdf");
-            //FileOutputStream flujo = new FileOutputStream(DocPDF);
-            //flujo.write(bytes);
-            //flujo.close();
+            File DocPDF = new File(folderTemp + "/"+nameFile+".pdf");
+            FileOutputStream flujo = new FileOutputStream(DocPDF);
+            flujo.write(bytes);
+            flujo.close();
 
             //Configuraciones 
             response.setContentType("application/pdf");
