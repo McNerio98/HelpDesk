@@ -55,7 +55,7 @@ public class RequisicionByRol {
         ///En el caso que es un receptor requisicion
         String query = "select idrequisicion from requisicionespagos where idcreador = " + this.iduser + " and estado=" + id;
         ///En el caso que es un lider requisicion 
-        String query2 = "select idrequisicion from requisicionespagos where estado = " + id;
+        String query2 = "select idrequisicion from requisicionespagos where idautorizador = "+this.iduser+" and estado = " + id;
         //En el caso para un contador
         String query3 = "select idrequisicion from requisicionespagos where idcontador = " + this.iduser + " and estado=" + id;
         

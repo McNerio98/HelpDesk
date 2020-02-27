@@ -8,6 +8,7 @@ package com.helpdesk.utilerias;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.controladores.Informacion;
+import com.helpdesk.controladores.JavaMail;
 import com.helpdesk.controladores.Login;
 import com.helpdesk.entidades.Clasificacion;
 import com.helpdesk.entidades.Departamento;
@@ -49,8 +50,32 @@ public class DataList {
         return clasf;
     }
 
+    public static void SendNotificationsToLiders(ArrayList<Usuario> listLideres, int idReq) {
+        htmlTemplate html = new htmlTemplate();
+        DataRequisicion data = getGeneralData(idReq);
+        for (int i = 0; i < listLideres.size(); i++) {
+            html.difineTag(
+                    "<h1>Hola, " + listLideres.get(i).getFirsName()
+                    + " " + listLideres.get(i).getLastName() + "</h1>"
+            );
+            html.difineTag(
+                    "<strong>" + data.getSolicitante() + "</strong>"
+                    + " de la empresa " + data.getEmpresa()
+                    + " del departamento de " + data.getDepto()
+                    + " ha solicitado una nueva requisicion.<br>"
+            );
+            html.difineTag("<h3>Monto: $" + data.getMontoTotal() + " - Prioridad: "+data.getPrioridad()+"</h3>");
+            html.difineTag("<p style='text-align:justify'>Entra a Helpdesk y decide tomar la requisicion.</p>");
+            if (JavaMail.SendMessage(listLideres.get(i).getEmail(), "Solicitud de Requisicion", html.RenderHTML())) {
+                System.out.print("Notificacion Enviada");
+            } else {
+                System.out.print("Notificacion no enviada");
+            }
+        }
+    }
+
     public static DataRequisicion getGeneralData(Integer idReq) {
-        
+
         DataRequisicion dt = new DataRequisicion();
         dt.setId(idReq);
         try {
@@ -62,16 +87,16 @@ public class DataList {
             params.add(idReq);
             params.add(idReq);
             params.add(idReq);
-             
-            String cmd ="select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd-MM-yyyy HH:MI') fecha, \n"
-                        +"rg.total, rg.estado, e.nombre, d.deptoname, (select concat(u2.firstname,' ', u2.lastname) from users u2, \n"
-                        +"requisicionespagos rg2 where rg2.idautorizador = u2.iduser and rg2.idrequisicion =?) Superior, \n"
-                        +"(select concat(u3.firstname,' ', u3.lastname) from users u3,requisicionespagos rg3 \n"
-                        +"where rg3.idcontador = u3.iduser and rg3.idrequisicion =?) Contador, rg.prioridad from requisicionespagos rg, \n"
-                        +"users u1, empresas e, departments d where rg.idcreador = u1.iduser and rg.idempresa = e.idempresa \n"
-                        +"and rg.iddepto = d.iddepto and idrequisicion = ? ";
-            String[][] rs = Operaciones.consultar(cmd, params);                        
-            
+
+            String cmd = "select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd-MM-yyyy HH:MI') fecha, \n"
+                    + "rg.total, rg.estado, e.nombre, d.deptoname, (select concat(u2.firstname,' ', u2.lastname) from users u2, \n"
+                    + "requisicionespagos rg2 where rg2.idautorizador = u2.iduser and rg2.idrequisicion =?) Superior, \n"
+                    + "(select concat(u3.firstname,' ', u3.lastname) from users u3,requisicionespagos rg3 \n"
+                    + "where rg3.idcontador = u3.iduser and rg3.idrequisicion =?) Contador, rg.prioridad from requisicionespagos rg, \n"
+                    + "users u1, empresas e, departments d where rg.idcreador = u1.iduser and rg.idempresa = e.idempresa \n"
+                    + "and rg.iddepto = d.iddepto and idrequisicion = ? ";
+            String[][] rs = Operaciones.consultar(cmd, params);
+
             dt.setSolicitante(rs[0][0]);
             dt.setFecha(rs[1][0]);
             dt.setMontoTotal(rs[2][0]);
@@ -84,7 +109,7 @@ public class DataList {
         } catch (Exception e) {
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, e);
             dt = null;
-        }finally{
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
@@ -94,7 +119,7 @@ public class DataList {
 
         return dt;
     }
-    
+
     public static ArrayList<Departamento> getDeptosByEmpresa(int id) {
         ArrayList<Departamento> list = new ArrayList<>();
         try {
@@ -105,17 +130,17 @@ public class DataList {
                     + "from empresasbydeptos a, departments b\n"
                     + "where a.iddepto = b.iddepto and a.idempresa =" + id;
             String array[][] = Operaciones.consultar(query, null);
-            if(array != null){
-                for(int i = 0; i<array[0].length;i++){
+            if (array != null) {
+                for (int i = 0; i < array[0].length; i++) {
                     Departamento depto = new Departamento();
                     //array[][] Columna-fila
                     depto = Operaciones.get(Integer.parseInt(array[0][i]), new Departamento());
                     list.add(depto);
                 }
-            }else{
+            } else {
                 list = null;
             }
-            
+
         } catch (Exception ex) {
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -127,19 +152,19 @@ public class DataList {
         }
         return list;
     }
-    
-    public static boolean existsDeptoInEmpresa(int idemp,int iddep){
+
+    public static boolean existsDeptoInEmpresa(int idemp, int iddep) {
         boolean exists = false;
-        try{
+        try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
-            String query = "select * from empresasbydeptos where iddepto = "+ iddep + " and  idempresa="+idemp;
+            String query = "select * from empresasbydeptos where iddepto = " + iddep + " and  idempresa=" + idemp;
             String array[][] = Operaciones.consultar(query, null);
-            if(array!=null){
+            if (array != null) {
                 exists = true;
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
@@ -151,7 +176,6 @@ public class DataList {
         return exists;
     }
 
-    
     public static ArrayList<Departamento> getAllDeptos() {
         ArrayList<Departamento> deptos = new ArrayList<>();
         try {
@@ -179,11 +203,11 @@ public class DataList {
             Operaciones.abrirConexion(conn);
             String query = "select idempresa from empresas where nombre !='x' and direccion !='x';";
             String array[][] = Operaciones.consultar(query, null);
-            if(array!=null){
-                for(int i=0;i<array[0].length;i++){
+            if (array != null) {
+                for (int i = 0; i < array[0].length; i++) {
                     list.add(Operaciones.get(Integer.parseInt(array[0][i]), new Empresa()));
                 }
-            }else{
+            } else {
                 list = null;
             }
         } catch (Exception ex) {
@@ -211,7 +235,7 @@ public class DataList {
 
         return idDepto;
     }
-    
+
     public static Integer getIdEmpresa(Integer idUsuario) throws Exception {
         Integer idEmpresa = 0;
 
@@ -223,24 +247,21 @@ public class DataList {
         idEmpresa = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
         return idEmpresa;
     }
-    
-    public static Integer getIdContador(Integer idEmpresa)throws Exception{ 
+
+    public static Integer getIdContador(Integer idEmpresa) throws Exception {
         Integer idContador = 0;
-            String sql = "select ue.idusuario from usuarioreqbyempresas ue, usuariosrequisicion rq \n" 
-                         +"where ue.idusuario = rq.idusuario and rq.idrol = 9 and ue.idempresa = ? ";
-            List<Object> params = new ArrayList();
-            params.add(idEmpresa);
-            
-            String[][] rs = Operaciones.consultar(sql, params);
-            if(rs!=null){
-                idContador = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
-            }
-            
+        String sql = "select ue.idusuario from usuarioreqbyempresas ue, usuariosrequisicion rq \n"
+                + "where ue.idusuario = rq.idusuario and rq.idrol = 9 and ue.idempresa = ? ";
+        List<Object> params = new ArrayList();
+        params.add(idEmpresa);
+
+        String[][] rs = Operaciones.consultar(sql, params);
+        if (rs != null) {
+            idContador = Integer.parseInt(rs[0][0]);//Solo devuelve un valor 
+        }
 
         return idContador;
     }
-    
-    
 
     /*Esta funcion trae todos los usuarios que tienen el rol de empleado*/
     public static ArrayList<listarEmpleado> getEmpleados(int id) {
@@ -301,37 +322,44 @@ public class DataList {
         list = receptor.getIncidenciaSolicitada();
         return list;
     }
-    public static boolean permisosSobreRequisicion(int idReq, HttpSession sesion){
+
+    public static boolean permisosSobreRequisicion(int idReq, HttpSession sesion) {
         boolean grant = false;
         Integer Rol = (int) sesion.getAttribute("Rol");
-        Integer IdUs = (int) sesion.getAttribute("idUsuario");        
-        
-        try{
+        Integer IdUs = (int) sesion.getAttribute("idUsuario");
+
+        try {
             ConexionPool conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
             RequisicionPago pg = Operaciones.get(idReq, new RequisicionPago());
-            if(pg.getIdRequisicion() == 0){
+            if (pg.getIdRequisicion() == 0) {
                 throw new Exception("No se recupero o no existe la requisicion");
             }
-            
-            switch(Rol){
+
+            switch (Rol) {
                 case 5:// gerente req
                     grant = true; //Tiene acceso a todas las requisiciones 
                     break;
                 case 6:  //lider req Para el lider podra si el la acepto sin importar en desenlace que tuvo 
-                    if(pg.getEstado()== 1 || (pg.getIdAutorizador()!=null && pg.getIdAutorizador()==IdUs)){grant = true;}
+                    if (pg.getEstado() == 1 || (pg.getIdAutorizador() != null && pg.getIdAutorizador() == IdUs)) {
+                        grant = true;
+                    }
                     break;
                 case 7: //receptor 
-                    if(pg.getIdCreador() == IdUs){grant = true;} // Siempre estara el creador 
+                    if (pg.getIdCreador() == IdUs) {
+                        grant = true;
+                    } // Siempre estara el creador 
                     break;
                 case 9: // Contador
-                    if(pg.getIdContador()!=null && pg.getIdContador() == IdUs){grant = true;}
+                    if (pg.getIdContador() != null && pg.getIdContador() == IdUs) {
+                        grant = true;
+                    }
                     break;
-            }          
-        }catch(Exception e){
+            }
+        } catch (Exception e) {
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, e);
-        }finally{
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
@@ -340,9 +368,7 @@ public class DataList {
         }
         return grant;
     }
-    
-   
-    
+
     public static boolean permisosSobreIncidencia(int idIncidencia, HttpSession sesion) {
         boolean grant = false;
         Integer Rol = (int) sesion.getAttribute("Rol");
@@ -404,7 +430,5 @@ public class DataList {
 
         return grant;
     }
-    
-    
 
 }

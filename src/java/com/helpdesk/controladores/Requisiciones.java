@@ -111,7 +111,7 @@ public class Requisiciones extends HttpServlet {
         switch (accion) {
             case "nueva": {
                 if (nuevaRequisicion(request, response)) {
-                    request.getSession().setAttribute("resultado", 1); //se inserto   
+                    request.getSession().setAttribute("resultado", 1); //se inserto  
                 } else {
                     request.getSession().setAttribute("resultado", 2); //No se inserto   
                 }
@@ -127,6 +127,8 @@ public class Requisiciones extends HttpServlet {
         String jsonReq = request.getParameter("JsonReq");
         Integer idU = (Integer)request.getSession().getAttribute("idUsuario");
         Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
+        int idReqs = 0;
+        ArrayList<Usuario> listLiders = new ArrayList<>();
         
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -165,6 +167,27 @@ public class Requisiciones extends HttpServlet {
             
             rg = Operaciones.insertar(rg);
             
+            
+            
+            String query = "select a.idusuario from usuarioreqbyempresas a, usuariosrequisicion b where a.idusuario=b.idusuario and b.idrol=6";
+            
+            String[][] array = Operaciones.consultar(query, null);
+            
+            for(int i = 0; i < array[0].length;i++){
+                Usuario user = new Usuario();
+                user = Operaciones.get(Integer.parseInt(array[0][i]), new Usuario());
+                listLiders.add(user);
+            }
+            
+            
+            
+            idReqs = rg.getIdRequisicion();
+            
+            
+            
+            
+            
+            
             if (rg.getIdRequisicion() != 0) {
                 //creando detalles 
                 int idReq = rg.getIdRequisicion();
@@ -192,6 +215,10 @@ public class Requisiciones extends HttpServlet {
                 Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex2);
             }
             
+        }
+        
+        if(estado){
+            DataList.SendNotificationsToLiders(listLiders, idReqs);
         }
         
         return estado;

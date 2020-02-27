@@ -75,6 +75,11 @@ public class PrincipalRequisicion extends HttpServlet {
                 } else {
                     s.setAttribute("pendingDiv", null);
                 }
+                if(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA)!=null){
+                    s.setAttribute("finishDiv", r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA));
+                }else{
+                    s.setAttribute("finishDiv", null);
+                }
                 if (list != null) {
                     for (int i = 0; i < list.size(); i++) {
                         datalist.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
