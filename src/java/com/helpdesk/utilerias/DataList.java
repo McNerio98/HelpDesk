@@ -49,6 +49,43 @@ public class DataList {
         }
         return clasf;
     }
+    
+    public static void sendNotificationToSolicitante(Usuario users, int idReq){
+        htmlTemplate html = new htmlTemplate();
+        DataRequisicion data = getGeneralData(idReq);
+        //Correo para el solicitante
+        
+             html.difineTag(
+                    "<h1>En hora buena! Tu solicitud ha sido autorizada y finalizada.</h1>"
+                     +"<p>Se ha autorizado tu requisicion por: " + data.getSuperior()
+                     +", entra a helpdesk para verificar tu requisicion.</p>"
+            ); 
+            html.difineTag(" \n \n"
+                    + "© 2019-2020 HelpDesk McNerio & CnkBlanco USO. All Rights Reserved.\n");
+            
+            JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
+   
+    }
+    public static void sendNotificationToContador(Usuario users, int idReq){
+        htmlTemplate html = new htmlTemplate();
+        DataRequisicion data = getGeneralData(idReq);
+        //Correo para el contador
+        html.difineTag(
+                    "<h1>Hola, " + users.getFirsName()
+                    + " " + users.getLastName() + "</h1>"
+            );
+            html.difineTag(
+                    "<strong>" + data.getSolicitante() + "</strong>"
+                    + " de la empresa " + data.getEmpresa()
+                    + " del departamento de " + data.getDepto()
+                    + " se le ha autorizado la requisicion por <strong>"+data.getSuperior()+".</strong><br>"
+            );
+            html.difineTag("<h3>Monto: $" + data.getMontoTotal() + " - Prioridad: "+data.getPrioridad()+"</h3>");
+            
+            
+            
+            JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
+    }
 
     public static void SendNotificationsToLiders(ArrayList<Usuario> listLideres, int idReq) {
         DataRequisicion data = getGeneralData(idReq);

@@ -8,11 +8,14 @@ package com.helpdesk.controladores;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.RequisicionPago;
+import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.DataList;
 import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -59,7 +62,7 @@ public class ProcesosReq extends HttpServlet {
         Integer idReq = Integer.parseInt(request.getParameter("idReq"));
         Integer myRol = (Integer) request.getSession().getAttribute("Rol");
         Integer myIdUsuario = (Integer) request.getSession().getAttribute("idUsuario");
-
+        ArrayList<Usuario> listUsers = new ArrayList<>();
         Integer nuevoEstado = 0;
 
         switch (accion) {
@@ -88,6 +91,8 @@ public class ProcesosReq extends HttpServlet {
             Operaciones.iniciarTransaccion();
 
             RequisicionPago pg = Operaciones.get(idReq, new RequisicionPago());
+            listUsers.add(Operaciones.get(pg.getIdContador(), new Usuario()));
+            listUsers.add(Operaciones.get(pg.getIdCreador(), new Usuario()));
             switch(nuevoEstado){
                 case Enums.ESTADO_REQ.REVISION:{
                     if(myRol == 6 && pg.getEstado()==Enums.ESTADO_REQ.SOLICITADA){
@@ -103,6 +108,7 @@ public class ProcesosReq extends HttpServlet {
                         pg.setEstado(nuevoEstado);
                         seteado = true;
                     }
+                    
                     break;
                 }
                 case Enums.ESTADO_REQ.RECHAZADA: {
@@ -139,6 +145,13 @@ public class ProcesosReq extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        
+        if(nuevoEstado == Enums.ESTADO_REQ.ACEPTADA && seteado == true && myRol == 6){
+            DataList.sendNotificationToContador(listUsers.get(0), idReq);
+        }
+        if(nuevoEstado == Enums.ESTADO_REQ.FINALIZADA && seteado == true && myRol == 9){
+            DataList.sendNotificationToSolicitante(listUsers.get(1), idReq);
         }
 
         return seteado;

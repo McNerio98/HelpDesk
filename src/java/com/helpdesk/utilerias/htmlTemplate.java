@@ -23,7 +23,8 @@ public class htmlTemplate {
                     "</head>\n" +
                     "<body>";
         
-        this.footer = "</body>\n" + "</html>";
+        this.footer = " \n \n"
+                    + "© 2019-2020 HelpDesk McNerio & CnkBlanco USO. All Rights Reserved.\n</body>\n" + "</html>";
     }
     
     public void difineTag(String tag){

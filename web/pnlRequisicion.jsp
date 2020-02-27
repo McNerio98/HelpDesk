@@ -230,7 +230,7 @@
                                 <div class="icon">
                                     <i class="fas fa-bell"></i>
                                 </div>
-                                <a onclick="getRequisiciones(5)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a onclick="getRequisiciones(1)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -247,7 +247,7 @@
                                 <div class="icon">
                                     <i class="fas fa-bell"></i>
                                 </div>
-                                <a onclick="getRequisiciones(5)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a onclick="getRequisiciones(1)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
