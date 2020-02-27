@@ -51,9 +51,9 @@ public class DataList {
     }
 
     public static void SendNotificationsToLiders(ArrayList<Usuario> listLideres, int idReq) {
-        htmlTemplate html = new htmlTemplate();
         DataRequisicion data = getGeneralData(idReq);
         for (int i = 0; i < listLideres.size(); i++) {
+            htmlTemplate html = new htmlTemplate();
             html.difineTag(
                     "<h1>Hola, " + listLideres.get(i).getFirsName()
                     + " " + listLideres.get(i).getLastName() + "</h1>"
