@@ -87,7 +87,17 @@ $(document).ready(function () {
       $('.txtMonto').change(setTotalRegistros);
       $('.txtDescripcion').change(setTotalRegistros);
       $('.txtMonto').change(contar);
-    })
+    });
+    
+    $('#btnDeadRegistro').click(function(){
+      let lgtud = pnlParent.children().length;
+      if(lgtud > 1){
+        let lastedChild = pnlParent.children()[lgtud-1];
+        $(lastedChild).remove();
+      }
+    });
+
+    
 
 
     $('.txtDescripcion').blur(DescToMonto);
@@ -104,7 +114,11 @@ $(document).ready(function () {
       if (contarRegistros() == 0) {
         e.preventDefault();
         alert("Debe llenar los campos");
-      } else {
+      } else if($('#slcPrioridad').val()==0){
+        e.preventDefault();
+        alert("Selecione una Prioridad");
+        $('#slcPrioridad').focus();
+      }else{
         //Obtener iterador 
         let contador = $('#pnlRegistros').children().length;
         let arrayRegistro = $('.registro');
@@ -116,7 +130,7 @@ $(document).ready(function () {
           desc = $(arrayRegistro[i]).find('.txtDescripcion').val();
           sum = $(arrayRegistro[i]).find('.txtMonto').val();
           if(desc.length > 0 && sum.length > 0){
-            var obj = { descripcion: desc, monto: sum };
+            var obj = {id:0, descripcion: desc, monto: sum };
             jsonMtx.push(obj);              
           }
         }

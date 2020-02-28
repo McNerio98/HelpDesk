@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @author ZEUS
  */
 public class DetalleAux {
-
+    private Integer id;
     private String descripcion;
     private BigDecimal monto;
 
@@ -33,6 +33,14 @@ public class DetalleAux {
 
     public void setMonto(BigDecimal monto) {
         this.monto = monto;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
 }

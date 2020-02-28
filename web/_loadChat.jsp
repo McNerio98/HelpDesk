@@ -2,31 +2,38 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:if test="${listMessages != null}">
-    <div class="direct-chat-messages">
-        <c:forEach var="it" items="${LstGestiones}">
+    <div id="panelChat" class="direct-chat-messages" style="height: 100% !important; overflow: overflow-y;">
+        <c:forEach var="com" items="${listMessages}">
             <!--Definiendo el estilo-->
             <c:choose>
-                <c:when test="${it.type == 'Correo'}">
-                    <c:set var="styleBoostrap" scope="application" value="dark"/>
+                <c:when test="${com.rol == 6}">
+                    <c:set var="flot" scope="page" value="right"/>
                 </c:when>
-                <c:when test="${it.type == 'Solicitud'}">
-                    <c:set var="styleBoostrap" scope="application" value="success"/>
-                </c:when>
-                <c:when test="${it.type == 'Procedimiento'}">
-                    <c:set var="styleBoostrap" scope="application" value="primary"/>
-                </c:when>                
+                <c:otherwise>
+                    <c:set var="flot" scope="page" value=""/>
+                </c:otherwise>                
             </c:choose>
 
-            <div class="direct-chat-msg">
+
+            <div class="direct-chat-msg ${flot}">
+
                 <div class="direct-chat-infos clearfix">
-                    <span class="direct-chat-name float-left">NerioNerio Pierce</span>
-                    <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                    <c:choose>
+                        <c:when test="${com.rol == 6}">
+                            <span class="direct-chat-name float-right">${com.titular}</span>
+                            <span class="direct-chat-timestamp float-left">${com.fecha}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="direct-chat-name float-left">${com.titular}</span>
+                            <span class="direct-chat-timestamp float-right">${com.fecha}</span>    
+                        </c:otherwise>
+                    </c:choose>
                 </div>
 
-                <img class="direct-chat-img" src="framework/img/user1-128x128.jpg" alt="Message User Image">
+                <img class="direct-chat-img" src="${pageContext.servletContext.contextPath}/framework/img/avatar5.png" alt="Message User Image">
 
                 <div class="direct-chat-text">
-                    Is this template really for free? That's unbelievable!
+                    ${com.mensaje}
                 </div>
             </div>
         </c:forEach>

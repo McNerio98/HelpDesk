@@ -94,6 +94,7 @@ public class Requisiciones extends HttpServlet {
                     Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
             if(request.getSession().getAttribute("resultado")!=null){
                 request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
                 request.getSession().removeAttribute("resultado");
@@ -131,10 +132,9 @@ public class Requisiciones extends HttpServlet {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
-            List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
-            });
+            List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>(){});
             
-            if (listDetallesAux.size() == 0) {
+            if (listDetallesAux!=null && listDetallesAux.size() == 0) {
                 throw new Exception("Alteracion en el Json");
             }
             

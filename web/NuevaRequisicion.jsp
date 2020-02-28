@@ -34,7 +34,15 @@
 <section class="content">
     <div class="container-fluid">
         <!-- Comienda el contenido principal -->
-        <form class="row" action="Requisiciones?accion=nueva" id="formRequisicion" method="POST">
+
+        <c:if test="${lstDetalles!=null}">
+            <c:set var="process" value="accion=update$idReq=${idReq}" scope="page"/>
+        </c:if>
+        <c:if test="${lstDetalles==null}">
+            <c:set var="process" value="accion=nueva" scope="page"/>
+        </c:if>
+        
+        <form class="row" action="Requisiciones?${process}" id="formRequisicion" method="POST">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -47,47 +55,98 @@
                                     <strong>Detalles de Requisicion</strong>
                                 </p>
 
+
+
                                 <div id="pnlRegistros">
-                                    <div class="row registro">
-                                        <div class="input-group mb-3 col-sm-8">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-angle-right"></i>
-                                                </span>
+                                    <c:if test="${lstDetalles!=null}">
+                                        <c:forEach var="det" items="${lstDetalles}">
+                                            <div class="row registro">
+                                                <input type="hidden" value="${det.id}">
+                                                <div class="input-group mb-3 col-sm-8">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-angle-right"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
+                                                           maxlength="200" value="${det.descripcion}">
+                                                </div>
+                                                <div class="input-group mb-3 col-sm-4">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+" value="${det.monto}">
+                                                </div>
+                                            </div>                                            
+                                        </c:forEach>
+                                    </c:if>
+
+                                    <c:if test="${lstDetalles==null}">
+                                        <div class="row registro">
+                                            <input type="hidden" value="0">
+                                            <div class="input-group mb-3 col-sm-8">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-angle-right"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
+                                                       maxlength="200">
                                             </div>
-                                            <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
-                                                   maxlength="200">
-                                        </div>
-                                        <div class="input-group mb-3 col-sm-4">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">$</span>
+                                            <div class="input-group mb-3 col-sm-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                             </div>
-                                            <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                         </div>
-                                    </div>
-                                    <div class="row registro">
-                                        <div class="input-group mb-3 col-sm-8">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-angle-right"></i>
-                                                </span>
+                                        <div class="row registro">
+                                            <div class="input-group mb-3 col-sm-8">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-angle-right"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
+                                                       maxlength="200">
                                             </div>
-                                            <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
-                                                   maxlength="200">
-                                        </div>
-                                        <div class="input-group mb-3 col-sm-4">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">$</span>
+                                            <div class="input-group mb-3 col-sm-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                             </div>
-                                            <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                         </div>
-                                    </div>                                    
+                                        <div class="row registro">
+                                            <div class="input-group mb-3 col-sm-8">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-angle-right"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
+                                                       maxlength="200">
+                                            </div>
+                                            <div class="input-group mb-3 col-sm-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
+                                            </div>
+                                        </div>                                                                          
+                                    </c:if>                                    
 
                                 </div>
 
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-outline-dark rounded-0" id="btnAddRegistro">+ Nuevo
-                                        Detalle</button>
+                                    <button type="button" class="btn btn-outline-dark rounded-0" id="btnAddRegistro">
+                                        <i class="fas fa-plus"></i> Agregar
+                                    </button>
+                                    <c:if test="${lstDetalles==null}">
+                                        <button type="button" class="btn btn-outline-dark rounded-0" id="btnDeadRegistro">
+                                            <i class="fas fa-minus"></i> Eliminar
+                                        </button>                                        
+                                    </c:if>
                                 </div>
 
                             </div>
@@ -114,9 +173,15 @@
                                         Autorizador: <span class="text-custom1">${DataGeneral.superior}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
                                         Contador: <span class="text-custom1">${DataGeneral.contador}</span></label>                                        
-                                    <div style="text-align: right;">
-                                        <button type="submit" class="btn btn-success">Solicitar</button>
-                                        <button type="button" class="btn btn-secondary">Cancelar</button>
+                                    
+                                        <div style="text-align: right;">
+                                            <c:if test="${lstDetalles!=null}">
+                                                <button type="submit" class="btn btn-success">Confirmar</button>
+                                            </c:if>
+                                            <c:if test="${lstDetalles==null}">
+                                                <button type="submit" class="btn btn-success">Solicitar</button>                                                
+                                            </c:if>
+                                        <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn-secondary">Cancelar</a>
                                         <input type="hidden" name="JsonReq" value="" id="JsonReq">
 
                                     </div>
@@ -141,7 +206,12 @@
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-money-bill-wave"></i></span>
                                     <h5 class="description-header text-success">MONTO TOTAL</h5>
-                                    <span class="description-text">$ <span id="totalSum">0</span></span>
+                                    <span class="description-text">$ 
+                                        <span id="totalSum">
+                                            <c:if test="${lstDetalles!=null}">${DataGeneral.montoTotal}</c:if>
+                                            <c:if test="${lstDetalles==null}">0</c:if>                                            
+                                        </span>
+                                    </span>
                                 </div>
                                 <!-- /.description-block -->
                             </div>
@@ -151,7 +221,10 @@
                                 <div class="description-block border-right">
                                     <span class="description-percentage "><i class="fas fa-stream"></i></span>
                                     <h5 class="description-header text-success">TOTAL REGISTROS</h5>
-                                    <span class="description-text" id="totalRecord">0</span>
+                                    <span class="description-text" id="totalRecord">
+                                        <c:if test="${lstDetalles!=null}">${DataGeneral.numRegistros}</c:if>
+                                        <c:if test="${lstDetalles==null}">0</c:if>                                                                                    
+                                    </span>
                                 </div>
                                 <!-- /.description-block -->
                             </div>

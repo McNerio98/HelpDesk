@@ -107,12 +107,12 @@
                                     <h3 class="card-title">Chat </h3>
 
                                     <div class="card-tools">
-                                        <span data-toggle="tooltip" title="3 New Messages" class="badge bg-success">3</span>
+                                        <span data-toggle="tooltip" title="Mensajes Nuevos" class="badge bg-success" id="countMessages">0</span>
 
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
-                                <div class="card-body" style="overflow: overflow-y; height: 400px;" id="bodyMesagges">
+                                <div class="card-body" style="height: 400px;" id="bodyMesagges">
                                     <div class="cnt-loading">
                                         <div class="spinner-border" role="status" style="width: 4rem !important; height: 4rem !important;">
                                             <span class="sr-only">Loading...</span>
@@ -138,7 +138,7 @@
                             <div style="text-align: right;">
                                 <c:choose>
                                     <c:when test = "${(pg.idCreador == idUsuario) && (pg.estado == 1 || pg.estado == 2)}">
-                                        <a href="#" class="btn btn-warning">Modificar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/RequisicionInfo?accion=update&idReq=${idReq}" class="btn btn-warning">Modificar</a>
                                     </c:when>
                                     <c:when test = "${Rol == 6 && pg.estado == 1}">
                                         <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=revision" class="btn btn-warning">Revision</a>
@@ -178,6 +178,8 @@
                 url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
                 success: function (result) {
                     $('#bodyMesagges').html(result);
+                    $('#panelChat').scrollTop( $('#panelChat').prop('scrollHeight') );
+                    $('#countMessages').text($('.direct-chat-msg').length);
 
                 }
             });
