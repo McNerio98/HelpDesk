@@ -58,8 +58,8 @@ public class Empleados extends HttpServlet {
             if (accion == null) {
                 if (rolss == 1) {
                     s.setAttribute("requestEmpleado", DataList.getEmpleados(0));
-                } 
-                if(rolss == 5){
+                }
+                if (rolss == 5) {
                     s.setAttribute("requestEmpleado", DataList.getEmpleados(1));
                 }
                 if (rolss == 2) {
@@ -86,7 +86,7 @@ public class Empleados extends HttpServlet {
                         Logger.getLogger(Procesos.class.getName()).log(Level.SEVERE, null, ex2);
                     }
                 }
-                
+
                 request.setAttribute("listDepto", listDepto);
                 request.setAttribute("listRol", listRol);
                 request.setAttribute("listEmpleados", DataList.getEmpleados(0));
@@ -107,7 +107,7 @@ public class Empleados extends HttpServlet {
                             /*se setean los valores*/
                             user = Operaciones.get(iduser, new Usuario());
                             user.setIdRole(rol);
-                            
+
                             UsuarioRequisicion userReq = Operaciones.get(iduser, new UsuarioRequisicion());
                             userReq.setIdRol(rol);
 
@@ -120,42 +120,46 @@ public class Empleados extends HttpServlet {
                             String[][] iddep = Operaciones.consultar(query, params);
 
                             /*se actualiza respectivamente cada entidad*/
-                            if(sessiontype.equals("HD")){
-                                
+                            if (sessiontype.equals("HD")) {
+
                                 Operaciones.actualizar(user.getIdUser(), user);
-                            }else{
+                            } else {
                                 //Si es actualizado para contador
-                                if(rol != Enums.ROL.CONTADOR_REQ){
+                                if (rol != Enums.ROL.CONTADOR_REQ) {
                                     //Si el contador tiene requisiciones pendientes
-                                    String query2 = "select * from requisicionespagos where idcontador = "+userReq.getIdUsuario()+" and estado = 3";
-                                    if((Operaciones.consultar(query2, null))!=null){
-                                        s.setAttribute("error", "No se puede actualizar, el contador tiene requisiciones pendientes");
-                                    }else{
+                                    String query2 = "select * from requisicionespagos where idcontador = " + userReq.getIdUsuario() + " and estado = 3";
+                                    if ((Operaciones.consultar(query2, null)) != null) {
+                                        request.setAttribute("error", "No se puede actualizar, el contador tiene requisiciones pendientes");
+                                        
+                                        
+
+                                        request.setAttribute("listDepto", Operaciones.getTodos(new Departamento()));
+                                        request.setAttribute("listRol", Operaciones.getTodos(new Rol()));
+                                        request.getRequestDispatcher("asignarRol.jsp").forward(request, response);
+                                    } else {
                                         s.setAttribute("error", null);
                                         //Se actualiza el contador a la empresa ficticia x
-                                        String query3 = "select idure from usuarioreqbyempresas where idusuario = "+ userReq.getIdUsuario();
+                                        String query3 = "select idure from usuarioreqbyempresas where idusuario = " + userReq.getIdUsuario();
                                         String query4 = "select idempresa from empresas where nombre = 'x'";
                                         String array1[][] = Operaciones.consultar(query4, null);
                                         String array2[][] = Operaciones.consultar(query3, null);
                                         int ure = Integer.parseInt(array2[0][0]);
                                         int idemp = Integer.parseInt(array1[0][0]);
-                                        
+
                                         UsuarioReqByEmpresa urbe = Operaciones.get(ure, new UsuarioReqByEmpresa());
-                                        
+
                                         urbe.setIdEmpresa(idemp);
-                                        
+
                                         Operaciones.actualizar(ure, urbe);
                                         Operaciones.actualizar(userReq.getIdUsuario(), userReq);
-                                        
-                                        
+
                                     }
-                                }else{
+                                } else {
                                     Operaciones.actualizar(userReq.getIdUsuario(), userReq);
                                 }
-                                
+
                             }
-                            
- 
+
                             Operaciones.commit();
                             response.sendRedirect(request.getContextPath() + "/Empleados");
                             //request.getRequestDispatcher("asignarRol.jsp").forward(request, response);
@@ -288,13 +292,10 @@ public class Empleados extends HttpServlet {
                             case 1: {
                                 if (UsersByFilters(idRol, idDepto, 1) != null) {
 
-                                    
                                     //String json = new Gson().toJson(UsersByFilters(idRol, idDepto, 1));
-                                    
                                     //out.print(json);
-                                    
-                                     printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 1),response);
-                                    
+                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 1), response);
+
                                 } else {
                                     out.print("null");
                                 }
@@ -303,12 +304,9 @@ public class Empleados extends HttpServlet {
                             case 2: {
                                 if (UsersByFilters(idRol, idDepto, 2) != null) {
 
-                                    
                                     //String json = new Gson().toJson(UsersByFilters(idRol, idDepto, 2));
-                                    
                                     //out.print(json);
-                                    
-                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 2),response);
+                                    printUsuariosJsonByFilter.Render(UsersByFilters(idRol, idDepto, 2), response);
 
                                 } else {
                                     out.print("null");
@@ -319,11 +317,10 @@ public class Empleados extends HttpServlet {
 
                         break;
                     }
-                    
-                    case "getAll":
-                    {
+
+                    case "getAll": {
                         int idcase = Integer.parseInt(request.getParameter("idcase"));
-                        this.getAllEmpleados(response,idcase);
+                        this.getAllEmpleados(response, idcase);
                         break;
                     }
                 }
@@ -341,39 +338,38 @@ public class Empleados extends HttpServlet {
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
             String query = "select iduser from users where idrole < 5";
-            
-            if(idcase==0){
+
+            if (idcase == 0) {
                 String array[][] = Operaciones.consultar(query, null);
-                for(int i=0;i<array[0].length;i++){
+                for (int i = 0; i < array[0].length; i++) {
                     Usuario usertmp = Operaciones.get(Integer.parseInt(array[0][i]), new Usuario());
                     lstUsers.add(usertmp);
                 }
-            }else{
-                
+            } else {
+
                 ArrayList<UsuarioRequisicion> userReq = Operaciones.getTodos(new UsuarioRequisicion());
-                for(int i=0;i<userReq.size();i++){
+                for (int i = 0; i < userReq.size(); i++) {
                     Usuario urq = Operaciones.get(userReq.get(i).getIdUsuario(), new Usuario());
                     urq.setIdRole(userReq.get(i).getIdRol());
                     lstUsers.add(urq);
                 }
             }
-            
-            
-            for(int i=0;i<lstUsers.size();i++){
+
+            for (int i = 0; i < lstUsers.size(); i++) {
                 listarEmpleado lst = new listarEmpleado();
                 lst.setUsuario(lstUsers.get(i));
-                
+
                 Departamento depto = new Departamento();
                 depto = Operaciones.get(DataList.getIdDepto(lstUsers.get(i).getIdUser()), new Departamento());
                 lst.setDepto(depto);
-                
+
                 Rol rol = new Rol();
                 rol = Operaciones.get(lstUsers.get(i).getIdRole(), new Rol());
-                
+
                 lst.setRol(rol);
                 lstEmpleado.add(lst);
             }
-            
+
             printUsuariosJsonByFilter.Render(lstEmpleado, response);
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);

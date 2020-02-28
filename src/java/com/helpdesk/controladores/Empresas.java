@@ -386,10 +386,11 @@ public class Empresas extends HttpServlet {
                         Operaciones.commit();
                         response.sendRedirect(request.getContextPath() + "/Empresas");
                     } catch (Exception ex) {
-                        out.print("Error servidor");
                         try {
+                            request.setAttribute("error", "No puedes actualizar un contador sin antes haber asociado uno");
+                            request.setAttribute("ContadorList", this.getContadores());
+                            request.getRequestDispatcher("empresas.jsp").forward(request, response);
                             Operaciones.rollback();
-                            out.print("Error servidor");
                         } catch (SQLException ex1) {
                             Logger.getLogger(Empresas.class.getName()).log(Level.SEVERE, null, ex1);
                         }
