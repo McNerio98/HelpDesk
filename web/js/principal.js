@@ -55,14 +55,7 @@ function displayDataTables(url) {
             url: url,
             dataSrc: ''
         },
-        "createdRow": function (row, data, index) {
-
-            // Add identity if it specified
-            $('td', row).eq(4).addClass("hidetd");
-            $('td', row).eq(5).addClass("hidetd");
-            row.id = "id" + data.id;
-
-        },
+        
         columns: [
             {data: 'id'},
             {
@@ -82,7 +75,7 @@ function displayDataTables(url) {
                     "sLengthMenu": "Mostrar _MENU_ registros",
                     "sZeroRecords": "No se encontraron resultados",
                     "sEmptyTable": "Ningún dato disponible en esta tabla",
-                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfo": "_END_ de _TOTAL_ registros",
                     "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
                     "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
                     "sInfoPostFix": "",

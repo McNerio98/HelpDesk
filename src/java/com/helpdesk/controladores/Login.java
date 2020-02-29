@@ -6,15 +6,20 @@ package com.helpdesk.controladores;
  */
 package com.helpdesk.controladores;
 
+import com.google.gson.Gson;
 import com.helpdesk.utilerias.Hash;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.DeptoPorUsuario;
+import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.Menu;
 import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioReqByEmpresa;
+import com.helpdesk.entidades.UsuarioRequisicion;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
+import com.helpdesk.utilerias.Enums;
 import com.helpdesk.utilerias.htmlTemplate;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,6 +52,13 @@ public class Login extends HttpServlet {
         return generatedString;
     }
 
+    public String getAllDeptosInEmpresas(int id) {
+        ArrayList list = DataList.getDeptosByEmpresa(id);
+
+        String json = new Gson().toJson(list);
+        return json;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -55,15 +67,22 @@ public class Login extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else if (accion.equals("registro")) {
             ArrayList<Departamento> Deptos = new ArrayList<Departamento>();
-            Deptos = DataList.getAllDeptos();
+            ArrayList<Empresa> empresas = new ArrayList<>();
+            empresas = DataList.getAllEmpresas();
+            Deptos = DataList.getDeptosByEmpresa(2);/// Valor seteado en definicion a la db
             request.setAttribute("DeptosList", Deptos);
+            request.setAttribute("EmpresasList", empresas);
             request.getRequestDispatcher("registro.jsp").forward(request, response);
+        } else if (accion.equals("getDeptosByEmpresa")) {
+            PrintWriter out = response.getWriter();
+            int idemp = Integer.parseInt(request.getParameter("id"));
+            out.print(this.getAllDeptosInEmpresas(idemp));
         } else if (accion.equals("recover")) {
             String opc = request.getParameter("opc");
             HttpSession s = request.getSession();
-            PrintWriter out = response.getWriter();
 
             switch (opc) {
+
                 //Cuando el usuario entre a la vista cambiar password
                 case "b19498e29da193d545f4072e58687845a894bcd6": {
                     s.setAttribute("recoverCase", 1);
@@ -73,7 +92,7 @@ public class Login extends HttpServlet {
                 //cuando se capta el correo y se le envia un link con una key hash al mismo
                 case "49381d2042ac93bb15942ecc3b2c1830d29ecdfa": {
                     String email = request.getParameter("email");
-
+                    PrintWriter out = response.getWriter();
                     if (!email.equals("")) {
                         if (this.verificarCorreo(email)) {
                             String key = this.generateRamdonString();
@@ -84,7 +103,7 @@ public class Login extends HttpServlet {
                             html.difineTag(
                                     "<p>Hola " + email + ",</p>"
                             );
-                              html.difineTag(
+                            html.difineTag(
                                     "<p class='colored'>Para restablecer su contraseña, "
                                     + "visite la siguiente dirección: </p>"
                             );
@@ -158,8 +177,9 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
-
+        PrintWriter out = response.getWriter();
         switch (accion) {
+            //Para mostrar los departamentos seleccionados a esa empresa
 
             case "saveNewPas": {
                 String usermail = request.getParameter("usermail");
@@ -214,15 +234,20 @@ public class Login extends HttpServlet {
                 String clave = request.getParameter("txtPassword");
                 String correo = request.getParameter("txtEmail");
                 String telefono = request.getParameter("txtTelephone");
+                // Campo para saber si sera un usuario de requisicion 
+                String req = request.getParameter("requisicion");
+                boolean userReq = (req != null && req.equals("true")) ? true : false;
+                String empresa = request.getParameter("empresa");
 
                 Usuario u = new Usuario();
+
                 u.setUserName(userName.toUpperCase());
                 u.setFirsName(nom);
                 u.setLastName(ape);
                 u.setEmail(correo);
                 u.setTelephone(telefono);
                 u.setPassword(Hash.generarHash(clave, Hash.SHA256));
-                u.setIdRole(4); //role 4 Empleado
+                u.setIdRole(Enums.ROL.EMPLEADO);
                 HttpSession s = request.getSession();
 
                 try {
@@ -231,12 +256,23 @@ public class Login extends HttpServlet {
                     Operaciones.abrirConexion(conn);
                     Operaciones.iniciarTransaccion();
 
-                    u = Operaciones.insertar(u);
-                    /*s.setAttribute("idUsuario", u.getIdUser());
-                    s.setAttribute("Usuario", u.getUserName());
-                    s.setAttribute("Rol", u.getIdRole());
-                    s.setAttribute("idUsuario", u.getIdUser());
-                    s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));*/
+                    if (userReq) {
+                        u.setIdRole(Enums.ROL.EMPLEADO_REQ);
+                        u = Operaciones.insertar(u);
+                        UsuarioRequisicion ur = new UsuarioRequisicion();
+                        ur.setIdUsuario(u.getIdUser());
+                        ur.setIdRol(Enums.ROL.EMPLEADO_REQ);
+                        ur = Operaciones.insertar(ur);
+
+                        UsuarioReqByEmpresa urb = new UsuarioReqByEmpresa();
+                        urb.setIdUsuario(u.getIdUser());
+                        urb.setIdEmpresa(Integer.parseInt(empresa));
+                        urb = Operaciones.insertar(urb);
+
+                    } else {
+                        u = Operaciones.insertar(u);
+                    }
+
                     DeptoPorUsuario dp = new DeptoPorUsuario();
                     dp.setIdDepto(Integer.parseInt(idDepto));
                     dp.setIdUser(u.getIdUser());
@@ -268,7 +304,7 @@ public class Login extends HttpServlet {
             case "consultar_usuario": {
                 response.setContentType("text/plain");
                 String userName = request.getParameter("usName");
-                PrintWriter out = response.getWriter();
+                
                 if (verificarUsuario(userName.toUpperCase())) {
                     out.print("true");
                 } else {
@@ -279,7 +315,7 @@ public class Login extends HttpServlet {
             case "consultar_correo": {
                 response.setContentType("text/plain");
                 String em = request.getParameter("usEmail");
-                PrintWriter out = response.getWriter();
+                
                 if (verificarCorreo(em)) {
                     out.print("true");
                 } else {
@@ -296,6 +332,9 @@ public class Login extends HttpServlet {
 
         String cuenta = request.getParameter("txtCuenta");
         String clave = request.getParameter("txtClave");
+        String logReq = request.getParameter("loginReq");
+        boolean loginReq = (logReq != null && logReq.equals("true")) ? true : false;
+
         try {
             Conexion conn = new ConexionPool();
             conn.conectar();
@@ -320,14 +359,34 @@ public class Login extends HttpServlet {
 
                 if (u.getPassword().equals(Hash.generarHash(clave, Hash.SHA256))) {
                     s.setAttribute("Usuario", u.getUserName());
-                    s.setAttribute("Rol", u.getIdRole());
                     s.setAttribute("idUsuario", u.getIdUser());
                     s.setAttribute("idDepUser", DataList.getIdDepto(u.getIdUser()));
+                    List<Menu> MenuPrincipal = new ArrayList<>();
 
-                    List<Menu> MenuPrincipal = getPermisos(u.getIdRole());
-                    s.setAttribute("MenuPrincipal", MenuPrincipal);
-
-                    response.sendRedirect("Principal");
+                    if (loginReq) {
+                        UsuarioRequisicion ur = Operaciones.get(u.getIdUser(), new UsuarioRequisicion());
+                        if (ur.getIdUsuario() == 0) {
+                            request.setAttribute("error", 2);
+                            request.getRequestDispatcher("login.jsp").forward(request, response);
+                            return;
+                        }
+                        s.setAttribute("Rol", ur.getIdRol());
+                        s.setAttribute("typeSession", "REQ");
+                        MenuPrincipal = getPermisos(ur.getIdRol());
+                        s.setAttribute("MenuPrincipal", MenuPrincipal);
+                        response.sendRedirect("PrincipalRequisicion");
+                    } else {
+                        if (u.getIdRole() >= 5 && u.getIdRole() <= 9) {
+                            request.setAttribute("error", 2);
+                            request.getRequestDispatcher("login.jsp").forward(request, response);
+                            return;
+                        }
+                        s.setAttribute("Rol", u.getIdRole());
+                        s.setAttribute("typeSession", "HD");
+                        MenuPrincipal = getPermisos(u.getIdRole());
+                        s.setAttribute("MenuPrincipal", MenuPrincipal);
+                        response.sendRedirect("Principal");
+                    }
                 } else {
                     //La clave es incorrecta
                     request.setAttribute("error", 1);
@@ -413,7 +472,6 @@ public class Login extends HttpServlet {
             m.setIdMenu(Integer.parseInt(result[0][i]));
             m.setMenu(result[1][i]);
             m.setController(result[2][i]);
-            m.setIdParent(Integer.parseInt(result[3][i] == null ? "0" : result[4][i]));
             permisos.add(m);
         }
 

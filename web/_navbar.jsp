@@ -35,8 +35,18 @@
 
                             <li id="${listUser.getUsuario().getIdUser()}" class="list-group-item d-flex justify-content-between align-items-center">
                                 ${listUser.getUsuario().getFirsName()} ${listUser.getUsuario().getLastName()}
-                                <a onclick="changeRol(${listUser.getUsuario().getIdUser()},${listUser.getDepto().getIdDepto()})" href="#">
+                                <c:if test="${typeSession == 'REQ'}">
+                                    <form action="${pageContext.servletContext.contextPath}/Solicitudes?accion=aceptRequest" method="post">
+                                        <input type="hidden" name="iduser" value="${listUser.getUsuario().getIdUser()}">
+                                        <input type="submit" value="Aceptar" class="btn btn-link">
+                                    </form>
+                                <!--<a onclick="changeRol(${listUser.getUsuario().getIdUser()},${listUser.getDepto().getIdDepto()},7)" href="#">
+                                    Aceptar</a>-->
+                                </c:if>
+                                <c:if test="${typeSession == 'HD'}">
+                                <a onclick="changeRol(${listUser.getUsuario().getIdUser()},${listUser.getDepto().getIdDepto()},3)" href="#">
                                     Aceptar</a>
+                                </c:if>
                             </li>
 
 
@@ -89,10 +99,10 @@
 
 <script>
 
-    function changeRol(iduser, iddepto) {
+    function changeRol(iduser, iddepto, rol) {
         fetch("${pageContext.servletContext.contextPath}/Empleados?accion=updateRolDepto", {
             method: 'post',
-            body: 'rol=' + 3 + '&depto=' + iddepto + '&iduser=' + iduser,
+            body: 'rol=' + rol + '&depto=' + iddepto + '&iduser=' + iduser,
             headers: {'Content-type': 'application/x-www-form-urlencoded'}
         })
                 .then((response) => response.text())

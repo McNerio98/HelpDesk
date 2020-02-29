@@ -9,7 +9,11 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-
+                <c:if test="${error!=null}">
+                    <div class="alert alert-danger" role="alert">
+                        ${error}
+                    </div>
+                </c:if>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -30,30 +34,37 @@
         <div class="row">
             <!-- Table row -->
 
-            <div class="table-responsive">
-                <table class="display" id="table_empleados">
-                    <thead>
+            <div class="card col-12">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Empleados</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" id="table_empleados">
+                            <thead>
 
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre completo</th>
-                            <th>Correo Electronico</th>
-                            <th>Contacto</th>
-                            <th>Departamento</th>
-                            <th>Rol</th>
-                            <th>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre completo</th>
+                                    <th>Correo Electronico</th>
+                                    <th>Contacto</th>
+                                    <th>Departamento</th>
+                                    <th>Rol</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
 
 
 
 
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
             <!-- ./col -->
         </div>
         <!-- /.row -->
@@ -82,6 +93,7 @@
                 </p>
                 <form action="${pageContext.servletContext.contextPath}/Empleados?accion=updateRolDepto" method="post">
                     <input id="inputuser" type="hidden" value="" name="iduser">
+                    <input type="hidden" value="${typeSession}" name="sessiontype">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Departamentos</label>
@@ -98,10 +110,22 @@
                             <label class="input-group-text" for="inputGroupSelect01">Roles</label>
                         </div>
                         <select name="rol" class="custom-select" id="inputGroupSelect02" value="">
+                            <c:if test="${typeSession == 'HD'}">
+                                <c:forEach var="listRol" items="${listRol}">
 
-                            <c:forEach var="listRol" items="${listRol}">
-                                <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
-                            </c:forEach>
+                                    <c:if test="${listRol.getIdRol() == 1 || listRol.getIdRol() == 2 || listRol.getIdRol() == 3 || listRol.getIdRol() == 4}">
+                                        <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${typeSession == 'REQ'}">
+                                <c:forEach var="listRol" items="${listRol}">
+
+                                    <c:if test="${listRol.getIdRol() == 5 || listRol.getIdRol() == 6 || listRol.getIdRol() == 7 || listRol.getIdRol() == 8 || listRol.getIdRol() == 9}">
+                                        <option value="${listRol.getIdRol()}">${listRol.getRoleName()}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -147,11 +171,18 @@
 <%@include file="_endPanel.jsp" %>
 
 <script>
+    var sesion = '${typeSession}';
+    console.log(sesion);
+    var idCaseSesion = 0;
+    if (sesion != "HD") {
+        idCaseSesion = 1;
+    }
+    console.log("CASE: " + idCaseSesion);
     $(document).ready(function () {
         $('#table_empleados').DataTable({
             responsive: true,
             ajax: {
-                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll',
+                url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll&idcase=' + idCaseSesion,
                 dataSrc: ''
             },
             "createdRow": function (row, data, index) {

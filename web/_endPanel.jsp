@@ -2,10 +2,10 @@
 </div>
 <!-- /.content-wrapper -->
 <footer class="main-footer">
-    <strong>Copyright &copy; 2019-2020 <a href="http://helpdesk.com">HelpDesk</a>.</strong>
+    <strong>Copyright &copy; 2019-2020 <a href="./">HelpDesk</a>.</strong>
     McNerio & CnkBlanco USO
     <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 1.1
+        <b>Version</b> 2.0
     </div>
 </footer>
 
@@ -37,6 +37,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="framework/js/demo.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
+<script src="js/dataTableBootstrap.js"></script>
 
 <script>
     function validarCaracteres(input, max, btn, alert) {

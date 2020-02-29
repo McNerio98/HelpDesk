@@ -6,6 +6,7 @@
 package com.helpdesk.controladores;
 
 import com.helpdesk.entidades.Menu;
+import com.helpdesk.utilerias.Enums;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -51,16 +52,33 @@ public class FiltroPrincipal implements Filter {
             return;
         }
 
-        if (request.getSession().getAttribute("Usuario") != null || request.getRequestURI().equals(request.getContextPath() + "/Login")) {
+        if ((request.getSession().getAttribute("Usuario") !=null && request.getSession().getAttribute("idUsuario")!=null) || request.getRequestURI().equals(request.getContextPath() + "/Login")) {
             boolean encontrado = true;
             String url = request.getRequestURI().toString();
             String context = request.getContextPath();
 
-            String pathPrincipal = request.getContextPath() + "/Principal";
+            
+            String panelPrincipal = "";
+            
+            //Hasta aqui hay ya estan los datos en la sesion 
+            String tipoSesion = (String)request.getSession().getAttribute("typeSession");
+            panelPrincipal = (tipoSesion!=null && tipoSesion.equals("HD"))?"Principal":"PrincipalRequisicion";
 
-            if (request.getParameter("accion") == null && !url.equals(pathPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Informacion") && !url.equals(context + "/Perfil")) {
+            if (request.getParameter("accion") == null && !url.equals("/"+panelPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Perfil") && !url.equals(context + "/RequisicionPDF")) {
+                
+               
+                //Manejando controller unicos y que no estan en los menus a partir del tipo de sesion 
                 List<Menu> permisos = (List<Menu>) request.getSession().getAttribute("MenuPrincipal");
+                
                 encontrado = false;
+                
+                if(tipoSesion.equals("HD") && url.equals(context + "/Informacion")){
+                   encontrado = true;
+                }else if(tipoSesion.equals("REQ") && url.equals(context + "/RequisicionInfo")){
+                   encontrado = true; 
+                }
+                
+                
                 int cont = 0;
                 
                 while (cont < permisos.size() && !encontrado) {
@@ -70,13 +88,12 @@ public class FiltroPrincipal implements Filter {
                     }
                     cont++;
                 }
-
             }
 
             if (encontrado) {
                 chain.doFilter(request, response);
             } else {
-                response.sendRedirect("Principal");
+                response.sendRedirect(panelPrincipal);
             }
 
         } else {

@@ -40,7 +40,7 @@ public class Principal extends HttpServlet {
             IncidenceByReceptor list = new IncidenceByReceptor(idUserSession);
 
             if (rol == 1) {
-                s.setAttribute("requestEmpleado", DataList.getEmpleados());
+                s.setAttribute("requestEmpleado", DataList.getEmpleados(0));
 
             }
             if (rol == 2) {
