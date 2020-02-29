@@ -6,6 +6,46 @@
 
 var root = document.getElementById("path");
 
+function getMyIncidences(opc) {
+    switch (opc) {
+        case 1:
+        {
+            displayDataTables(root.value + "/IncidenciasLider?accion=todas");
+            break;
+        }
+        case 2:
+        {
+            displayDataTables(root.value + "/IncidenciasLider?accion=enproceso");
+            break;
+        }
+        case 3:
+        {
+            //Pendientes
+            displayDataTables(root.value + "/IncidenciasLider?accion=pending");
+            break;
+        }
+        case 4:
+        {
+
+            displayDataTables(root.value + "/IncidenciasLider?accion=finalizadas");
+            break;
+        }
+        case 5:
+        {
+            ///Solicitadas
+            displayDataTables(root.value + "/IncidenciasLider?accion=solicitadas");
+            break;
+        }
+        case 6:
+        {
+            ///Rechazadas
+            displayDataTables(root.value + "/IncidenciasLider?accion=refuse");
+            break;
+        }
+
+    }
+}
+
 function getIncidences(opc) {
     switch (opc) {
         case 1:

@@ -47,6 +47,26 @@ public class IncidenceByReceptor {
             }
         }
     }
+    
+    public ArrayList<Incidencia> getIncidencesStatusByLider(int id, int idcase){
+        ArrayList<Incidencia> listStatus = new ArrayList<>();
+        String query = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where\n"
+                + "a.idincidence=b.idincidence and a.idreceptor = "+this.iduser+" and a.status="+id+"  group by a.idincidence";
+        String query2  = "select\n"
+                + "a.idincidence\n"
+                + "from incidences a, incidencebyreceptor b\n"
+                + "where\n"
+                + "a.idincidence=b.idincidence and a.idreceptor = "+this.iduser+" group by a.idincidence";
+        if(idcase == 1){
+            listStatus = this.listIncidencia(query, null);
+        }else{
+            listStatus = this.listIncidencia(query2, null);
+        }
+        return listStatus;
+    }
 
     public ArrayList<Incidencia> getIncidencesByStatus(int id) {
         ArrayList<Incidencia> listStatus = new ArrayList<>();
