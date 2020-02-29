@@ -16,7 +16,8 @@
                     <c:if test="${resultado==2}">
                         <p class="text-danger m-0"><strong>Problemas al registrar!</strong></p>
                     </c:if>
-                </c:if>                
+                </c:if>
+                <p class="text-danger m-0" id="mesanjeByDeleteStatus"></p>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -34,14 +35,15 @@
 <section class="content">
     <div class="container-fluid">
         <!-- Comienda el contenido principal -->
-
+        <input type="hidden" value="${pageContext.servletContext.contextPath}" id="pathApp"/>
         <c:if test="${lstDetalles!=null}">
-            <c:set var="process" value="accion=update$idReq=${idReq}" scope="page"/>
+            <c:set var="process" value="accion=update&idReq=${idReq}" scope="page"/>
+            <input type="hidden" value="${idReq}" id="idRequisicion"/>
         </c:if>
         <c:if test="${lstDetalles==null}">
             <c:set var="process" value="accion=nueva" scope="page"/>
         </c:if>
-        
+
         <form class="row" action="Requisiciones?${process}" id="formRequisicion" method="POST">
             <div class="col-md-12">
                 <div class="card">
@@ -55,13 +57,11 @@
                                     <strong>Detalles de Requisicion</strong>
                                 </p>
 
-
-
                                 <div id="pnlRegistros">
                                     <c:if test="${lstDetalles!=null}">
                                         <c:forEach var="det" items="${lstDetalles}">
                                             <div class="row registro">
-                                                <input type="hidden" value="${det.id}">
+                                                <input type="hidden" value="${det.id}" id="idDet" class="idDet"/>
                                                 <div class="input-group mb-3 col-sm-8">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
@@ -71,19 +71,22 @@
                                                     <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
                                                            maxlength="200" value="${det.descripcion}">
                                                 </div>
-                                                <div class="input-group mb-3 col-sm-4">
+                                                <div class="input-group mb-3 col-sm-3 col-9">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
                                                     <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+" value="${det.monto}">
                                                 </div>
+                                                <div class="input-group mb-3 col-sm-1 col-3">
+                                                    <button type="button" class="btn btn-danger btnDeleteFromDB" value="${det.id}" id="btnDeleteFromDB" >-</button>
+                                                </div>                                                
                                             </div>                                            
                                         </c:forEach>
                                     </c:if>
 
                                     <c:if test="${lstDetalles==null}">
                                         <div class="row registro">
-                                            <input type="hidden" value="0">
+                                            <input type="hidden" value="0" id="idDet" class="idDet"/>
                                             <div class="input-group mb-3 col-sm-8">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -93,14 +96,18 @@
                                                 <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
                                                        maxlength="200">
                                             </div>
-                                            <div class="input-group mb-3 col-sm-4">
+                                            <div class="input-group mb-3 col-sm-3 col-9">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
                                                 </div>
                                                 <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                             </div>
+                                            <div class="input-group mb-3 col-sm-1 col-3">
+                                                <button type="button" class="btn btn-secondary btnDeleteRecord" id="btnDeleteRecord" >-</button>
+                                            </div>                                            
                                         </div>
                                         <div class="row registro">
+                                            <input type="hidden" value="0" id="idDet" class="idDet"/>
                                             <div class="input-group mb-3 col-sm-8">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -110,14 +117,18 @@
                                                 <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
                                                        maxlength="200">
                                             </div>
-                                            <div class="input-group mb-3 col-sm-4">
+                                            <div class="input-group mb-3 col-sm-3 col-9">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
                                                 </div>
                                                 <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                             </div>
-                                        </div>
+                                            <div class="input-group mb-3 col-sm-1 col-3">
+                                                <button type="button" class="btn btn-secondary btnDeleteRecord" id="btnDeleteRecord" >-</button>
+                                            </div>                                            
+                                        </div>                                        
                                         <div class="row registro">
+                                            <input type="hidden" value="0" id="idDet" class="idDet"/>
                                             <div class="input-group mb-3 col-sm-8">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">
@@ -127,13 +138,17 @@
                                                 <input type="text" class="form-control txtDescripcion" placeholder="Descripcion"
                                                        maxlength="200">
                                             </div>
-                                            <div class="input-group mb-3 col-sm-4">
+                                            <div class="input-group mb-3 col-sm-3 col-9">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
                                                 </div>
                                                 <input type="text" class="form-control txtMonto" placeholder="Monto" pattern="[0.0-9]+">
                                             </div>
-                                        </div>                                                                          
+                                            <div class="input-group mb-3 col-sm-1 col-3">
+                                                <button type="button" class="btn btn-secondary btnDeleteRecord" id="btnDeleteRecord" >-</button>
+                                            </div>                                            
+                                        </div>                                        
+
                                     </c:if>                                    
 
                                 </div>
@@ -142,11 +157,6 @@
                                     <button type="button" class="btn btn-outline-dark rounded-0" id="btnAddRegistro">
                                         <i class="fas fa-plus"></i> Agregar
                                     </button>
-                                    <c:if test="${lstDetalles==null}">
-                                        <button type="button" class="btn btn-outline-dark rounded-0" id="btnDeadRegistro">
-                                            <i class="fas fa-minus"></i> Eliminar
-                                        </button>                                        
-                                    </c:if>
                                 </div>
 
                             </div>
@@ -173,18 +183,19 @@
                                         Autorizador: <span class="text-custom1">${DataGeneral.superior}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
                                         Contador: <span class="text-custom1">${DataGeneral.contador}</span></label>                                        
-                                    
-                                        <div style="text-align: right;">
-                                            <c:if test="${lstDetalles!=null}">
-                                                <button type="submit" class="btn btn-success">Confirmar</button>
-                                            </c:if>
-                                            <c:if test="${lstDetalles==null}">
-                                                <button type="submit" class="btn btn-success">Solicitar</button>                                                
-                                            </c:if>
+
+                                    <div style="text-align: right;">
+                                        <c:if test="${lstDetalles!=null}">
+                                            <button type="submit" class="btn btn-success">Confirmar</button>
+                                        </c:if>
+                                        <c:if test="${lstDetalles==null}">
+                                            <button type="submit" class="btn btn-success">Solicitar</button>                                                
+                                        </c:if>
                                         <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn-secondary">Cancelar</a>
                                         <input type="hidden" name="JsonReq" value="" id="JsonReq">
 
                                     </div>
+                                                                                
 
                                 </div>
 
@@ -210,42 +221,65 @@
                                         <span id="totalSum">
                                             <c:if test="${lstDetalles!=null}">${DataGeneral.montoTotal}</c:if>
                                             <c:if test="${lstDetalles==null}">0</c:if>                                            
+                                            </span>
                                         </span>
-                                    </span>
+                                    </div>
+                                    <!-- /.description-block -->
                                 </div>
-                                <!-- /.description-block -->
-                            </div>
 
-                            <!-- /.col -->
-                            <div class="col-sm-4">
-                                <div class="description-block border-right">
-                                    <span class="description-percentage "><i class="fas fa-stream"></i></span>
-                                    <h5 class="description-header text-success">TOTAL REGISTROS</h5>
-                                    <span class="description-text" id="totalRecord">
+                                <!-- /.col -->
+                                <div class="col-sm-4">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage "><i class="fas fa-stream"></i></span>
+                                        <h5 class="description-header text-success">TOTAL REGISTROS</h5>
+                                        <span class="description-text" id="totalRecord">
                                         <c:if test="${lstDetalles!=null}">${DataGeneral.numRegistros}</c:if>
                                         <c:if test="${lstDetalles==null}">0</c:if>                                                                                    
-                                    </span>
+                                        </span>
+                                    </div>
+                                    <!-- /.description-block -->
                                 </div>
-                                <!-- /.description-block -->
                             </div>
+                            <!-- /.row -->
                         </div>
-                        <!-- /.row -->
+
                     </div>
-
                 </div>
+            </form>
+
+
+
+            <!-- /.No quitar esto, copiar en todos los demas -->          
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="js/controlFormReq.js"></script>
+
+    <div class="modal fade alertDeleteRecord" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="exampleModalLabel">Alertar de Eliminacion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center text-warning h1"><i class="fas fa-exclamation-triangle"></i></div>
+                    <p style="text-align: center;">!Esta a punto de Eliminar un detalle de esta requisicion <br>
+                        <b>!ESTA ACCION YA NO SE PODRA DESHACER</b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Confirmar</button>
+                </div>
+
             </div>
-        </form>
-
-
-
-        <!-- /.No quitar esto, copiar en todos los demas -->          
+        </div>
     </div>
-    <!-- /.container-fluid -->
-</section>
-<!-- /.content -->
-
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<script src="js/controlFormReq.js"></script>
 
 <%@include file="_endPanel.jsp" %>

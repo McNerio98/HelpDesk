@@ -217,7 +217,7 @@
                                     <button id="btnnSaveChanges" type="submit" class="btn btn-primary">Guardar Cambios</button>
                                 </c:if>
                                 <c:if test="${ContadorList == null}">
-                                    <button disabled id="btnSaveChanges"  class="btn btn-primary">Guardar Cambios</button>
+                                    <button id="btnnSaveChanges" disabled id="btnSaveChanges"  class="btn btn-primary">Guardar Cambios</button>
                                 </c:if>
                             </div>
                         </form>
@@ -238,7 +238,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <form action="${pageContext.servletContext.contextPath}/Departamentos?accion=actualizar" method="post">
+                        <form>
                             <input type="hidden" value="" id="IdEmpresa" name="idempresa">
                             <div class="form-group">
                                 <div class="row">
@@ -249,7 +249,7 @@
                                         <!-- SEARCH FORM -->
                                         <div class="form-group">
                                             <!-- SEARCH FORM -->
-                                            <form class="form-inline ml-3">
+                                            <form action="#" class="form-inline ml-3">
                                                 <div class="input-group input-group-sm">
                                                     <input id="searchDepto" onblur="displayNone()" class="form-control form-control-navbar" type="search" placeholder="Buscar departamento" aria-label="Search">
                                                     <div class="input-group-append">
@@ -401,7 +401,7 @@
     searchDepto.addEventListener('keyup', function (e) {
         document.getElementById("alertDepto").innerHTML = "";
         var name = e.target.value;
-
+        console.log(name);
         if (this.value.length == 0) {
             html.style.display = "none";
         } else {

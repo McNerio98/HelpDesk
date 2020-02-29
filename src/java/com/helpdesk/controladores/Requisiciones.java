@@ -56,7 +56,7 @@ public class Requisiciones extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
         if (accion == null) {
-            
+
             try {
                 Conexion conn = new ConexionPool();
                 conn.conectar();
@@ -65,46 +65,45 @@ public class Requisiciones extends HttpServlet {
                         + "e.nombre, d.deptoname from empresas e, users u, usuarioreqbyempresas uem, deptobyusers du, departments d \n"
                         + "where u.iduser = uem.idusuario and uem.idempresa = e.idempresa and d.iddepto = du.iddepto and u.iduser = du.iduser \n"
                         + "and u.iduser = ? ";
-                
+
                 Integer id = (Integer) request.getSession().getAttribute("idUsuario");
                 List<Object> params = new ArrayList();
                 params.add(id);
-                
+
                 Usuario contador = Operaciones.get(DataList.getIdContador(DataList.getIdEmpresa(id)), new Usuario());
-                
+
                 String[][] rs = Operaciones.consultar(cmd, params);
                 DataRequisicion dr = new DataRequisicion();
                 dr.setFecha(rs[0][0]);
                 dr.setSolicitante(rs[1][0]);
                 dr.setEmpresa(rs[2][0]);
                 dr.setDepto(rs[3][0]);
-                if(contador.getIdUser() != 0){
-                    dr.setContador(contador.getFirsName()+" "+contador.getLastName());
+                if (contador.getIdUser() != 0) {
+                    dr.setContador(contador.getFirsName() + " " + contador.getLastName());
                 }
                 request.setAttribute("DataGeneral", dr);
 
-                
             } catch (Exception e) {
                 //Redirecciona al error 
-                Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, e);                
-            }finally{
+                Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, e);
+            } finally {
                 try {
                     Operaciones.cerrarConexion();
                 } catch (SQLException ex) {
                     Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
-            if(request.getSession().getAttribute("resultado")!=null){
+
+            if (request.getSession().getAttribute("resultado") != null) {
                 request.setAttribute("resultado", request.getSession().getAttribute("resultado"));
                 request.getSession().removeAttribute("resultado");
             }
-            
+
             request.getRequestDispatcher("NuevaRequisicion.jsp").forward(request, response);
         }
-        
+
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -112,43 +111,117 @@ public class Requisiciones extends HttpServlet {
         switch (accion) {
             case "nueva": {
                 if (nuevaRequisicion(request, response)) {
-                    request.getSession().setAttribute("resultado", 1); //se inserto   
+                    request.getSession().setAttribute("resultado", 1); //se inserto  
                 } else {
                     request.getSession().setAttribute("resultado", 2); //No se inserto   
                 }
                 response.sendRedirect("Requisiciones");
                 break;
             }
+            case "update": {
+                if (updateRequisicion(request, response)) {
+                    request.getSession().setAttribute("resultado", 1); //se inserto  
+                } else {
+                    request.getSession().setAttribute("resultado", 2); //No se inserto   
+                }
+                response.sendRedirect("RequisicionInfo?idReq="+request.getParameter("idReq"));
+            }
         }
-        
+
     }
-    
-    private boolean nuevaRequisicion(HttpServletRequest request, HttpServletResponse response) {
+
+    private boolean updateRequisicion(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = false;
         String jsonReq = request.getParameter("JsonReq");
-        Integer idU = (Integer)request.getSession().getAttribute("idUsuario");
-        Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
-        
+        String idRequisicion = request.getParameter("idReq");
+
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
-            List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>(){});
-            
-            if (listDetallesAux!=null && listDetallesAux.size() == 0) {
+            List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
+            });
+
+            if (listDetallesAux != null && listDetallesAux.size() == 0) {
                 throw new Exception("Alteracion en el Json");
             }
-            
+
             BigDecimal montoTotal = new BigDecimal(0);
-            
+
             for (int i = 0; i < listDetallesAux.size(); i++) {
                 montoTotal = montoTotal.add(listDetallesAux.get(i).getMonto());
             }
-            
+
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
-            
+
+            RequisicionPago rg = Operaciones.get(Integer.parseInt(idRequisicion), new RequisicionPago());
+            rg.setTotal(montoTotal);
+            rg = Operaciones.actualizar(rg.getIdRequisicion(), rg);
+
+            //Actualizando detalles 
+            for (int i = 0; i < listDetallesAux.size(); i++) {
+                DetalleRequisicion detalle = new DetalleRequisicion();
+                int IdAux = listDetallesAux.get(i).getId();
+                if (IdAux != 0) { //Es una actualizacion
+                    detalle = Operaciones.get(IdAux, new DetalleRequisicion());
+                    detalle.setDescripcion(listDetallesAux.get(i).getDescripcion());
+                    detalle.setMonto(listDetallesAux.get(i).getMonto());
+                    detalle = Operaciones.actualizar(detalle.getIdDetalle(), detalle);
+                } else { // Es un nuevo detalle 
+                    detalle.setDescripcion(listDetallesAux.get(i).getDescripcion());
+                    detalle.setMonto(listDetallesAux.get(i).getMonto());
+                    detalle.setIdRequisicion(Integer.parseInt(idRequisicion));
+                    detalle = Operaciones.insertar(detalle);
+                }
+            }
+
+            Operaciones.commit();
+            estado = true;
+
+        } catch (Exception e) {
+            Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return estado;
+    }
+
+    private boolean nuevaRequisicion(HttpServletRequest request, HttpServletResponse response) {
+        boolean estado = false;
+        String jsonReq = request.getParameter("JsonReq");
+        Integer idU = (Integer) request.getSession().getAttribute("idUsuario");
+        Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
+        int idReqs = 0;
+        ArrayList<Usuario> listLiders = new ArrayList<>();
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
+            List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
+            });
+
+            if (listDetallesAux != null && listDetallesAux.size() == 0) {
+                throw new Exception("Alteracion en el Json");
+            }
+
+            BigDecimal montoTotal = new BigDecimal(0);
+
+            for (int i = 0; i < listDetallesAux.size(); i++) {
+                montoTotal = montoTotal.add(listDetallesAux.get(i).getMonto());
+            }
+
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
+
             RequisicionPago rg = new RequisicionPago();
             rg.setIdCreador((int) request.getSession().getAttribute("idUsuario"));
             //El autorizador sera hasta que un lider tome la requisicion 
@@ -162,9 +235,21 @@ public class Requisiciones extends HttpServlet {
             rg.setTotal(montoTotal);
             rg.setPrioridad(prioridad);
             rg.setIdContador(DataList.getIdContador(DataList.getIdEmpresa(idU)));
-            
+
             rg = Operaciones.insertar(rg);
-            
+
+            String query = "select a.idusuario from usuarioreqbyempresas a, usuariosrequisicion b where a.idusuario=b.idusuario and b.idrol=6";
+
+            String[][] array = Operaciones.consultar(query, null);
+
+            for (int i = 0; i < array[0].length; i++) {
+                Usuario user = new Usuario();
+                user = Operaciones.get(Integer.parseInt(array[0][i]), new Usuario());
+                listLiders.add(user);
+            }
+
+            idReqs = rg.getIdRequisicion();
+
             if (rg.getIdRequisicion() != 0) {
                 //creando detalles 
                 int idReq = rg.getIdRequisicion();
@@ -191,9 +276,13 @@ public class Requisiciones extends HttpServlet {
             } catch (SQLException ex2) {
                 Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex2);
             }
-            
+
         }
-        
+
+        if (estado) {
+            DataList.SendNotificationsToLiders(listLiders, idReqs);
+        }
+
         return estado;
     }
 

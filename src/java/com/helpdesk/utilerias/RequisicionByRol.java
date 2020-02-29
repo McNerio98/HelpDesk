@@ -54,9 +54,11 @@ public class RequisicionByRol {
         ArrayList<RequisicionPago> list = new ArrayList<>();
         ///En el caso que es un receptor requisicion
         String query = "select idrequisicion from requisicionespagos where idcreador = " + this.iduser + " and estado=" + id;
-        ///En el caso que es un lider requisicion
-        String query2 = "select idrequisicion from requisicionespagos where estado = " + id;
-
+        ///En el caso que es un lider requisicion 
+        String query2 = "select idrequisicion from requisicionespagos where idautorizador = "+this.iduser+" and estado = " + id;
+        //En el caso para un contador
+        String query3 = "select idrequisicion from requisicionespagos where idcontador = " + this.iduser + " and estado=" + id;
+        
         switch (this.idrol) {
             case 7: {
                 list = this.listRequisicion(query, null);
@@ -66,10 +68,15 @@ public class RequisicionByRol {
                 list = this.listRequisicion(query2, null);
                 break;
             }
+            case 9:{
+                list = this.listRequisicion(query3, null);
+                break;
+            }
         }
 
         return list;
     }
+
 
     public ArrayList<Object> getAllRequisicionesByContadorAndPriority() {
         ArrayList<Object> mainlist = new ArrayList<>();
@@ -84,7 +91,7 @@ public class RequisicionByRol {
             for (int i = 1; i < 4; i++) {
                 String query = "select idrequisicion\n"
                         + "from requisicionespagos\n"
-                        + "where estado = 3 and prioridad = "+i+" and idcontador = "+ this.iduser;
+                        + "where estado = 3 and prioridad = " + i + " and idcontador = " + this.iduser;
                 if (i == 1) {
                     String array[][] = Operaciones.consultar(query, null);
                     if (array != null) {

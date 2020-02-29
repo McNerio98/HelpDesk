@@ -53,14 +53,6 @@
                 </c:forEach>
                 <c:if test="${typeSession == 'REQ'}"> 
                     <c:if test="${Rol == 9}">
-                        <div class="input-group input-group-sm" style="border-radius: 7px; overflow: hidden;">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Buscar" aria-label="Buscar" style="background-color: #f2f4f6;">
-                            <div class="input-group-append" style="background-color: #f2f4f6;">
-                                <button class="btn btn-navbar" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
                         <c:forEach var="iterador" items="${ListEmpresas}">
                         <li class="nav-item has-treeview pb-1">
                             <a href="#" class="nav-link">

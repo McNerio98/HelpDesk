@@ -157,6 +157,12 @@
 
                         </div>
                     </div>
+                    <c:if test="${idReqForPDF!=null}">
+                        <div id="viewReportPDF">
+                            <iframe  src="${pageContext.servletContext.contextPath}/RequisicionPDF" frameborder="0" width="100%" height="500" id="pnlLoadPDF"></iframe>
+                        </div>                                            
+                    </c:if>
+
                 </div>
 
 
@@ -178,7 +184,7 @@
                 url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
                 success: function (result) {
                     $('#bodyMesagges').html(result);
-                    $('#panelChat').scrollTop( $('#panelChat').prop('scrollHeight') );
+                    $('#panelChat').scrollTop($('#panelChat').prop('scrollHeight'));
                     $('#countMessages').text($('.direct-chat-msg').length);
 
                 }
@@ -188,42 +194,35 @@
         refreshMessages();
 
 
-        var generatePDF = "${pdfGenerate}";
 
-        if (generatePDF == "true") {
-            let URL = "${pageContext.servletContext.contextPath}/RequisicionPDF";
-            var win = window.open(URL, '_blank');
-            win.focus();
-        }
-
-        function sendMessage(){
+        function sendMessage() {
             let contentMsg = $('#txtContentMsg').val();
             $.ajax({
                 type: 'POST',
                 data: {msg: contentMsg},
                 url: '${pageContext.servletContext.contextPath}/ProcesosReq?accion=newMessage' + '&idReq=' + ${idReq},
-                success: function(result){
-                    if(result=='true'){
+                success: function (result) {
+                    if (result == 'true') {
                         refreshMessages();
                         $('#txtContentMsg').val("");
-                    }else{
+                    } else {
                         console.log("ERROR en envio de mensaje");
-                    }                    
+                    }
                 }
             });
         }
-        
-            
-        $('#btnSendMsg').click(function(){
+
+
+        $('#btnSendMsg').click(function () {
             let contentMsg = $('#txtContentMsg').val();
-            if(contentMsg.length==0){
+            if (contentMsg.length == 0) {
                 alert("No hay mensajes");
-            }else{
+            } else {
                 sendMessage();
             }
         });
-        
-        
+
+
 
     });
 

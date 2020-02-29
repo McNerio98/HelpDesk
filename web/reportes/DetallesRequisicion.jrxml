@@ -65,34 +65,34 @@ CONTABLE]]></text>
 		<band height="24" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
 				<reportElement x="111" y="0" width="296" height="24" uuid="22d94163-8936-43b6-914b-cd002a337301"/>
-				<box leftPadding="2" rightPadding="2">
+				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="0.9" lineColor="#636363"/>
 					<topPen lineWidth="0.9" lineColor="#636363"/>
 					<leftPen lineWidth="0.9" lineColor="#636363"/>
 					<bottomPen lineWidth="0.9" lineColor="#636363"/>
 					<rightPen lineWidth="0.9" lineColor="#636363"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="407" y="0" width="148" height="24" uuid="a0dff083-fb76-4b47-a2de-fd5b8d2b7627"/>
-				<box leftPadding="2" rightPadding="2">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="407" y="0" width="148" height="24" uuid="a0dff083-fb76-4b47-a2de-fd5b8d2b7627"/>
+				<box leftPadding="10" rightPadding="5">
 					<pen lineWidth="0.9" lineColor="#636363"/>
 					<topPen lineWidth="0.9" lineColor="#636363"/>
 					<leftPen lineWidth="0.9" lineColor="#636363"/>
 					<bottomPen lineWidth="0.9" lineColor="#636363"/>
 					<rightPen lineWidth="0.9" lineColor="#636363"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="0" width="111" height="24" uuid="9b06cab1-1c07-4fe7-9eaa-c560ba37a40a"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="111" height="24" uuid="9b06cab1-1c07-4fe7-9eaa-c560ba37a40a"/>
 				<box>
 					<pen lineWidth="0.9" lineColor="#636363"/>
 					<topPen lineWidth="0.9" lineColor="#636363"/>

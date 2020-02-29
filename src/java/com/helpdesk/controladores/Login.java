@@ -69,7 +69,7 @@ public class Login extends HttpServlet {
             ArrayList<Departamento> Deptos = new ArrayList<Departamento>();
             ArrayList<Empresa> empresas = new ArrayList<>();
             empresas = DataList.getAllEmpresas();
-            Deptos = DataList.getAllDeptos();
+            Deptos = DataList.getDeptosByEmpresa(2);/// Valor seteado en definicion a la db
             request.setAttribute("DeptosList", Deptos);
             request.setAttribute("EmpresasList", empresas);
             request.getRequestDispatcher("registro.jsp").forward(request, response);

@@ -75,6 +75,11 @@ public class PrincipalRequisicion extends HttpServlet {
                 } else {
                     s.setAttribute("pendingDiv", null);
                 }
+                if(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA)!=null){
+                    s.setAttribute("finishDiv", r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA));
+                }else{
+                    s.setAttribute("finishDiv", null);
+                }
                 if (list != null) {
                     for (int i = 0; i < list.size(); i++) {
                         datalist.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
@@ -123,8 +128,12 @@ public class PrincipalRequisicion extends HttpServlet {
                 s.setAttribute("listBaja", (ArrayList<RequisicionPago>) dataobject.get(0));
                 s.setAttribute("listMedia", (ArrayList<RequisicionPago>) dataobject.get(1));
                 s.setAttribute("listAlta", (ArrayList<RequisicionPago>) dataobject.get(2));
+                s.setAttribute("listFinish", r.getRequisicionByStatus(5));
                 request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                 //response.sendRedirect("./PrincipalRequisicion?accion=load&idemp=1&iddep=3");
+            }
+            if(rol == Enums.ROL.EMPLEADO_REQ){
+                request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
             }
 
         } else {
@@ -307,6 +316,17 @@ public class PrincipalRequisicion extends HttpServlet {
                         case 3: {
                             ArrayList<DataRequisicion> data = new ArrayList<>();
                             ArrayList<RequisicionPago> list = (ArrayList<RequisicionPago>) dataobject.get(2);
+                            for (int i = 0; i < list.size(); i++) {
+                                DataRequisicion d = DataList.getGeneralData(list.get(i).getIdRequisicion());
+                                data.add(d);
+                            }
+                            String json = new Gson().toJson(data);
+                            out.print(json);
+                            break;
+                        }
+                        case 4:{
+                            ArrayList<DataRequisicion> data = new ArrayList<>();
+                            ArrayList<RequisicionPago> list = r.getRequisicionByStatus(5);
                             for (int i = 0; i < list.size(); i++) {
                                 DataRequisicion d = DataList.getGeneralData(list.get(i).getIdRequisicion());
                                 data.add(d);
