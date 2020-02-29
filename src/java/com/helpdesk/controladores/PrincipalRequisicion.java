@@ -425,7 +425,7 @@ public class PrincipalRequisicion extends HttpServlet {
             String query = "select a.idempresa\n"
                     + "from empresas a, usuariosrequisicion b, usuarioreqbyempresas c\n"
                     + "where \n"
-                    + "a.idempresa=c.idempresa and b.idusuario=c.idusuario and a.nombre != 'x'  and b.idrol = 9 and b.idusuario=" + id;
+                    + "a.idempresa=c.idempresa and b.idusuario=c.idusuario and a.nombre != 'x'  and b.idrol = 9 and b.idusuario=" + id + " group by a.idempresa";
 
             String array[][] = Operaciones.consultar(query, null);
             if (array != null) {
