@@ -55,10 +55,7 @@
                             <small id="emailHelp" class="form-text text-muted">Para iniciar sesion tambien podras utilizar tu correo electronico</small>
                             <p class="text-danger d-none" id="userExist">El Usuario ya existe</p>
                         </div>
-                        <div class="custom-control custom-checkbox mr-sm-2">
-                            <input class="custom-control-input" type="checkbox" name="requisicion" id="ifcheckbox" value="true">
-                            <label class="custom-control-label" for="ifcheckbox">Requisicion Cheque</label>
-                        </div>
+
                         <hr/>
                         <span class="text-danger" id="alerEmpresa"></span>
                         <div class="form-row mt-3">
@@ -81,6 +78,11 @@
                                 </select>
                             </div>                             
                         </div>
+                        <div class="custom-control custom-checkbox mr-sm-2 mb-3">
+                            <p class="text-danger text-center m-0 p-0"><b>Advertencia</b> la siguiente opcion es para usuarios exclusivamente de Requisicioes de Pago!</p>
+                            <input class="custom-control-input" type="checkbox" name="requisicion" id="ifcheckbox" value="true">
+                            <label class="custom-control-label" for="ifcheckbox">Requisicion Cheque</label>  
+                        </div>                        
 
                     </div>
                     <div class="col-md-6 mt-5">
