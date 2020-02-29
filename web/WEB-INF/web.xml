@@ -93,6 +93,10 @@
         <servlet-name>RequisicionPDF</servlet-name>
         <servlet-class>com.helpdesk.reportes.RequisicionPDF</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>IncidenciasLider</servlet-name>
+        <servlet-class>com.helpdesk.controladores.IncidenciasLider</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Principal</servlet-name>
         <url-pattern>/Principal</url-pattern>
@@ -172,6 +176,10 @@
     <servlet-mapping>
         <servlet-name>RequisicionPDF</servlet-name>
         <url-pattern>/RequisicionPDF</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>IncidenciasLider</servlet-name>
+        <url-pattern>/IncidenciasLider</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

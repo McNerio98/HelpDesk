@@ -40,7 +40,12 @@
                                 <div class="icon">
                                     <i class="far fa-file-alt"></i>
                                 </div>
-                                <a onclick="getIncidences(1)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(1)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(1)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -57,7 +62,12 @@
                                 <div class="icon">
                                     <i class="far fa-file-alt"></i>
                                 </div>
-                                <a onclick="getIncidences(1)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(1)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(1)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -74,7 +84,12 @@
                                 <div class="icon">
                                     <i class="fas fa-cogs"></i>
                                 </div>
-                                <a onclick="getIncidences(2)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(2)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(2)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -91,7 +106,12 @@
                                 <div class="icon">
                                     <i class="fas fa-cogs"></i>
                                 </div>
-                                <a onclick="getIncidences(2)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(2)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(2)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -108,7 +128,12 @@
                                 <div class="icon">
                                     <i class="fas fa-toolbox"></i>
                                 </div>
-                                <a onclick="getIncidences(3)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(3)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(3)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -125,7 +150,12 @@
                                 <div class="icon">
                                     <i class="fas fa-toolbox"></i>
                                 </div>
-                                <a onclick="getIncidences(3)"    href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(3)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(3)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -143,7 +173,12 @@
                                     <div class="icon">
                                         <i class="fas fa-bell"></i>
                                     </div>
-                                    <a onclick="getIncidences(5)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <c:if test="${incidencesLider == true}">
+                                        <a onclick="getMyIncidences(5)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                        </c:if> 
+                                        <c:if test="${incidencesLider == null}">
+                                        <a onclick="getIncidences(5)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                        </c:if> 
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -160,7 +195,12 @@
                                     <div class="icon">
                                         <i class="fas fa-bell"></i>
                                     </div>
-                                    <a onclick="getIncidences(5)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    <c:if test="${incidencesLider == true}">
+                                        <a onclick="getMyIncidences(5)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                        </c:if> 
+                                        <c:if test="${incidencesLider == null}">
+                                        <a onclick="getIncidences(5)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                        </c:if> 
                                 </div>
                             </div>
                             <!-- ./col -->        
@@ -179,7 +219,12 @@
                                 <div class="icon">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
-                                <a onclick="getIncidences(6)"  href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(6)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(6)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -196,7 +241,12 @@
                                 <div class="icon">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
-                                <a onclick="getIncidences(6)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(6)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(6)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -213,7 +263,12 @@
                                 <div class="icon">
                                     <i class="fas fa-check-double"></i>
                                 </div>
-                                <a onclick="getIncidences(4)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(4)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(4)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -230,7 +285,12 @@
                                 <div class="icon">
                                     <i class="fas fa-check-double"></i>
                                 </div>
-                                <a onclick="getIncidences(4)"   href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <c:if test="${incidencesLider == true}">
+                                    <a onclick="getMyIncidences(4)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
+                                    <c:if test="${incidencesLider == null}">
+                                    <a onclick="getIncidences(4)" href="#Incidencias" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                    </c:if> 
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -295,36 +355,36 @@
 <%@include file="_endPanel.jsp" %>
 <script src="js/principal.js"></script>
 <script>
-                                    $('#table_incidences').DataTable({
-                                        responsive: true,
-                                        language:
-                                                {
-                                                    "sProcessing": "Procesando...",
-                                                    "sLengthMenu": "Mostrar _MENU_ registros",
-                                                    "sZeroRecords": "No se encontraron resultados",
-                                                    "sEmptyTable": "Ningun dato disponible en esta tabla",
-                                                    "sInfo": "_START_ al _END_ de un total de _TOTAL_ registros",
-                                                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                                                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                                                    "sInfoPostFix": "",
-                                                    "sSearch": "Buscar:",
-                                                    "sUrl": "",
-                                                    "sInfoThousands": ",",
-                                                    "sLoadingRecords": "Ningun dato disponible en esta tabla",
-                                                    "oPaginate": {
-                                                        "sFirst": "Primero",
-                                                        "sLast": "\DAltimo",
-                                                        "sNext": "Siguiente",
-                                                        "sPrevious": "Anterior"
-                                                    },
-                                                    "oAria": {
-                                                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                                                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                                                    },
-                                                    "buttons": {
-                                                        "copy": "Copiar",
-                                                        "colvis": "Visibilidad"
+                                        $('#table_incidences').DataTable({
+                                            responsive: true,
+                                            language:
+                                                    {
+                                                        "sProcessing": "Procesando...",
+                                                        "sLengthMenu": "Mostrar _MENU_ registros",
+                                                        "sZeroRecords": "No se encontraron resultados",
+                                                        "sEmptyTable": "Ningun dato disponible en esta tabla",
+                                                        "sInfo": "_START_ al _END_ de un total de _TOTAL_ registros",
+                                                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                                        "sInfoPostFix": "",
+                                                        "sSearch": "Buscar:",
+                                                        "sUrl": "",
+                                                        "sInfoThousands": ",",
+                                                        "sLoadingRecords": "Ningun dato disponible en esta tabla",
+                                                        "oPaginate": {
+                                                            "sFirst": "Primero",
+                                                            "sLast": "\DAltimo",
+                                                            "sNext": "Siguiente",
+                                                            "sPrevious": "Anterior"
+                                                        },
+                                                        "oAria": {
+                                                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                                        },
+                                                        "buttons": {
+                                                            "copy": "Copiar",
+                                                            "colvis": "Visibilidad"
+                                                        }
                                                     }
-                                                }
-                                    });
+                                        });
 </script>
