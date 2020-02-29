@@ -130,32 +130,41 @@ public class Empleados extends HttpServlet {
                                     String query2 = "select * from requisicionespagos where idcontador = " + userReq.getIdUsuario() + " and estado = 3";
                                     if ((Operaciones.consultar(query2, null)) != null) {
                                         request.setAttribute("error", "No se puede actualizar, el contador tiene requisiciones pendientes");
-                                        
-                                        
 
                                         request.setAttribute("listDepto", Operaciones.getTodos(new Departamento()));
                                         request.setAttribute("listRol", Operaciones.getTodos(new Rol()));
                                         request.getRequestDispatcher("asignarRol.jsp").forward(request, response);
                                     } else {
-                                        s.setAttribute("error", null);
-                                        //Se actualiza el contador a la empresa ficticia x
                                         String query3 = "select idure from usuarioreqbyempresas where idusuario = " + userReq.getIdUsuario();
-                                        String query4 = "select idempresa from empresas where nombre = 'x'";
-                                        String array1[][] = Operaciones.consultar(query4, null);
                                         String array2[][] = Operaciones.consultar(query3, null);
                                         int ure = Integer.parseInt(array2[0][0]);
-                                        int idemp = Integer.parseInt(array1[0][0]);
-
                                         UsuarioReqByEmpresa urbe = Operaciones.get(ure, new UsuarioReqByEmpresa());
-
-                                        urbe.setIdEmpresa(idemp);
-
+                                        urbe.setIdEmpresa(2);
                                         Operaciones.actualizar(ure, urbe);
                                         Operaciones.actualizar(userReq.getIdUsuario(), userReq);
-
+                                        
                                     }
                                 } else {
                                     Operaciones.actualizar(userReq.getIdUsuario(), userReq);
+                                }
+
+                                if (rol == Enums.ROL.CONTADOR_REQ) {
+
+                                    //Se actualiza el contador a la empresa ficticia x
+                                    String query3 = "select idure from usuarioreqbyempresas where idusuario = " + userReq.getIdUsuario();
+                                    String query4 = "select idempresa from empresas where nombre = 'x'";
+                                    String array1[][] = Operaciones.consultar(query4, null);
+                                    String array2[][] = Operaciones.consultar(query3, null);
+                                    int ure = Integer.parseInt(array2[0][0]);
+                                    int idemp = Integer.parseInt(array1[0][0]);
+
+                                    UsuarioReqByEmpresa urbe = Operaciones.get(ure, new UsuarioReqByEmpresa());
+
+                                    urbe.setIdEmpresa(idemp);
+
+                                    Operaciones.actualizar(ure, urbe);
+                                    Operaciones.actualizar(userReq.getIdUsuario(), userReq);
+
                                 }
 
                             }
