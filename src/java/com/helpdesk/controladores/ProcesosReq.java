@@ -86,7 +86,10 @@ public class ProcesosReq extends HttpServlet {
             conn.conectar();
             Operaciones.abrirConexion(conn);
             DetalleRequisicion dt = Operaciones.eliminar(Integer.parseInt(idDetalle), new DetalleRequisicion());
-            if(dt.getIdDetalle()!=0){
+            RequisicionPago pg = Operaciones.get(Integer.parseInt(idReq), new RequisicionPago());
+            pg.setTotal(pg.getTotal().subtract(dt.getMonto()));
+            pg = Operaciones.actualizar(pg.getIdRequisicion(), pg);
+            if(dt.getIdDetalle()!=0 && pg.getIdRequisicion()!=0){
                 estado = true;
             }
         }catch(Exception e){

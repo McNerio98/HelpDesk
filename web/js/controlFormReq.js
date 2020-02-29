@@ -174,11 +174,12 @@ $(document).ready(function () {
         idRequisicion = $('#idRequisicion').val();
         obj = $(this).parent().parent();
         
-        let lgtud = pnlParent.children().length;
+        let lgtud = $('.btnDeleteFromDB').length;
+        
         if (lgtud > 1) {
             $('.alertDeleteRecord').modal();            
         } else {
-            $('#mesanjeByDeleteStatus').text("Se debe contender al menos 1 registro");
+            $('#mesanjeByDeleteStatus').text("Se debe contender al menos 1 registro hasta Confirmar");
         }
 
 

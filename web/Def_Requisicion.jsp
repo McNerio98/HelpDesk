@@ -122,7 +122,7 @@
                                 <!-- /.card-body -->
                                 <c:if  test="${(pg.idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
                                     <div class="card-footer">
-                                        <form action="#" method="post">
+                                        <form action="#" method="post" id="formMesagges">
                                             <div class="input-group">
                                                 <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg" maxlength="50">
                                                 <span class="input-group-append">
@@ -212,14 +212,21 @@
             });
         }
 
-
-        $('#btnSendMsg').click(function () {
+        function enviarNewMesagge() {
             let contentMsg = $('#txtContentMsg').val();
             if (contentMsg.length == 0) {
                 alert("No hay mensajes");
             } else {
                 sendMessage();
             }
+        }
+
+        $('#btnSendMsg').click(enviarNewMesagge);
+        
+        
+        $('#formMesagges').submit(function(e){
+            e.preventDefault();
+            enviarNewMesagge();
         });
 
 
