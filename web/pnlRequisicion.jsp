@@ -8,7 +8,13 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Dashboard</h1>
+                <c:if test="${selected != null}">
+                    <h4 class="m-0 text-dark">${selected}</h4>
+                </c:if>
+                <c:if test="${selected == null}">
+                    <h1 class="m-0 text-dark">Dashboard</h1>
+                </c:if>
+                
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -142,7 +148,7 @@
                                     <div class="inner">
                                         <h3>${fn:length(listFinish)}</h3>
 
-                                        <p>Finalizadas</p>
+                                        <p>Mis Finalizadas</p>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>
@@ -159,7 +165,7 @@
                                     <div class="inner">
                                         <h3>0</h3>
 
-                                        <p>Finalizadas</p>
+                                        <p>Mis Finalizadas</p>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-traffic-light"></i>

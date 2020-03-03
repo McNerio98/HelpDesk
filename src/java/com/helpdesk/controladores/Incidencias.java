@@ -93,7 +93,7 @@ public class Incidencias extends HttpServlet {
 
         }
 
-        request.setAttribute("DeptosList", DataList.getAllDeptos());
+        request.setAttribute("DeptosList", DataList.getDeptosByEmpresa(2));
         request.setAttribute("ClasfList", DataList.getAllClassifications());
         request.getRequestDispatcher("NuevaIncidencia.jsp").forward(request, response);
 
