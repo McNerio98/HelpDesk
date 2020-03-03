@@ -49,7 +49,7 @@ public class RequisicionInfo extends HttpServlet {
                 String accion = request.getParameter("accion");
                 if (accion == null) {
                     //Informacion General 
-                    ArrayList<DetalleAux> LstDetalles = getListDetalles(idRequisicion);
+                    
                     DataRequisicion dataGeneral = DataList.getGeneralData(idRequisicion);
                     RequisicionPago pg = getRequisicion(idRequisicion);
 
@@ -57,7 +57,7 @@ public class RequisicionInfo extends HttpServlet {
                     //Comentarios 
                     request.setAttribute("pg", pg);
                     request.setAttribute("generalData", dataGeneral);
-                    request.setAttribute("LstDetalles", LstDetalles);
+                    
                     request.setAttribute("idReq", idRequisicion);
                     
                     if (request.getSession().getAttribute("resultado") != null) {
@@ -96,40 +96,21 @@ public class RequisicionInfo extends HttpServlet {
         String idRequisicion = request.getParameter("idReq");
         
         if (accion == null || idRequisicion == null) {
-            response.getWriter().print("false");
+            response.sendRedirect("PrincipalRequisicion");
         } else if (accion.equals("getAllMsg")) {
             //Obtener array con mensajes
             ArrayList<DataComentario> listMessages = getAllComentarios(Integer.parseInt(idRequisicion));
             request.setAttribute("listMessages", listMessages);
             request.getRequestDispatcher("_loadChat.jsp").forward(request, response);
-        } else if (accion.equals("update")) {
-            if (updateRequisicion(request, response)) {
-                //aciones mandar error a la sesion
-            }            
+        } else if (accion.equals("loadDetalles")) {
+            ArrayList<DetalleAux> LstDetalles = getListDetalles(Integer.parseInt(idRequisicion));
+             request.setAttribute("LstDetalles", LstDetalles);
+             request.getRequestDispatcher("_Details.jsp").forward(request, response);
             
         }
     }
     
-    private boolean updateRequisicion(HttpServletRequest request, HttpServletResponse response) {
-        Integer idReq = Integer.parseInt(request.getParameter("idReq"));
-        //Obtener el nuevo json 
-        //Los que tengan id = 0 son nuevos detalles y se agregan 
-        String jsonReq = request.getParameter("JsonReq");
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
-            List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
-            });
-            //Aqui me quede
-        } catch (Exception e) {
-            
-        } finally {
-            
-        }
-        
-        return false;
-    }
-    
+
     private ArrayList<DataComentario> getAllComentarios(Integer idReq) {
         ArrayList<DataComentario> ListaMsg = new ArrayList<DataComentario>();
         try {

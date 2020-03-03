@@ -20,8 +20,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">HelpDesk</li>
+                    <li class="p-2 border border-success" style="border-radius: 5px 0px 5px 0px;"><a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion">Volver Inicio</a></li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -75,31 +74,14 @@
                                 <strong>Detalles de Requisicion</strong>
                             </p>                    
 
-                            <div id="pnlRegistros">
+                            <div id="pnlRegistros" style="max-height: 400px; overflow-y: auto;">
 
-                                <table class="table table-bordered">
-                                    <thead>                  
-                                        <tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Descripcion</th>
-                                            <th style="width: 40px">Monto</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:set var="contador" value="${1}" />
-                                        <c:forEach var="req" items="${LstDetalles}">
-                                            <tr>
-                                                <td>${contador}</td>
-                                                <td>${req.descripcion}</td>
-                                                <td><span class="badge bg-warning"> $ ${req.monto}</span></td>
-                                            </tr>                          
-                                            <c:set var="contador" value="${contador + 1}" />
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
 
-                            </div>                                                    
-
+                            </div>
+                                        <button class="btn btn-warning" id="reloadDetail">
+                                            <i class="fas fa-sync"></i>
+                                            Recargar
+                                        </button>
                         </div>
                         <div class="col-md-4">
                             <div class="card card-sucress cardutline direct-chat direct-chat-success">
@@ -136,6 +118,8 @@
                             </div>
 
                             <div style="text-align: right;">
+
+                                
                                 <c:choose>
                                     <c:when test = "${(pg.idCreador == idUsuario) && (pg.estado == 1 || pg.estado == 2)}">
                                         <a href="${pageContext.servletContext.contextPath}/RequisicionInfo?accion=update&idReq=${idReq}" class="btn btn-warning">Modificar</a>
@@ -192,9 +176,24 @@
         }
 
         refreshMessages();
+        setInterval(refreshMessages,30000); //Cada 30 segundos
 
 
-
+        
+        function refreshDetail() {
+            $.ajax({
+                type: 'POST',
+                url: "${pageContext.servletContext.contextPath}/RequisicionInfo?accion=loadDetalles&idReq=${idReq}",
+                success: function (result) {
+                    $('#pnlRegistros').html(result);
+                }
+            });
+        }
+        
+        refreshDetail();
+        
+        $('#reloadDetail').click(refreshDetail);
+        
         function sendMessage() {
             let contentMsg = $('#txtContentMsg').val();
             $.ajax({
