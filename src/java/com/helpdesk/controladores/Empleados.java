@@ -139,10 +139,16 @@ public class Empleados extends HttpServlet {
                                         String array2[][] = Operaciones.consultar(query3, null);
                                         int ure = Integer.parseInt(array2[0][0]);
                                         UsuarioReqByEmpresa urbe = Operaciones.get(ure, new UsuarioReqByEmpresa());
-                                        urbe.setIdEmpresa(2);
-                                        Operaciones.actualizar(ure, urbe);
-                                        Operaciones.actualizar(userReq.getIdUsuario(), userReq);
-                                        
+                                        Usuario contadoruser = Operaciones.get(urbe.getIdUsuario(), new Usuario());
+                                        if (contadoruser.getIdRole() == Enums.ROL.CONTADOR_REQ) {
+                                            urbe.setIdEmpresa(2);
+                                            Operaciones.actualizar(ure, urbe);
+                                            Operaciones.actualizar(userReq.getIdUsuario(), userReq);
+                                        }else{
+                                            Operaciones.actualizar(ure, urbe);
+                                            Operaciones.actualizar(userReq.getIdUsuario(), userReq);
+                                        }
+
                                     }
                                 } else {
                                     Operaciones.actualizar(userReq.getIdUsuario(), userReq);

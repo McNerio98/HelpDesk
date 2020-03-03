@@ -192,6 +192,8 @@
         }
 
         refreshMessages();
+        
+        setInterval(refreshMessages, 3000);
 
 
 
