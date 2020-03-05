@@ -42,7 +42,12 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="Principal">Home</a></li>
+                    <c:if test="${typeSession == 'HD'}">
+                        <li class="breadcrumb-item"><a href="${pageContext.servletContext.contextPath}/Principal">Inicio</a></li>
+                        </c:if>
+                        <c:if test="${typeSession == 'REQ'}">
+                        <li class="breadcrumb-item"><a href="${pageContext.servletContext.contextPath}/PrincipaRequisicion">Inicio</a></li>
+                        </c:if>                    
                     <li class="breadcrumb-item active">HelpDesk</li>
                 </ol>
             </div><!-- /.col -->
@@ -61,6 +66,9 @@
         <div class="contenedor">
             <div class="profile-panel-main bg-light bg-dark">
                 <form action="${pageContext.servletContext.contextPath}/Perfil?accion=update" style="width: 100%;" method="POST" id="formProfile">
+
+                    <a href="#" id="tagSendSolicitud" style="display:none; text-align: right;" class="text text-warning"></a>
+
                     <div class="form-row">
                         <div class="form-group col-md-6" style="text-align: center;">
                             <img src="${pageContext.servletContext.contextPath}/framework/img/user2-160x160.jpg" class="profileImg">
@@ -104,24 +112,49 @@
                     </div>
                     <button type="submit" class="btn btn-light" id="commitChange" style="display: none;">Confirmar</button>
                     <button type="button" class="btn btn-secondary" id="enabledEdit">Modificar</button>
-                    <a href="${pageContext.servletContext.contextPath}/Principal" class="btn btn-secondary" id="abort" style="display:none;">Cancelar</a>
+                    <c:if test="${typeSession == 'HD'}">
+                        <a href="${pageContext.servletContext.contextPath}/Principal" class="btn btn-secondary" id="abort" style="display:none;">Cancelar</a>
+                    </c:if>
+                    <c:if test="${typeSession == 'REQ'}">
+                        <a href="${pageContext.servletContext.contextPath}/PrincipaRequisicion" class="btn btn-secondary" id="abort" style="display:none;">Cancelar</a>
+                    </c:if>  
+
                 </form>
 
             </div>
         </div>
-
-
+        <input type="hidden" value="${activeCount}" id="sendActiveCount"/>
+        <input type="hidden" value="${pageContext.servletContext.contextPath}" id="contextApp"/>
+        <div class="modal fade modalSendSoli" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="modalSendSoli">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Envio de Solicitud</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        Se Enviara una Solicitud, porteriormente sera aceptara por el gerente
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="btnSendSolid">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- /.No quitar esto, copiar en todos los demas -->          
     </div>
     <!-- /.container-fluid -->
 </section>
+
 
 <%@include file="_endPanel.jsp" %>
 <script>
 
     $(document).ready(function () {
         var formulario = $('#formProfile');
-
 
         var idUsuario = $('#txtIdUsuario');
         var celular = $('#txtCel');
@@ -179,7 +212,48 @@
             if ($(cnkShow).prop('checked')) {
                 $(cnkShow).val("trueChange");
             }
+
         });
+
+        var dataActive = $('#sendActiveCount').val();
+        var linkSend = document.getElementById("tagSendSolicitud");
+        var context = $('#contextApp').val();
+        var btnSendSoli = $('#btnSendSolid');
+        var urlAjax = "";
+
+        if (dataActive == 'activeHD') {
+            $(linkSend).text("Unirse a Helpdesk");
+            $(linkSend).css('display', 'inline');
+            urlAjax = context+"/Perfil?accion=activeMod&mod=HD";
+        } else if (dataActive == 'activeREQ') {
+            $(linkSend).text("Unirse a Mod. Requisicion");
+            $(linkSend).css('display', 'inline');
+            urlAjax = context+"/Perfil?accion=activeMod&mod=REQ";
+        }
+
+        $(linkSend).click(function (e) {
+            e.preventDefault();
+            $('#modalSendSoli').modal('show');
+        })
+
+        $(btnSendSoli).click(function () {
+            $.ajax({
+                type: 'POST',
+                url: urlAjax,
+                success: function (result) {
+                    console.log(result);
+                    if (result == 'true') {
+                        $('#modalSendSoli').modal('hide');
+                        $(linkSend).remove();
+                        
+                    } else {  
+                        $('#modalBody').text("Error intentar mas tarde");
+                    }
+                }
+            });
+        });
+        
+        console.log(urlAjax);
 
     });
 
