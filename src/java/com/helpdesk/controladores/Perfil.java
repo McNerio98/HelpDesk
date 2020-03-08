@@ -8,7 +8,9 @@ package com.helpdesk.controladores;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioRequisicion;
 import com.helpdesk.operaciones.Operaciones;
+import com.helpdesk.utilerias.Enums;
 import com.helpdesk.utilerias.Hash;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,8 +46,28 @@ public class Perfil extends HttpServlet {
             conn.conectar();
             Operaciones.abrirConexion(conn);
             Usuario u = Operaciones.get(idUsuario, new Usuario());
+            //verificando el tipo de session 
+            String typeSec = (String) request.getSession().getAttribute("typeSession");
+            if (typeSec.equals("REQ")) {
+                //verifica si esta registrado en HD
+                //Si el usuario tiene algun rol de requisicion entonces no esta habilitado para hd 
+                if (u.getIdRole() >= 5 && u.getIdRole() <= 9) {
+                    //Habilitar para HD
+                    request.setAttribute("activeCount", "activeHD");
+                }
+
+            } else if (typeSec.equals("HD")) {
+                //verifica si esta registrado en REQ
+                UsuarioRequisicion ur = Operaciones.get(u.getIdUser(), new UsuarioRequisicion());
+                //Si es cero entonces no esta registrado
+                if (ur.getIdUsuario() == 0) {
+                    //Habilitar para REQ
+                    request.setAttribute("activeCount", "activeREQ");
+                }
+
+            }
             request.setAttribute("Us", u);
-            
+
         } catch (Exception ex) {
 
             Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,6 +95,41 @@ public class Perfil extends HttpServlet {
                     request.getSession().setAttribute("resultChange", 2); //fail
                 }
                 response.sendRedirect("Perfil");
+            }
+            case "activeMod": {
+                String modToActive = request.getParameter("mod");
+                Integer idUsuario = (int) request.getSession().getAttribute("idUsuario");
+                String typeSec = (String) request.getSession().getAttribute("typeSession");
+                response.setContentType("text/plain");
+                try {
+                    Conexion conn = new ConexionPool();
+                    conn.conectar();
+                    Operaciones.abrirConexion(conn);
+                    Operaciones.iniciarTransaccion();
+                    Usuario u = Operaciones.get(idUsuario, new Usuario());
+                    
+                    if (modToActive.equals("HD") && typeSec.equals("REQ")) {
+                        u.setIdRole(Enums.ROL.EMPLEADO);
+                        u = Operaciones.actualizar(u.getIdUser(), u);
+                    } else if (modToActive.equals("REQ") && typeSec.equals("HD")) {
+                        UsuarioRequisicion ur = new UsuarioRequisicion();
+                        ur.setIdUsuario(u.getIdUser());
+                        ur.setIdRol(Enums.ROL.EMPLEADO_REQ);
+                        ur = Operaciones.insertar(ur);
+                    }
+                    
+                    Operaciones.commit();
+                    response.getWriter().print("true");
+                } catch (Exception ex) {
+                    response.getWriter().print("false");
+                    Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        Operaciones.cerrarConexion();
+                    } catch (SQLException ex1) {
+                        Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
             }
         }
 

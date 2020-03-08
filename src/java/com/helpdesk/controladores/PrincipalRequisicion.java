@@ -8,6 +8,7 @@ package com.helpdesk.controladores;
 import com.google.gson.Gson;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.operaciones.Operaciones;
@@ -75,9 +76,9 @@ public class PrincipalRequisicion extends HttpServlet {
                 } else {
                     s.setAttribute("pendingDiv", null);
                 }
-                if(r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA)!=null){
+                if (r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA) != null) {
                     s.setAttribute("finishDiv", r.getRequisicionByStatus(Enums.ESTADO_REQ.FINALIZADA));
-                }else{
+                } else {
                     s.setAttribute("finishDiv", null);
                 }
                 if (list != null) {
@@ -132,7 +133,7 @@ public class PrincipalRequisicion extends HttpServlet {
                 request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                 //response.sendRedirect("./PrincipalRequisicion?accion=load&idemp=1&iddep=3");
             }
-            if(rol == Enums.ROL.EMPLEADO_REQ){
+            if (rol == Enums.ROL.EMPLEADO_REQ) {
                 request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
             }
 
@@ -225,9 +226,10 @@ public class PrincipalRequisicion extends HttpServlet {
                     break;
                 }
                 case "load": {
+                    int idemp = Integer.parseInt(request.getParameter("idemp"));
+                    int iddep = Integer.parseInt(request.getParameter("iddep"));
                     if (rol == Enums.ROL.CONTADOR_REQ) {
-                        int idemp = Integer.parseInt(request.getParameter("idemp"));
-                        int iddep = Integer.parseInt(request.getParameter("iddep"));
+
                         ArrayList<Object> main = this.loadRequisiciones(request, response, idemp, iddep);
 
                         ArrayList<RequisicionPago> listBaja = (ArrayList<RequisicionPago>) main.get(0);
@@ -276,15 +278,32 @@ public class PrincipalRequisicion extends HttpServlet {
                             s.setAttribute("listBaja", listBaja);
                             s.setAttribute("listMedia", listMedia);
                             s.setAttribute("listAlta", listAlta);
-                            request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
+
                         }
                     } else {
                         s.setAttribute("listBaja", null);
                         s.setAttribute("listMedia", null);
                         s.setAttribute("listAlta", null);
-                        request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
+                        //request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                     }
-
+                    ArrayList<Empresa> listemp = this.getListEmpresaByContador(idUserSession);
+                    ArrayList<Departamento> listDepto = DataList.getDeptosByEmpresa(idemp);
+                    Departamento depto = new Departamento();
+                    Empresa emp = new Empresa();
+                    for(int i=0;i<listemp.size();i++){
+                        if(listemp.get(i).getIdEmpresa() == idemp){
+                            emp = listemp.get(i);
+                            break;
+                        }
+                    }
+                    for(int i=0;i<listDepto.size();i++){
+                        if(listDepto.get(i).getIdDepto() == iddep){
+                            depto = listDepto.get(i);
+                            break;
+                        }
+                    }
+                    request.setAttribute("selected", emp.getNombre() + "/" + depto.getDeptoName());
+                    request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                     break;
                 }
                 case "priority": {
@@ -324,7 +343,7 @@ public class PrincipalRequisicion extends HttpServlet {
                             out.print(json);
                             break;
                         }
-                        case 4:{
+                        case 4: {
                             ArrayList<DataRequisicion> data = new ArrayList<>();
                             ArrayList<RequisicionPago> list = r.getRequisicionByStatus(5);
                             for (int i = 0; i < list.size(); i++) {

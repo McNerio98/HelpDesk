@@ -76,14 +76,19 @@ $(document).ready(function () {
     function contar(e) {
         let montos = $('.txtMonto');
         let total = 0;
-
+        console.log();
+        if(parseFloat($(e.target).val()) > 0){
         for (let i = 0; i < montos.length; i++) {
             if ($(montos[i]).val().length > 0) {
                 total += parseFloat($(montos[i]).val());
             }
         }
-        let auxSum = (!(total.toString()).includes(".") ? total + ".00" : total)
-        $('#totalSum').text(auxSum);
+        let auxSum = (!(total.toString()).includes(".") ? total + ".00" : total);
+        $('#totalSum').text(auxSum);            
+        }else{
+            alert("Valor no valido");
+           $(e.target).val("");
+        }
     }
     ;
 

@@ -21,7 +21,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion">Inicio</a></li>
                     <li class="breadcrumb-item active">HelpDesk</li>
                 </ol>
             </div><!-- /.col -->
@@ -208,7 +208,7 @@
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-eye"></i></span>
                                     <h5 class="description-header text-success">ESTADO</h5>
-                                    <span class="description-text">Solicitada</span>
+                                    <span class="description-text">${DataGeneral.estado}</span>
                                 </div>
                                 <!-- /.description-block -->
                             </div>
