@@ -52,6 +52,11 @@ public class RequisicionPago {
     private int idDepto;
     @NotNull
     private int prioridad;
+    @NotNull
+    private Timestamp fechaAprovacion;
+    @NotNull
+    private Timestamp fechaEstimada;
+    
 
     /**
      * @return the idRequisicion
@@ -172,5 +177,23 @@ public class RequisicionPago {
     public void setPrioridad(int prioridad) {
         this.prioridad = prioridad;
     }
+
+    public Timestamp getFechaAprovacion() {
+        return fechaAprovacion;
+    }
+
+    public void setFechaAprovacion(Timestamp fechaAprovacion) {
+        this.fechaAprovacion = fechaAprovacion;
+    }
+
+    public Timestamp getFechaEstimada() {
+        return fechaEstimada;
+    }
+
+    public void setFechaEstimada(Timestamp fechaEstimada) {
+        this.fechaEstimada = fechaEstimada;
+    }
+    
+    
     
 }
