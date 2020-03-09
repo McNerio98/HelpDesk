@@ -6,6 +6,7 @@
 package com.helpdesk.entidades;
 
 import com.helpdesk.anotaciones.AutoIncrement;
+import com.helpdesk.anotaciones.Entity;
 import com.helpdesk.anotaciones.NotNull;
 import com.helpdesk.anotaciones.PrimaryKey;
 
@@ -13,6 +14,7 @@ import com.helpdesk.anotaciones.PrimaryKey;
  *
  * @author ZEUS
  */
+@Entity(table="Enlaces")
 public class Enlace {
     @AutoIncrement
     @PrimaryKey

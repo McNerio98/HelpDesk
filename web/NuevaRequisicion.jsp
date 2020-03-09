@@ -162,34 +162,69 @@
                                 <p class="text-center">
                                     <strong>Enlaces de Documentos</strong>
                                 </p>
+
                                 <div id="pnlLinks">
-                                    <div class="row enlace">
-                                        <input type="hidden" value="0" id="idLink" class="idLink"/>
-                                        <div class="input-group mb-3 col-sm-6">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-angle-right"></i>
-                                                </span>
-                                            </div>
-                                            <input type="text" class="form-control txtNombreAdjunto" placeholder="Nombre Archivo"
-                                                   maxlength="200">
-                                        </div>
-                                        <div class="input-group mb-3 col-sm-5 col-9">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-link"></i>
-                                                </span>
-                                            </div>
-                                            <input type="text" class="form-control txtLink" placeholder="Link" maxlength="500">
-                                        </div>
+                                    <c:if test="${lstEnlaces != null}">
+                                        <c:forEach var="lnk" items="${lstEnlaces}">
+                                            <div class="row enlace">
+                                                <input type="hidden" value="${lnk.idEnlace}" id="txtId" class="txtId"/>
+                                                <div class="input-group mb-3 col-sm-6">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-angle-right"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text" class="form-control txtNombreAdjunto" placeholder="Nombre Archivo"
+                                                           maxlength="200" value="${lnk.descripcion}"> 
+                                                </div>
+                                                <div class="input-group mb-3 col-sm-5 col-9">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-link"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text" class="form-control txtLink" placeholder="Link" maxlength="500" value="${enlace}">
+                                                </div>
 
-                                        <div class="input-group mb-3 col-sm-1 col-3">
-                                            <button type="button" class="btn btn-secondary btnDeleteLink"
-                                                    id="btnDeleteLink">-</button>
-                                        </div>
+                                                <div class="input-group mb-3 col-sm-1 col-3">
+                                                    <button type="button" class="btn btn-danger btnDeleteFromDBLink"
+                                                            id="btnDeleteFromDBLink">-</button>
+                                                </div>
 
-                                    </div>
-                                </div>
+                                            </div>                                            
+                                        </c:forEach>
+                                    </c:if>  
+                                    <c:if test="${lstEnlaces == null}">
+                                        <div class="row enlace">
+                                            <input type="hidden" value="0" id="txtId" class="txtId"/>
+                                            <div class="input-group mb-3 col-sm-6">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-angle-right"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control txtNombreAdjunto" placeholder="Nombre Archivo"
+                                                       maxlength="200">
+                                            </div>
+                                            <div class="input-group mb-3 col-sm-5 col-9">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-link"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control txtLink" placeholder="Link" maxlength="500">
+                                            </div>
+
+                                            <div class="input-group mb-3 col-sm-1 col-3">
+                                                <button type="button" class="btn btn-secondary btnDeleteLink"
+                                                        id="btnDeleteLink">-</button>
+                                            </div>
+
+                                        </div>
+                                    </c:if>                                      
+
+                                </div>                                 
+
                                 <div class="text-center">
                                     <button type="button" class="btn btn-warning rounded-0" id="btnAddLink">
                                         <i class="fas fa-link"></i> Agregar
@@ -350,5 +385,26 @@
             </div>
         </div>
     </div>
+    <div class="modal fade alertDeleteLink" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="exampleModalLabel">Alertar de Eliminacion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center text-warning h1"><i class="fas fa-exclamation-triangle"></i></div>
+                    <p style="text-align: center;">!Esta a punto de Eliminar un enlace <br>
+                        <b>!ESTA ACCION YA NO SE PODRA DESHACER</b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteLink">Confirmar</button>
+                </div>
 
+            </div>
+        </div>
+    </div>
 <%@include file="_endPanel.jsp" %>

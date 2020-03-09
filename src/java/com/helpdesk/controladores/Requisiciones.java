@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.DetalleRequisicion;
+import com.helpdesk.entidades.Enlace;
 import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.entidades.UsuarioRequisicion;
@@ -196,6 +197,7 @@ public class Requisiciones extends HttpServlet {
     private boolean nuevaRequisicion(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = false;
         String jsonReq = request.getParameter("JsonReq");
+        String jsonLinks = request.getParameter("JsonLinks");
         Integer idU = (Integer) request.getSession().getAttribute("idUsuario");
         Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
         String finalDate = request.getParameter("finalDate");
@@ -229,8 +231,7 @@ public class Requisiciones extends HttpServlet {
             //El autorizador sera hasta que un lider tome la requisicion 
             rg.setIdAutorizador(null);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            
-            
+
             Date dt = new Date();
             rg.setFecha(new Timestamp(dt.getTime()));
             rg.setEstado(Enums.ESTADO_REQ.SOLICITADA);
@@ -242,6 +243,19 @@ public class Requisiciones extends HttpServlet {
             rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
 
             rg = Operaciones.insertar(rg);
+            
+            if (jsonLinks != null) {//Hay enlaces
+                List<Enlace> listEnlaces = objectMapper.readValue(jsonLinks, new TypeReference<List<Enlace>>() {
+                });
+                
+                for(int i=0;i<listEnlaces.size();i++){
+                    Enlace e = new Enlace();
+                    e.setDescripcion(listEnlaces.get(i).getDescripcion());
+                    e.setEnlace(listEnlaces.get(i).getEnlace());
+                    e.setIdRequisicion(rg.getIdRequisicion());
+                    Operaciones.insertar(e);
+                }
+            }
 
             String query = "select a.idusuario from usuarioreqbyempresas a, usuariosrequisicion b where a.idusuario=b.idusuario and b.idrol=6";
 
