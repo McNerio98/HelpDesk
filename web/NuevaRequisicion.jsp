@@ -158,6 +158,44 @@
                                         <i class="fas fa-plus"></i> Agregar
                                     </button>
                                 </div>
+                                <hr>
+                                <p class="text-center">
+                                    <strong>Enlaces de Documentos</strong>
+                                </p>
+                                <div id="pnlLinks">
+                                    <div class="row enlace">
+                                        <input type="hidden" value="0" id="idLink" class="idLink"/>
+                                        <div class="input-group mb-3 col-sm-6">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-angle-right"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control txtNombreAdjunto" placeholder="Nombre Archivo"
+                                                   maxlength="200">
+                                        </div>
+                                        <div class="input-group mb-3 col-sm-5 col-9">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-link"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control txtLink" placeholder="Link" maxlength="500">
+                                        </div>
+
+                                        <div class="input-group mb-3 col-sm-1 col-3">
+                                            <button type="button" class="btn btn-secondary btnDeleteLink"
+                                                    id="btnDeleteLink">-</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-warning rounded-0" id="btnAddLink">
+                                        <i class="fas fa-link"></i> Agregar
+                                    </button>
+                                </div>
+
 
                             </div>
                             <div class="col-md-4">
@@ -165,12 +203,23 @@
                                     <strong>Datos Generales</strong>
                                 </p>
                                 <div class="form-group">
-                                    <select class="form-control" name="slcPrioridad" id="slcPrioridad">
-                                        <option value="0">--SELECIONE PRIORIDAD--</option>
-                                        <option value="1">BAJA</option>
-                                        <option value="2">MEDIA</option>
-                                        <option value="3">ALTA</option>
-                                    </select>
+                                    <div class="form-group">
+                                        <label for="auxDate">Selecionar Prioridad</label><br>
+                                        <select class="form-control" name="slcPrioridad" id="slcPrioridad">
+                                            <option value="0">--SELECIONE PRIORIDAD--</option>
+                                            <option value="1">BAJA</option>
+                                            <option value="2">MEDIA</option>
+                                            <option value="3">ALTA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="auxDate">Fecha Final Estimada</label><br>
+                                        <div id="datepicker-group" class="input-group date" data-date-format="dd-mm-yyyy">
+                                            <input class="form-control" type="text" placeholder="DD/MM/YYYY" id="auxDate"/>
+                                            <input type="hidden" value="" id="dateFechaFinal" name="finalDate">
+                                            <span class="input-group-addon"></span>
+                                        </div>                                                                            
+                                    </div>                                     
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Fecha:
                                         <span class="text-custom1"> ${DataGeneral.fecha}</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Empresa:
@@ -193,9 +242,10 @@
                                         </c:if>
                                         <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn-secondary">Cancelar</a>
                                         <input type="hidden" name="JsonReq" value="" id="JsonReq">
+                                        <input type="hidden" name="JsonLinks" value="" id="JsonLinks">
 
                                     </div>
-                                                                                
+
 
                                 </div>
 
@@ -257,8 +307,27 @@
 
     <!-- jQuery -->
     <script src="plugins/jquery/jquery.min.js"></script>
-    <script src="js/controlFormReq.js"></script>
 
+
+    <!--Mover a archivo independiente-->
+    <script>
+        function formatear(inv) {
+            let dia = inv[0] + inv[1];
+            let mes = inv[3] + inv[4];
+            let anio = inv[6] + inv[7] + inv[8] + inv[9];
+            return anio + "-" + mes + "-" + dia;
+        }
+
+        $(document).ready(function () {
+            $("#datepicker-group").datepicker({
+                format: "dd/mm/yyyy",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true
+            });
+        });
+    </script>
+    <script src="js/controlFormReq.js"></script>
     <div class="modal fade alertDeleteRecord" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">

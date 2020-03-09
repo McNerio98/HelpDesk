@@ -52,7 +52,6 @@ public class RequisicionPago {
     private int idDepto;
     @NotNull
     private int prioridad;
-    @NotNull
     private Timestamp fechaAprovacion;
     @NotNull
     private Timestamp fechaEstimada;

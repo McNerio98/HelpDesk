@@ -34,6 +34,65 @@ $(document).ready(function () {
 
 
 
+    function DescToLink(e) {
+        let link = $(e.target).parent().next().children('.txtLink');
+        let desc = $(e.target);
+
+        if ($(desc).val().length > 0) {
+            $(link).prop('required', true);
+        } else {
+            $(link).prop('required', false);
+        }
+    }
+
+    function LinkToDesc(e) {
+        let desc = $(e.target).parent().prev().children('.txtNombreAdjunto');
+        let link = $(e.target);
+
+        if ($(link).val().length > 0) {
+            $(desc).prop('required', true);
+        } else {
+            $(desc).prop('required', false);
+        }
+    }
+
+    function contarLinks(e) {
+        let cnt = 0;
+        let contador = $('#pnlLinks').children().length;
+        let arrayRegistro = $('.enlace');
+        let nom, link;
+        for (let i = 0; i < contador; i++) {
+            nom = $(arrayRegistro[i]).find('.txtNombreAdjunto').val();
+            link = $(arrayRegistro[i]).find('.txtLink').val();
+
+            if ((nom.length > 0) && (link.length > 0)) {
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    function setTotalLinks() {
+        $('#totalLinks').text(contarLinks());
+    }
+
+
+    function deleteLink() {
+
+        let lgtud = $('#pnlLinks').children().length;
+        if (lgtud > 1) {
+            $(this).parent().parent().remove();
+            contarLinks();
+        } else {
+            alert("Limite alcanzado");
+            console.log("Limite alcanzado");
+        }
+
+    }
+
+
+
 
     function getNewContainer() {
         let structura;
@@ -77,17 +136,17 @@ $(document).ready(function () {
         let montos = $('.txtMonto');
         let total = 0;
         console.log();
-        if(parseFloat($(e.target).val()) > 0){
-        for (let i = 0; i < montos.length; i++) {
-            if ($(montos[i]).val().length > 0) {
-                total += parseFloat($(montos[i]).val());
+        if (parseFloat($(e.target).val()) > 0) {
+            for (let i = 0; i < montos.length; i++) {
+                if ($(montos[i]).val().length > 0) {
+                    total += parseFloat($(montos[i]).val());
+                }
             }
-        }
-        let auxSum = (!(total.toString()).includes(".") ? total + ".00" : total);
-        $('#totalSum').text(auxSum);            
-        }else{
+            let auxSum = (!(total.toString()).includes(".") ? total + ".00" : total);
+            $('#totalSum').text(auxSum);
+        } else {
             alert("Valor no valido");
-           $(e.target).val("");
+            $(e.target).val("");
         }
     }
     ;
@@ -141,6 +200,54 @@ $(document).ready(function () {
     $('.txtMonto').change(contar);
 
 
+
+    function addElementLink() {
+        let pnlParent = $('#pnlLinks');
+
+        let parent = $("<div class='row enlace'><input type='hidden' value='0' id='idLink' class='idLink'/></div>");
+        let parent1_Def = "<div class='input-group mb-3 col-sm-6'><div class='input-group-prepend'>" +
+                "<span class='input-group-text'><i class='fas fa-angle-right'></i></span></div></div>";
+        let parent2_Def = "<div class='input-group mb-3 col-sm-5 col-9'><div class='input-group-prepend'>" +
+                "<span class='input-group-text'><i class='fas fa-link'></i></span></div></div>";
+        let parent3_Def = "<div class='input-group mb-3 col-sm-1 col-3'></div>";
+
+
+        //Node parents 
+        let newParent1 = $(parent1_Def);
+        let newParent2 = $(parent2_Def);
+        let newParent3 = $(parent3_Def);
+
+        //Node Children 
+        let newTxtDescription = $("<input type='text' class='form-control txtNombreAdjunto' placeholder='Nombre Archivo' maxlength='200'>");
+        let newTxtLink = $("<input type='text' class='form-control txtLink' placeholder='Link' maxlength='500'>");
+        let newbtnDeleteLink = $("<button type='button' class='btn btn-secondary btnDeleteLink' id='btnDeleteLink' >-</button>");
+
+        //Add Events 
+        newTxtDescription.on('blur', DescToLink).on('change', setTotalLinks);
+        newTxtLink.on('blur', LinkToDesc).on('change', setTotalLinks);
+        newbtnDeleteLink.on('click', deleteLink);
+
+
+        //Add 
+        $(newParent1).append(newTxtDescription);
+        $(newParent2).append(newTxtLink);
+        $(newParent3).append(newbtnDeleteLink);
+
+        //Super add 
+        $(parent).append(newParent1);
+        $(parent).append(newParent2);
+        $(parent).append(newParent3);
+        $(pnlParent).append(parent);
+    }
+
+    $('#btnAddLink').click(addElementLink);
+
+    $('.txtNombreAdjunto').on('blur', DescToLink).on('change', setTotalLinks);
+    $('.txtLink').on('blur', LinkToDesc).on('change', setTotalLinks);
+    $('.btnDeleteLink').on('click', deleteLink);
+
+
+
     $('#formRequisicion').submit(function (e) {
 
         if (contarRegistros() == 0) {
@@ -150,7 +257,13 @@ $(document).ready(function () {
             e.preventDefault();
             alert("Selecione una Prioridad");
             $('#slcPrioridad').focus();
+        } else if ($('#auxDate').val() == 0) {
+            alert("Debe seleccionar una fecha de estimacion");
         } else {
+
+            //Aqui validar el formato de la fecha y que sea mayor a ahora 
+
+
             //Obtener iterador 
             let contador = $('#pnlRegistros').children().length;
             let arrayRegistro = $('.registro');
@@ -169,6 +282,32 @@ $(document).ready(function () {
             }
 
             $('#JsonReq').val(JSON.stringify(jsonMtx));
+            auxDate = document.getElementById('auxDate');
+            fechaFinal = document.getElementById('dateFechaFinal');
+            fechaFinal.value = formatear(auxDate.value);
+
+            //Si hay links se mandan
+
+            if (contarLinks() > 0) {
+                let contador = $('#pnlLinks').children().length;
+                let arrayRegistro = $('.enlace');
+
+                var desc, link;
+                var jsonMtxLinks = [];
+
+                for (let i = 0; i < contador; i++) {
+                    desc = $(arrayRegistro[i]).find('.txtNombreAdjunto').val();
+                    link = $(arrayRegistro[i]).find('.txtLink').val();
+                    if (desc.length > 0 && link.length > 0) {
+
+                        var obj = {id: 0, descripcion: desc, enlace: link};
+                        jsonMtxLinks.push(obj);
+                    }
+                }
+
+                $('#JsonLinks').val(JSON.stringify(jsonMtxLinks));
+
+            }
 
         }
 
@@ -178,11 +317,11 @@ $(document).ready(function () {
         idDetalle = $(this).val();
         idRequisicion = $('#idRequisicion').val();
         obj = $(this).parent().parent();
-        
+
         let lgtud = $('.btnDeleteFromDB').length;
-        
+
         if (lgtud > 1) {
-            $('.alertDeleteRecord').modal();            
+            $('.alertDeleteRecord').modal();
         } else {
             $('#mesanjeByDeleteStatus').text("Se debe contender al menos 1 registro hasta Confirmar");
         }

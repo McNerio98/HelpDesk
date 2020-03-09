@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -175,6 +176,23 @@ public class ProcesosReq extends HttpServlet {
         if (nuevoEstado == 0) { //No establecio ningun proceso especifico
             return seteado;
         }
+        /*
+        try{
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
+            System.out.print("Finalizo");
+        }catch(Exception e){
+            Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }*/
+        
 
         try {
             Conexion conn = new ConexionPool();
@@ -198,6 +216,8 @@ public class ProcesosReq extends HttpServlet {
                     if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
                         request.getSession().setAttribute("idReqForPDF", pg.getIdRequisicion());
                         pg.setEstado(nuevoEstado);
+                        Date dt = new Date();
+                        pg.setFechaAprovacion(new Timestamp(dt.getTime()));
                         seteado = true;
                     }
                     
@@ -225,6 +245,7 @@ public class ProcesosReq extends HttpServlet {
             }
 
         } catch (Exception e) {
+            Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, e);
             try {
                 Operaciones.rollback();
             } catch (SQLException ex) {
@@ -245,7 +266,6 @@ public class ProcesosReq extends HttpServlet {
         if(nuevoEstado == Enums.ESTADO_REQ.FINALIZADA && seteado == true && myRol == 9){
             DataList.sendNotificationToSolicitante(listUsers.get(1), idReq);
         }
-
         return seteado;
     }
 

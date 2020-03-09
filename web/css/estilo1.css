@@ -56,8 +56,8 @@
     padding: 0px !important;
 }
 
- .text-custom1 {
-      color: #e83e8c;
+.text-custom1 {
+    color: #e83e8c;
 }
 
 .text-custom2{
@@ -71,5 +71,13 @@
     justify-content: center;
     align-items: center;
     color:#b8b3b5;
+}
+
+#pnlLinks,
+#pnlRegistros {
+    overflow-y: auto;
+    max-height: 350px;
+    overflow-x: hidden;
+
 }
 

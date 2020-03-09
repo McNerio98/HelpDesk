@@ -124,7 +124,7 @@ public class Requisiciones extends HttpServlet {
                 } else {
                     request.getSession().setAttribute("resultado", 2); //No se inserto   
                 }
-                response.sendRedirect("RequisicionInfo?idReq="+request.getParameter("idReq"));
+                response.sendRedirect("RequisicionInfo?idReq=" + request.getParameter("idReq"));
             }
         }
 
@@ -182,7 +182,7 @@ public class Requisiciones extends HttpServlet {
 
         } catch (Exception e) {
             Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
-        }finally{
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
@@ -198,6 +198,8 @@ public class Requisiciones extends HttpServlet {
         String jsonReq = request.getParameter("JsonReq");
         Integer idU = (Integer) request.getSession().getAttribute("idUsuario");
         Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
+        String finalDate = request.getParameter("finalDate");
+
         int idReqs = 0;
         ArrayList<Usuario> listLiders = new ArrayList<>();
 
@@ -225,8 +227,10 @@ public class Requisiciones extends HttpServlet {
             RequisicionPago rg = new RequisicionPago();
             rg.setIdCreador((int) request.getSession().getAttribute("idUsuario"));
             //El autorizador sera hasta que un lider tome la requisicion 
-            rg.setIdAutorizador(null); //Dato queado
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            rg.setIdAutorizador(null);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            
+            
             Date dt = new Date();
             rg.setFecha(new Timestamp(dt.getTime()));
             rg.setEstado(Enums.ESTADO_REQ.SOLICITADA);
@@ -235,6 +239,7 @@ public class Requisiciones extends HttpServlet {
             rg.setTotal(montoTotal);
             rg.setPrioridad(prioridad);
             rg.setIdContador(DataList.getIdContador(DataList.getIdEmpresa(idU)));
+            rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
 
             rg = Operaciones.insertar(rg);
 
