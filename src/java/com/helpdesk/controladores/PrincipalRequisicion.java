@@ -125,6 +125,7 @@ public class PrincipalRequisicion extends HttpServlet {
                 } else {
                     listData = null;
                 }
+             
                 s.setAttribute("ListEmpresas", listData);
                 s.setAttribute("listBaja", (ArrayList<RequisicionPago>) dataobject.get(0));
                 s.setAttribute("listMedia", (ArrayList<RequisicionPago>) dataobject.get(1));
@@ -227,7 +228,8 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 case "load": {
                     int idemp = Integer.parseInt(request.getParameter("idemp"));
-                    int iddep = Integer.parseInt(request.getParameter("iddep"));
+                    //int iddep = Integer.parseInt(request.getParameter("iddep"));
+                    int iddep = 0;
                     if (rol == Enums.ROL.CONTADOR_REQ) {
 
                         ArrayList<Object> main = this.loadRequisiciones(request, response, idemp, iddep);
@@ -302,7 +304,7 @@ public class PrincipalRequisicion extends HttpServlet {
                             break;
                         }
                     }
-                    request.setAttribute("selected", emp.getNombre() + "/" + depto.getDeptoName());
+                    request.setAttribute("selected", emp.getNombre());
                     request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                     break;
                 }
@@ -377,9 +379,14 @@ public class PrincipalRequisicion extends HttpServlet {
             Operaciones.abrirConexion(conn);
 
             for (int i = 1; i < 4; i++) {
+                //Query para filtrar requisiciones por empresa y departamento
+                /*String query = "select idrequisicion \n"
+                        + "from requisicionespagos \n"
+                        + "where idempresa = " + idemp + " and iddepto = " + iddep + " and estado = 3 and prioridad =" + i;*/
+                //Query para filtrar solo por empresa
                 String query = "select idrequisicion \n"
                         + "from requisicionespagos \n"
-                        + "where idempresa = " + idemp + " and iddepto = " + iddep + " and estado = 3 and prioridad =" + i;
+                        + "where idempresa = " + idemp + " and estado = 3 and prioridad =" + i;
                 if (i == 1) {
                     String array[][] = Operaciones.consultar(query, null);
                     if (array != null) {

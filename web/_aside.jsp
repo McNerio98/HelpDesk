@@ -55,14 +55,16 @@
                     <c:if test="${Rol == 9}">
                         <c:forEach var="iterador" items="${ListEmpresas}">
                         <li class="nav-item has-treeview pb-1">
-                            <a href="#" class="nav-link">
+                            <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion?accion=load&idemp=${iterador.getEmpresa().getIdEmpresa()}" class="nav-link">
                                 <i class="nav-icon fas fa-city"></i>
                                 <p>
                                     ${iterador.getEmpresa().getNombre()}
-                                    <i class="right fas fa-angle-left"></i>
+                                     <!--<span class="badge badge-light right">4</span>-->
+                                    <i class="fas fa-arrow-right right"></i>
+                                    
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none;">
+                            <!--<ul class="nav nav-treeview" style="display: none;">
                                 <c:forEach var="deptos" items="${iterador.getListDeptos()}">
                                 <li class="nav-item">
                                     <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion?accion=load&idemp=${iterador.getEmpresa().getIdEmpresa()}&iddep=${deptos.getIdDepto()}" class="nav-link">
@@ -70,7 +72,7 @@
                                     </a>
                                 </li>
                                 </c:forEach>
-                            </ul>
+                            </ul>-->
                         </li>
                         </c:forEach>
                     </c:if>

@@ -28,6 +28,7 @@ public class RequisicionByRol {
     private int iduser;
     private int idrol;
     private int iddepto;
+    private int idemp;
 
     public RequisicionByRol(int id) {
         try {
@@ -37,7 +38,7 @@ public class RequisicionByRol {
 
             this.iduser = id;
             this.iddepto = DataList.getIdDepto(this.iduser);
-
+            this.idemp = DataList.getIdEmpresa(iduser);
             this.idrol = Operaciones.get(this.iduser, new UsuarioRequisicion()).getIdRol();
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,7 +153,7 @@ public class RequisicionByRol {
         //En el caso que sea Receptor Requisicion rol = 7
         String query1 = "select idrequisicion from requisicionespagos where idcreador = " + this.iduser;
         //En el caso que sea Lider Requisicion rol = 6
-        String query2 = "select idrequisicion from requisicionespagos where estado = 1";
+        String query2 = "select idrequisicion from requisicionespagos where estado = 1 and idempresa = " + this.idemp;
 
         switch (this.idrol) {
             case 7: {
