@@ -12,24 +12,19 @@
 </c:if>
 
 <c:if test="${LstEnlaces != null && LstEnlaces.size() == 0}">
-    <p class="text-gray p-3">No se han anexado enlaces</p>    
+    <p class="text-gray p-3 text-center">No se han anexado enlaces</p>    
 </c:if>
 
 <c:if test="${LstEnlaces != null && LstEnlaces.size() > 0}">
     <table class="table table-bordered">
-        <thead>                  
-            <tr>
-                <th style="width: 10px">#</th>
-                <th>Descripcion / Enlace</th>
-            </tr>
-        </thead>
         <tbody>
             <c:set var="contador2" value="${1}" />
             <c:forEach var="lnk" items="${LstEnlaces}">
                 <tr>
-                    <td>${contador}</td>
+                    <td style="width: 10px">${contador2}</td>
                     <td>
                         <a href="${lnk.enlace}" target="_blank">
+                            <i class="fas fa-passport"></i>
                             ${lnk.descripcion}
                         </a>
                     </td>

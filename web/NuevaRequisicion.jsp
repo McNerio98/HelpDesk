@@ -289,7 +289,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-eye"></i></span>
                                     <h5 class="description-header text-success">ESTADO</h5>
@@ -298,7 +298,7 @@
                                 <!-- /.description-block -->
                             </div>
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-money-bill-wave"></i></span>
                                     <h5 class="description-header text-success">MONTO TOTAL</h5>
@@ -311,9 +311,17 @@
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
+                                <div class="col-sm-3">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage"><i class="fas fa-link"></i></span>
+                                        <h5 class="description-header text-success">ENLACES</h5>
+                                        <span class="description-text" id="totalLinks">0</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>                                            
 
                                 <!-- /.col -->
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="description-block border-right">
                                         <span class="description-percentage "><i class="fas fa-stream"></i></span>
                                         <h5 class="description-header text-success">TOTAL REGISTROS</h5>
