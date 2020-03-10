@@ -4,10 +4,8 @@ $(document).ready(function () {
     var pnlParent = $('#pnlRegistros'); // es el div contenedor 
 
     // Datos para eliminar detalles 
-    var idDetalle;
-    var idEnlace;
-    var idRequisicion;
-    var obj;
+    var idDetalle,idEnlace,idRequisicion;
+    var obj,objRowEnlace;
     var pathApplication = $('#pathApp').val();
 
 
@@ -246,7 +244,8 @@ $(document).ready(function () {
     $('.txtNombreAdjunto').on('blur', DescToLink).on('change', setTotalLinks);
     $('.txtLink').on('blur', LinkToDesc).on('change', setTotalLinks);
     $('.btnDeleteLink').on('click', deleteLink);
-
+    
+    $('#anombre').val($('#SolicitanteName').text());
 
 
     $('#formRequisicion').submit(function (e) {
@@ -259,8 +258,11 @@ $(document).ready(function () {
             alert("Selecione una Prioridad");
             $('#slcPrioridad').focus();
         } else if ($('#auxDate').val() == 0) {
+            e.preventDefault();
             alert("Debe seleccionar una fecha de estimacion");
-        } else {
+        } else if($('#anombre').val().length <= 1){
+            $('#anombre').val($('#SolicitanteName').text());
+        }else{
 
             //Aqui validar el formato de la fecha y que sea mayor a ahora 
 
@@ -332,7 +334,7 @@ $(document).ready(function () {
     $('.btnDeleteFromDBLink').click(function () {
         idEnlace = $(this).val();
         idRequisicion = $('#idRequisicion').val();
-        obj = $(this).parent().parent();
+        objRowEnlace = $(this).parent().parent();
 
         let lgtud = $('.btnDeleteFromDBLink').length;
 
@@ -355,9 +357,9 @@ $(document).ready(function () {
             success: function (result) {
                 if (result == 'true') {
                     $('.alertDeleteRecord').modal('hide');
-                    $(obj).remove();
-                    contar();
-                    setTotalRegistros();
+                    $(objRowEnlace).remove();
+                    contarLinks();
+                    setTotalLinks();
                 } else {
                     $('#mesanjeByDeleteStatus').text("Error al Eliminar");
                 }
@@ -365,15 +367,15 @@ $(document).ready(function () {
         });
     });
 
-    $('#confirmDelete').click(function () {
+    $('#confirmDeleteLink').click(function () {
 
         $.ajax({
             type: 'POST',
-            data: {idReq: idRequisicion, idenDetalle: idDetalle},
+            data: {ideLink: idEnlace},
             url: pathApplication + '/ProcesosReq?accion=deleteEnlace',
             success: function (result) {
                 if (result == 'true') {
-                    $('.alertDeleteRecord').modal('hide');
+                    $('.alertDeleteLink').modal('hide');
                     $(obj).remove();
                     contar();
                     setTotalRegistros();

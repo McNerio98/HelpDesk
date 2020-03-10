@@ -239,14 +239,17 @@
                                 </p>
                                 <div class="form-group">
                                     <div class="form-group">
-                                        <label for="auxDate">Selecionar Prioridad</label><br>
                                         <select class="form-control" name="slcPrioridad" id="slcPrioridad">
                                             <option value="0">--SELECIONE PRIORIDAD--</option>
-                                            <option value="1">BAJA</option>
-                                            <option value="2">MEDIA</option>
-                                            <option value="3">ALTA</option>
+                                            <option value="1">PRIORIDAD BAJA</option>
+                                            <option value="2">PRIORIDAD MEDIA</option>
+                                            <option value="3">PRIORIDAD ALTA</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="auxDate">A Nombre de: </label><br>
+                                        <input type="text" name="anombre" id="anombre" required="true" class="form-control" maxlength="50" />
+                                    </div> 
                                     <div class="form-group">
                                         <label for="auxDate">Fecha Final Estimada</label><br>
                                         <div id="datepicker-group" class="input-group date" data-date-format="dd-mm-yyyy">
@@ -262,7 +265,7 @@
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
                                         Departamento: <span class="text-custom1">${DataGeneral.depto}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
-                                        Solicitante: <span class="text-custom1">${DataGeneral.solicitante}</span></label>
+                                        Solicitante: <span class="text-custom1" id="SolicitanteName">${DataGeneral.solicitante}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
                                         Autorizador: <span class="text-custom1">${DataGeneral.superior}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
@@ -315,7 +318,14 @@
                                     <div class="description-block border-right">
                                         <span class="description-percentage"><i class="fas fa-link"></i></span>
                                         <h5 class="description-header text-success">ENLACES</h5>
-                                        <span class="description-text" id="totalLinks">0</span>
+                                        <span class="description-text" id="totalLinks">
+                                        <c:if test="${lstEnlaces != null}">
+                                            ${lstEnlaces.size()}
+                                        </c:if>
+                                        <c:if test="">
+                                            0
+                                        </c:if>    
+                                        </span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>                                            

@@ -134,6 +134,7 @@ public class Requisiciones extends HttpServlet {
     private boolean updateRequisicion(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = false;
         String jsonReq = request.getParameter("JsonReq");
+        String jsonLinks = request.getParameter("JsonLinks");
         String idRequisicion = request.getParameter("idReq");
 
         try {
@@ -141,10 +142,8 @@ public class Requisiciones extends HttpServlet {
             objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
             List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
             });
+            
 
-            if (listDetallesAux != null && listDetallesAux.size() == 0) {
-                throw new Exception("Alteracion en el Json");
-            }
 
             BigDecimal montoTotal = new BigDecimal(0);
 
@@ -177,6 +176,9 @@ public class Requisiciones extends HttpServlet {
                     detalle = Operaciones.insertar(detalle);
                 }
             }
+            
+            //Actualizando enlaces si hay nuevos cabios
+            
 
             Operaciones.commit();
             estado = true;
@@ -201,6 +203,7 @@ public class Requisiciones extends HttpServlet {
         Integer idU = (Integer) request.getSession().getAttribute("idUsuario");
         Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
         String finalDate = request.getParameter("finalDate");
+        String anombre = request.getParameter("anombre");
 
         int idReqs = 0;
         ArrayList<Usuario> listLiders = new ArrayList<>();
@@ -241,6 +244,7 @@ public class Requisiciones extends HttpServlet {
             rg.setPrioridad(prioridad);
             rg.setIdContador(DataList.getIdContador(DataList.getIdEmpresa(idU)));
             rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
+            rg.setaNombre(anombre);
 
             rg = Operaciones.insertar(rg);
             
