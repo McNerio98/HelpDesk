@@ -365,5 +365,23 @@ $(document).ready(function () {
         });
     });
 
+    $('#confirmDelete').click(function () {
+
+        $.ajax({
+            type: 'POST',
+            data: {idReq: idRequisicion, idenDetalle: idDetalle},
+            url: pathApplication + '/ProcesosReq?accion=deleteEnlace',
+            success: function (result) {
+                if (result == 'true') {
+                    $('.alertDeleteRecord').modal('hide');
+                    $(obj).remove();
+                    contar();
+                    setTotalRegistros();
+                } else {
+                    $('#mesanjeByDeleteStatus').text("Error al Eliminar");
+                }
+            }
+        });
+    });
 
 });
