@@ -142,8 +142,6 @@ public class Requisiciones extends HttpServlet {
             objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
             List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
             });
-            
-
 
             BigDecimal montoTotal = new BigDecimal(0);
 
@@ -176,9 +174,27 @@ public class Requisiciones extends HttpServlet {
                     detalle = Operaciones.insertar(detalle);
                 }
             }
-            
+
             //Actualizando enlaces si hay nuevos cabios
-            
+            if (jsonLinks != null) {
+                List<Enlace> listEnlaces = objectMapper.readValue(jsonReq, new TypeReference<List<Enlace>>() {
+                });
+                for(int j=0; j < listEnlaces.size(); j++){
+                    Enlace e = new Enlace();
+                    int id = listEnlaces.get(j).getIdEnlace();
+                    if(id!=0){ //Es una actualizacion
+                        e = Operaciones.get(id, new Enlace());
+                        e.setDescripcion(listEnlaces.get(j).getDescripcion());
+                        e.setEnlace(listEnlaces.get(j).getEnlace());
+                        e = Operaciones.actualizar(e.getIdEnlace(), e);
+                    }else{ //Es una nuevo
+                        e.setDescripcion(listEnlaces.get(j).getDescripcion());
+                        e.setEnlace(listEnlaces.get(j).getEnlace());
+                        e.setIdRequisicion(Integer.parseInt(idRequisicion));
+                        e = Operaciones.insertar(e);
+                    }
+                }
+            }
 
             Operaciones.commit();
             estado = true;
@@ -247,12 +263,12 @@ public class Requisiciones extends HttpServlet {
             rg.setaNombre(anombre);
 
             rg = Operaciones.insertar(rg);
-            
-            if (jsonLinks != null) {//Hay enlaces
+
+            if (jsonLinks != null && !"".equals(jsonLinks)) {//Hay enlaces
                 List<Enlace> listEnlaces = objectMapper.readValue(jsonLinks, new TypeReference<List<Enlace>>() {
                 });
-                
-                for(int i=0;i<listEnlaces.size();i++){
+
+                for (int i = 0; i < listEnlaces.size(); i++) {
                     Enlace e = new Enlace();
                     e.setDescripcion(listEnlaces.get(i).getDescripcion());
                     e.setEnlace(listEnlaces.get(i).getEnlace());

@@ -194,7 +194,7 @@
                                             </div>                                            
                                         </c:forEach>
                                     </c:if>  
-                                    <c:if test="${lstEnlaces == null}">
+                                    <c:if test="${lstEnlaces == null || lstEnlaces.size() == 0}">
                                         <div class="row enlace">
                                             <input type="hidden" value="0" id="txtId" class="txtId"/>
                                             <div class="input-group mb-3 col-sm-6">
