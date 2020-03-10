@@ -75,10 +75,12 @@
                                 <strong>Detalles de Requisicion</strong>
                             </p>                    
 
-                            <div id="pnlRegistros" style="max-height: 400px; overflow-y: auto;">
-
-
-                            </div>
+                            <div id="pnlRegistros" style="max-height: 400px; overflow-y: auto;"></div>
+                            <hr>
+                            <p class="text-center">
+                                <strong>Seccion de Enlaces / Documentos</strong>
+                            </p>                            
+                            <div id="pnlEnlaces" style="max-height: 400px; overflow-y: auto;"></div>
                                         <button class="btn btn-warning" id="reloadDetail">
                                             <i class="fas fa-sync"></i>
                                             Recargar
@@ -191,9 +193,25 @@
             });
         }
         
-        refreshDetail();
+
         
-        $('#reloadDetail').click(refreshDetail);
+        function refreshLinks() {
+            $.ajax({
+                type: 'POST',
+                url: "${pageContext.servletContext.contextPath}/RequisicionInfo?accion=loadLinks&idReq=${idReq}",
+                success: function (result) {
+                    $('#pnlEnlaces').html(result);
+                }
+            });
+        }
+        
+        refreshDetail();
+        refreshLinks();        
+        
+        $('#reloadDetail').click(function(){
+            refreshDetail();
+            refreshLinks();
+        });
         
         function sendMessage() {
             let contentMsg = $('#txtContentMsg').val();

@@ -1,6 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@include file="_startPanel.jsp" %>
-
+<script src="./js/momentjs.min.js"></script>
 
 
 <!-- Content Header (Page header) Esto dependera de cada pagina-->
@@ -378,14 +378,21 @@
                                                 <td>
                                                     <a href="${pageContext.servletContext.contextPath}/RequisicionInfo?idReq=${list.getId()}" class="list-group-item list-group-item-action">
                                                         <div class="d-flex w-100 justify-content-between">
-                                                            <p style="font-size: 15px;font-weight:bold" class="mb-1">${list.getSolicitante()}</p>
-                                                            <small>${list.getFecha()}</small>
+                                                            <p style="font-size: 15px;font-weight:bold" class="mb-1">
+                                                                <small style="font-size: 12px;font-weight:normal">Solicitante: </small>${list.getSolicitante()}
+                                                            </p>
+                                                            <small>Para el <script> document.write(moment('${list.getFechaEstimada()}', "DD-MM-YYYYHH:mm").format("LL"))</script></small>
                                                         </div>
-
-                                                        <p class="mb-1">${list.getEmpresa()} - ${list.getDepto()}
-                                                            <span class="text-wrap badge badge-primary float-right">
-                                                            ${list.getPrioridad()}</p>
-                                                        </span>
+                                                        
+                                                            <p class="mb-1 text-muted">
+                                                             <i>
+                                                                <small style="font-size: 12px;font-weight:normal">A nombre de: ${list.getaNombre()}</small>
+                                                             <i>
+                                                             <span class="text-wrap badge badge-primary float-right">
+                                                                $ ${list.getMontoTotal()}</p>
+                                                            </span>
+                                                        
+                                                            <p class="mb-1">${list.getEmpresa()} - ${list.getDepto()}</p>
                                                     </a>
                                                 </td>
                                             </tr>

@@ -126,6 +126,8 @@ public class DataList {
             params.add(idReq);
 
             String cmd = "select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd-MM-yyyy HH:MI') fecha, \n"
+                    + "to_char(rg.fechaestimada,'dd-MM-yyyy HH:MI') fechaestimada,  \n"
+                    + "rg.anombre, \n"
                     + "rg.total, rg.estado, e.nombre, d.deptoname, (select concat(u2.firstname,' ', u2.lastname) from users u2, \n"
                     + "requisicionespagos rg2 where rg2.idautorizador = u2.iduser and rg2.idrequisicion =?) Superior, \n"
                     + "(select concat(u3.firstname,' ', u3.lastname) from users u3,requisicionespagos rg3 \n"
@@ -136,13 +138,15 @@ public class DataList {
 
             dt.setSolicitante(rs[0][0]);
             dt.setFecha(rs[1][0]);
-            dt.setMontoTotal(rs[2][0]);
-            dt.setEstado(Integer.parseInt(rs[3][0]));
-            dt.setEmpresa(rs[4][0]);
-            dt.setDepto(rs[5][0]);
-            dt.setSuperior(rs[6][0]);
-            dt.setContador(rs[7][0]);
-            dt.setPrioridad(Integer.parseInt(rs[8][0]));
+            dt.setFechaEstimada(rs[2][0]);
+            dt.setaNombre(rs[3][0]);
+            dt.setMontoTotal(rs[4][0]);
+            dt.setEstado(Integer.parseInt(rs[5][0]));
+            dt.setEmpresa(rs[6][0]);
+            dt.setDepto(rs[7][0]);
+            dt.setSuperior(rs[8][0]);
+            dt.setContador(rs[9][0]);
+            dt.setPrioridad(Integer.parseInt(rs[10][0]));
         } catch (Exception e) {
             Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, e);
             dt = null;

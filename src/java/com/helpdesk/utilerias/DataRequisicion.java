@@ -12,6 +12,7 @@ package com.helpdesk.utilerias;
 public class DataRequisicion {
     private int id;
     private String fecha;
+    private String fechaEstimada;
     private String empresa;
     private String depto;
     private String solicitante;
@@ -21,7 +22,7 @@ public class DataRequisicion {
     private String numRegistros;
     private String montoTotal;
     private String prioridad;
-    
+    private String aNombre;
 
     public DataRequisicion() {
         this.superior = "--No Asignado--";
@@ -41,6 +42,22 @@ public class DataRequisicion {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+    
+    public String getFechaEstimada() {
+        return this.fechaEstimada;
+    }
+    
+    public void setaNombre(String n){
+        this.aNombre = n;
+    }
+    
+    public  String getaNombre(){
+        return this.aNombre;
+    }
+
+    public void setFechaEstimada(String fecha) {
+        this.fechaEstimada = fecha;
     }
 
     public String getEmpresa() {

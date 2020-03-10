@@ -5,6 +5,7 @@ $(document).ready(function () {
 
     // Datos para eliminar detalles 
     var idDetalle;
+    var idEnlace;
     var idRequisicion;
     var obj;
     var pathApplication = $('#pathApp').val();
@@ -268,7 +269,7 @@ $(document).ready(function () {
             let contador = $('#pnlRegistros').children().length;
             let arrayRegistro = $('.registro');
 
-            var desc, sum, id;
+            var desc, sum, iden;
             var jsonMtx = [];
 
             for (let i = 0; i < contador; i++) {
@@ -292,15 +293,16 @@ $(document).ready(function () {
                 let contador = $('#pnlLinks').children().length;
                 let arrayRegistro = $('.enlace');
 
-                var desc, link;
+                var desc, link, id, idReq;
                 var jsonMtxLinks = [];
 
                 for (let i = 0; i < contador; i++) {
+                    idLink = $(arrayRegistro[i]).find('.txtId').val();
                     desc = $(arrayRegistro[i]).find('.txtNombreAdjunto').val();
                     link = $(arrayRegistro[i]).find('.txtLink').val();
                     if (desc.length > 0 && link.length > 0) {
 
-                        var obj = {id: 0, descripcion: desc, enlace: link};
+                        var obj = {idEnlace: idLink, descripcion: desc, enlace: link, idRequisicion: 0};
                         jsonMtxLinks.push(obj);
                     }
                 }
@@ -325,9 +327,24 @@ $(document).ready(function () {
         } else {
             $('#mesanjeByDeleteStatus').text("Se debe contender al menos 1 registro hasta Confirmar");
         }
-
-
     });
+
+    $('.btnDeleteFromDBLink').click(function () {
+        idEnlace = $(this).val();
+        idRequisicion = $('#idRequisicion').val();
+        obj = $(this).parent().parent();
+
+        let lgtud = $('.btnDeleteFromDBLink').length;
+
+        if (lgtud > 1) {
+            $('.alertDeleteLink').modal();
+        } else {
+            $('#mesanjeByDeleteStatus').text("Se debe contender al menos 1 registro hasta Confirmar");
+        }
+    });
+
+
+
 
     $('#confirmDelete').click(function () {
 
@@ -348,5 +365,23 @@ $(document).ready(function () {
         });
     });
 
+    $('#confirmDelete').click(function () {
+
+        $.ajax({
+            type: 'POST',
+            data: {idReq: idRequisicion, idenDetalle: idDetalle},
+            url: pathApplication + '/ProcesosReq?accion=deleteEnlace',
+            success: function (result) {
+                if (result == 'true') {
+                    $('.alertDeleteRecord').modal('hide');
+                    $(obj).remove();
+                    contar();
+                    setTotalRegistros();
+                } else {
+                    $('#mesanjeByDeleteStatus').text("Error al Eliminar");
+                }
+            }
+        });
+    });
 
 });

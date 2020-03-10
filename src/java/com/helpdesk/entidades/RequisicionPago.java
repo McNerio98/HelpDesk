@@ -55,6 +55,9 @@ public class RequisicionPago {
     private Timestamp fechaAprovacion;
     @NotNull
     private Timestamp fechaEstimada;
+    @NotNull
+    private String aNombre;
+          
     
 
     /**
@@ -191,6 +194,14 @@ public class RequisicionPago {
 
     public void setFechaEstimada(Timestamp fechaEstimada) {
         this.fechaEstimada = fechaEstimada;
+    }
+
+    public String getaNombre() {
+        return aNombre;
+    }
+
+    public void setaNombre(String aNombre) {
+        this.aNombre = aNombre;
     }
     
     
