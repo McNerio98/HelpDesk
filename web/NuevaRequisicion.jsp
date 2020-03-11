@@ -183,11 +183,11 @@
                                                             <i class="fas fa-link"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" class="form-control txtLink" placeholder="Link" maxlength="500" value="${enlace}">
+                                                    <input type="text" class="form-control txtLink" placeholder="Link" maxlength="500" value="${lnk.enlace}">
                                                 </div>
 
                                                 <div class="input-group mb-3 col-sm-1 col-3">
-                                                    <button type="button" class="btn btn-danger btnDeleteFromDBLink"
+                                                    <button type="button" class="btn btn-danger btnDeleteFromDBLink" value="${lnk.idEnlace}"
                                                             id="btnDeleteFromDBLink">-</button>
                                                 </div>
 
@@ -296,7 +296,14 @@
                                 <div class="description-block border-right">
                                     <span class="description-percentage"><i class="fas fa-eye"></i></span>
                                     <h5 class="description-header text-success">ESTADO</h5>
-                                    <span class="description-text">${DataGeneral.estado}</span>
+                                    <span class="description-text">
+                                        <c:if test="${DataGeneral!=null}">
+                                            ${DataGeneral.estado}
+                                        </c:if>
+                                        <c:if test="${pg==null}">
+                                            SOLICITADA
+                                        </c:if>
+                                    </span>
                                 </div>
                                 <!-- /.description-block -->
                             </div>
@@ -322,20 +329,20 @@
                                         <c:if test="${lstEnlaces != null}">
                                             ${lstEnlaces.size()}
                                         </c:if>
-                                        <c:if test="">
+                                        <c:if test="${lstEnlaces==null}">
                                             0
                                         </c:if>    
-                                        </span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>                                            
+                                    </span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>                                            
 
-                                <!-- /.col -->
-                                <div class="col-sm-3">
-                                    <div class="description-block border-right">
-                                        <span class="description-percentage "><i class="fas fa-stream"></i></span>
-                                        <h5 class="description-header text-success">TOTAL REGISTROS</h5>
-                                        <span class="description-text" id="totalRecord">
+                            <!-- /.col -->
+                            <div class="col-sm-3">
+                                <div class="description-block border-right">
+                                    <span class="description-percentage "><i class="fas fa-stream"></i></span>
+                                    <h5 class="description-header text-success">TOTAL REGISTROS</h5>
+                                    <span class="description-text" id="totalRecord">
                                         <c:if test="${lstDetalles!=null}">${DataGeneral.numRegistros}</c:if>
                                         <c:if test="${lstDetalles==null}">0</c:if>                                                                                    
                                         </span>
@@ -354,75 +361,98 @@
 
             <!-- /.No quitar esto, copiar en todos los demas -->          
         </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+        <!--Auxiliar-->
+    <c:if test="${pg!=null}">
+        <input type="hidden" value="update" id="accionProcesar"/>                                    
+    </c:if>
+    <c:if test="${pg==null}">
+        <input type="hidden" value="nuevo" id="accionProcesar"/>                                    
+    </c:if>        
 
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
+
+    <!--Prioridad-->
+    <input type="hidden" value="${pg.prioridad}" id="valPrioridad"/>
+    <!--A nombre de-->
+    <input type="hidden" value="${pg.aNombre}" id="valAnombre"/>
+    <!--Fecha-->
+    <input type="hidden" value="<fmt:formatDate value="${pg.fechaEstimada}" pattern="dd/MM/yyyy"/>" id="valFechaEstimada"/>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
 
 
-    <!--Mover a archivo independiente-->
-    <script>
-        function formatear(inv) {
-            let dia = inv[0] + inv[1];
-            let mes = inv[3] + inv[4];
-            let anio = inv[6] + inv[7] + inv[8] + inv[9];
-            return anio + "-" + mes + "-" + dia;
+<!--Mover a archivo independiente-->
+<script>
+    function formatear(inv) {
+        let dia = inv[0] + inv[1];
+        let mes = inv[3] + inv[4];
+        let anio = inv[6] + inv[7] + inv[8] + inv[9];
+        return anio + "-" + mes + "-" + dia;
+    }
+
+    $(document).ready(function () {        
+        if($('#accionProcesar').val()=='update'){
+            $('#slcPrioridad').val($('#valPrioridad').val());
+            $('#anombre').val($('#valAnombre').val());
+            $('#auxDate').val($('#valFechaEstimada').val());
         }
+        
+        $("#datepicker-group").datepicker({
+            format: "dd/mm/yyyy",
+            todayHighlight: true,
+            autoclose: true,
+            clearBtn: true
+        });        
+    });
 
-        $(document).ready(function () {
-            $("#datepicker-group").datepicker({
-                format: "dd/mm/yyyy",
-                todayHighlight: true,
-                autoclose: true,
-                clearBtn: true
-            });
-        });
-    </script>
-    <script src="js/controlFormReq.js"></script>
-    <div class="modal fade alertDeleteRecord" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="exampleModalLabel">Alertar de Eliminacion</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center text-warning h1"><i class="fas fa-exclamation-triangle"></i></div>
-                    <p style="text-align: center;">!Esta a punto de Eliminar un detalle de esta requisicion <br>
-                        <b>!ESTA ACCION YA NO SE PODRA DESHACER</b></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">Confirmar</button>
-                </div>
-
+    
+</script>
+<script src="js/controlFormReq.js"></script>
+<div class="modal fade alertDeleteRecord" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="exampleModalLabel">Alertar de Eliminacion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <div class="modal-body">
+                <div class="text-center text-warning h1"><i class="fas fa-exclamation-triangle"></i></div>
+                <p style="text-align: center;">!Esta a punto de Eliminar un detalle de esta requisicion <br>
+                    <b>!ESTA ACCION YA NO SE PODRA DESHACER</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Confirmar</button>
+            </div>
+
         </div>
     </div>
-    <div class="modal fade alertDeleteLink" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="exampleModalLabel">Alertar de Eliminacion</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center text-warning h1"><i class="fas fa-exclamation-triangle"></i></div>
-                    <p style="text-align: center;">!Esta a punto de Eliminar un enlace <br>
-                        <b>!ESTA ACCION YA NO SE PODRA DESHACER</b></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteLink">Confirmar</button>
-                </div>
-
+</div>
+<div class="modal fade alertDeleteLink" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="exampleModalLabel">Alertar de Eliminacion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <div class="modal-body">
+                <div class="text-center text-warning h1"><i class="fas fa-exclamation-triangle"></i></div>
+                <p style="text-align: center;">!Esta a punto de Eliminar un enlace <br>
+                    <b>!ESTA ACCION YA NO SE PODRA DESHACER</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteLink">Confirmar</button>
+            </div>
+
         </div>
     </div>
+</div>
 <%@include file="_endPanel.jsp" %>

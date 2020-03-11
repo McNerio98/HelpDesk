@@ -136,6 +136,9 @@ public class Requisiciones extends HttpServlet {
         String jsonReq = request.getParameter("JsonReq");
         String jsonLinks = request.getParameter("JsonLinks");
         String idRequisicion = request.getParameter("idReq");
+        String prioridad = request.getParameter("slcPrioridad");
+        String finalDate = request.getParameter("finalDate");
+        String anombre = request.getParameter("anombre");
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -176,8 +179,8 @@ public class Requisiciones extends HttpServlet {
             }
 
             //Actualizando enlaces si hay nuevos cabios
-            if (jsonLinks != null) {
-                List<Enlace> listEnlaces = objectMapper.readValue(jsonReq, new TypeReference<List<Enlace>>() {
+            if (jsonLinks != null && !"".equals(jsonLinks)) {
+                List<Enlace> listEnlaces = objectMapper.readValue(jsonLinks, new TypeReference<List<Enlace>>() {
                 });
                 for(int j=0; j < listEnlaces.size(); j++){
                     Enlace e = new Enlace();
@@ -201,6 +204,11 @@ public class Requisiciones extends HttpServlet {
 
         } catch (Exception e) {
             Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
+            try {
+                Operaciones.rollback();
+            } catch (SQLException ex) {
+                Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } finally {
             try {
                 Operaciones.cerrarConexion();

@@ -4,8 +4,8 @@ $(document).ready(function () {
     var pnlParent = $('#pnlRegistros'); // es el div contenedor 
 
     // Datos para eliminar detalles 
-    var idDetalle,idEnlace,idRequisicion;
-    var obj,objRowEnlace;
+    var idDetalle, idEnlace, idRequisicion;
+    var obj, objRowEnlace;
     var pathApplication = $('#pathApp').val();
 
 
@@ -125,7 +125,6 @@ $(document).ready(function () {
     }
 
     function setTotalRegistros() {
-        console.log(contarRegistros());
         let nodo = $('#totalRecord');
         $(nodo).text(contarRegistros());
     }
@@ -134,7 +133,6 @@ $(document).ready(function () {
     function contar(e) {
         let montos = $('.txtMonto');
         let total = 0;
-        console.log();
         if (parseFloat($(e.target).val()) > 0) {
             for (let i = 0; i < montos.length; i++) {
                 if ($(montos[i]).val().length > 0) {
@@ -142,7 +140,7 @@ $(document).ready(function () {
                 }
             }
             let auxSum = (!(total.toString()).includes(".") ? total + ".00" : total);
-            $('#totalSum').text(auxSum);
+            $('#totalSum').text(parseFloat(auxSum).toFixed(2));
         } else {
             alert("Valor no valido");
             $(e.target).val("");
@@ -203,7 +201,7 @@ $(document).ready(function () {
     function addElementLink() {
         let pnlParent = $('#pnlLinks');
 
-        let parent = $("<div class='row enlace'><input type='hidden' value='0' id='idLink' class='idLink'/></div>");
+        let parent = $("<div class='row enlace'><input type='hidden' value='0' id='txtId' class='txtId'/></div>");
         let parent1_Def = "<div class='input-group mb-3 col-sm-6'><div class='input-group-prepend'>" +
                 "<span class='input-group-text'><i class='fas fa-angle-right'></i></span></div></div>";
         let parent2_Def = "<div class='input-group mb-3 col-sm-5 col-9'><div class='input-group-prepend'>" +
@@ -244,10 +242,14 @@ $(document).ready(function () {
     $('.txtNombreAdjunto').on('blur', DescToLink).on('change', setTotalLinks);
     $('.txtLink').on('blur', LinkToDesc).on('change', setTotalLinks);
     $('.btnDeleteLink').on('click', deleteLink);
-    
-    $('#anombre').val($('#SolicitanteName').text());
+
+    if ($('#accionProcesar').val() == 'nuevo') {
+        $('#anombre').val($('#SolicitanteName').text());
+    }
 
 
+
+    //Proceso de envio 
     $('#formRequisicion').submit(function (e) {
 
         if (contarRegistros() == 0) {
@@ -260,9 +262,9 @@ $(document).ready(function () {
         } else if ($('#auxDate').val() == 0) {
             e.preventDefault();
             alert("Debe seleccionar una fecha de estimacion");
-        } else if($('#anombre').val().length <= 1){
+        } else if ($('#anombre').val().length <= 1) {
             $('#anombre').val($('#SolicitanteName').text());
-        }else{
+        } else {
 
             //Aqui validar el formato de la fecha y que sea mayor a ahora 
 
@@ -333,16 +335,11 @@ $(document).ready(function () {
 
     $('.btnDeleteFromDBLink').click(function () {
         idEnlace = $(this).val();
+        console.log(idEnlace);
         idRequisicion = $('#idRequisicion').val();
         objRowEnlace = $(this).parent().parent();
 
-        let lgtud = $('.btnDeleteFromDBLink').length;
-
-        if (lgtud > 1) {
-            $('.alertDeleteLink').modal();
-        } else {
-            $('#mesanjeByDeleteStatus').text("Se debe contender al menos 1 registro hasta Confirmar");
-        }
+        $('.alertDeleteLink').modal();
     });
 
 
@@ -356,10 +353,10 @@ $(document).ready(function () {
             url: pathApplication + '/ProcesosReq?accion=deleteDetalle',
             success: function (result) {
                 if (result == 'true') {
+                    $(obj).remove();
+                    contar();
+                    setTotalRegistros();
                     $('.alertDeleteRecord').modal('hide');
-                    $(objRowEnlace).remove();
-                    contarLinks();
-                    setTotalLinks();
                 } else {
                     $('#mesanjeByDeleteStatus').text("Error al Eliminar");
                 }
@@ -367,6 +364,7 @@ $(document).ready(function () {
         });
     });
 
+//btn Confirmar borrado de Enlace
     $('#confirmDeleteLink').click(function () {
 
         $.ajax({
@@ -375,13 +373,13 @@ $(document).ready(function () {
             url: pathApplication + '/ProcesosReq?accion=deleteEnlace',
             success: function (result) {
                 if (result == 'true') {
-                    $('.alertDeleteLink').modal('hide');
-                    $(obj).remove();
-                    contar();
-                    setTotalRegistros();
+                    $(objRowEnlace).remove();
+                    contarLinks();
+                    setTotalLinks();
                 } else {
                     $('#mesanjeByDeleteStatus').text("Error al Eliminar");
                 }
+                $('.alertDeleteLink').modal('hide');
             }
         });
     });

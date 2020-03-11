@@ -74,7 +74,8 @@ public class RequisicionInfo extends HttpServlet {
                         ArrayList<Enlace> lstEnlaces = getListEnlaces(idRequisicion);
                         
                         DataRequisicion dataGeneral = DataList.getGeneralData(idRequisicion);
-                        dataGeneral.setNumRegistros(String.valueOf(listDetalles.size()));
+                        dataGeneral.setNumRegistros(String.valueOf(listDetalles.size())); 
+                        request.setAttribute("pg", pg);
                         request.setAttribute("DataGeneral", dataGeneral);
                         request.setAttribute("lstDetalles", listDetalles);
                         request.setAttribute("lstEnlaces", lstEnlaces);
