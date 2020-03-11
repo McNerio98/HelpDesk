@@ -173,6 +173,12 @@ function displayDataTables(url) {
             {
                 data: null,
                 render: function (data, type, row) {
+                    var f = "";
+                    if(moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL") == 'Invalid date'){
+                        f = "No definida";
+                    }else{
+                        f = "Para el " + moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL");
+                    }
                     // Combine the first and last names into a single table field
                     return `
                         <a href="` + root.value + `/RequisicionInfo?idReq=` + data.id + `" class="list-group-item list-group-item-action">
@@ -180,7 +186,7 @@ function displayDataTables(url) {
                                                             <p style="font-size: 15px;font-weight:bold" class="mb-1">
                                                                 <small style="font-size: 12px;font-weight:normal">Solicitante: </small>` + data.solicitante + `
                                                             </p>
-                                                            <small> Para el ` + moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL")   + `</small>
+                                                            <small>` + f + `</small>
                                                         </div>
                                                         
                                                             <p class="mb-1 text-muted">

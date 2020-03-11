@@ -298,16 +298,22 @@ public class PrincipalRequisicion extends HttpServlet {
                             break;
                         }
                     }
-                    for(int i=0;i<listDepto.size();i++){
+                    /*for(int i=0;i<listDepto.size();i++){
                         if(listDepto.get(i).getIdDepto() == iddep){
                             depto = listDepto.get(i);
                             break;
                         }
-                    }
+                    }*/
                     request.setAttribute("selected", emp.getNombre());
                     request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                     break;
                 }
+                
+                case "loadAll":{
+                    out.print("Hello world");
+                    break;
+                }
+                
                 case "priority": {
                     String priority = request.getParameter("id");
                     ArrayList<Object> dataobject = r.getAllRequisicionesByContadorAndPriority();

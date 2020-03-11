@@ -76,6 +76,18 @@
                         </li>
                         </c:forEach>
                     </c:if>
+                    <c:if test="${Rol == 6}">
+                        <li class="nav-item has-treeview pb-1">
+                            <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion?accion=loadAll" class="nav-link">
+                                <p>
+                                    Aceptadas por otros lideres
+                                     <!--<span class="badge badge-light right">4</span>-->
+<!--                                    <i class="fas fa-arrow-right right"></i>-->
+                                    
+                                </p>
+                            </a>
+                        </li>
+                    </c:if>
                 </c:if>
             </ul>
         </nav>
