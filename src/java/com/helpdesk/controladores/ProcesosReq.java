@@ -45,6 +45,10 @@ public class ProcesosReq extends HttpServlet {
         } else {
             boolean seteado = this.setProceso(request, response);
             if (seteado) {
+                if (request.getSession().getAttribute("idReqForPDF") != null) {
+                    request.getRequestDispatcher("viewRequisicionPDF.jsp").forward(request, response);
+                    return;
+                }
                 request.getSession().setAttribute("resultado", 1);
             } else {
                 request.getSession().setAttribute("resultado", 2);
@@ -61,12 +65,16 @@ public class ProcesosReq extends HttpServlet {
         //Comentarios 
         String accion = request.getParameter("accion");
         boolean estado = false;
-        if (accion.equals("newMessage")) {
-            estado = sendMesagge(request, response);
-        } else if (accion.equals("deleteDetalle")) {
-            estado = deleteDetalleFromDB(request, response);
-        } else if (accion.equals("deleteEnlace")) {
-            estado = deleteLink(request, response);
+        switch(accion){
+            case "newMessage":
+                estado = sendMesagge(request, response);
+                break;
+            case "deleteDetalle":
+                estado = deleteDetalleFromDB(request, response);
+                break;
+            case "deleteEnlace":
+                estado = deleteLink(request, response);
+                break;
         }
 
         if (estado) {
@@ -74,7 +82,6 @@ public class ProcesosReq extends HttpServlet {
         } else {
             response.getWriter().print("false");
         }
-
     }
 
     private boolean deleteDetalleFromDB(HttpServletRequest request, HttpServletResponse response) {

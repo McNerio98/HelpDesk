@@ -157,8 +157,12 @@ public class Requisiciones extends HttpServlet {
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
 
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             RequisicionPago rg = Operaciones.get(Integer.parseInt(idRequisicion), new RequisicionPago());
             rg.setTotal(montoTotal);
+            rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
+            rg.setPrioridad(Integer.parseInt(prioridad));
+            rg.setaNombre(anombre);
             rg = Operaciones.actualizar(rg.getIdRequisicion(), rg);
 
             //Actualizando detalles 

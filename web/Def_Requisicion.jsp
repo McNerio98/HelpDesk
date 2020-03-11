@@ -45,18 +45,20 @@
                     <div class="row">
                         <div class="col-md-8 border-right">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-7">
                                     <p class="text-center">
                                         <strong>Datos Generales</strong>
-                                    </p>                                  
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha: <span class="text-custom1">${generalData.fecha}</span> </label>
+                                    </p>
+                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> A nombre de: <span class="text-custom1">${pg.aNombre}</span> </label>
+                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha estimada: <span class="text-custom1"><fmt:formatDate value="${pg.fechaEstimada}" pattern="dd/MM/yyyy"/></span> </label>
+                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha creacion: <span class="text-custom1">${generalData.fecha}</span> </label>
                                     <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Empresa: <span class="text-custom1">${generalData.empresa}</span> </label>
                                     <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Departamento: <span class="text-custom1">${generalData.depto}</span></label>
                                     <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Solicitante: <span class="text-custom1">${generalData.solicitante}</span></label>
                                     <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Autorizador: <span class="text-custom1">${generalData.superior}</span></label>                      
                                     <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Contador: <span class="text-custom1">${generalData.contador}</span></label>                                          
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
                                         <h5 class="description-header text-success">ESTADO</h5>
                                         <span class="description-text">${generalData.estado}</span>
@@ -85,6 +87,12 @@
                                             <i class="fas fa-sync"></i>
                                             Recargar
                                         </button>
+                                        <c:if test="${pg.estado == 3 && (pg.idAutorizador == idUsuario || pg.idContador == idUsuario)}">
+                                            <a href="" class="btn btn-warning" id="openPDFModal" class="openPDFModal">
+                                                <i class="fas fa-file-pdf"></i>
+                                                Generar PDF
+                                            </a>
+                                        </c:if>
                         </div>
                         <div class="col-md-4">
                             <div class="card card-sucress cardutline direct-chat direct-chat-success">
@@ -144,12 +152,6 @@
 
                         </div>
                     </div>
-                    <c:if test="${idReqForPDF!=null}">
-                        <div id="viewReportPDF">
-                            <iframe  src="${pageContext.servletContext.contextPath}/RequisicionPDF" frameborder="0" width="100%" height="500" id="pnlLoadPDF"></iframe>
-                        </div>                                            
-                    </c:if>
-
                 </div>
 
 

@@ -125,7 +125,7 @@ public class DataList {
             params.add(idReq);
             params.add(idReq);
 
-            String cmd = "select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd-MM-yyyy HH:MI') fecha, \n"
+            String cmd = "select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd/MM/yyyy HH:MI AM') fecha, \n"
                     + "rg.total, rg.estado, e.nombre, d.deptoname, (select concat(u2.firstname,' ', u2.lastname) from users u2, \n"
                     + "requisicionespagos rg2 where rg2.idautorizador = u2.iduser and rg2.idrequisicion =?) Superior, \n"
                     + "(select concat(u3.firstname,' ', u3.lastname) from users u3,requisicionespagos rg3 \n"
