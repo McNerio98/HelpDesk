@@ -310,7 +310,13 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
                 
                 case "loadAll":{
-                    out.print("Hello world");
+                    if(rol == Enums.ROL.LIDER_REQ){
+                        
+                        request.getRequestDispatcher("allRequisicion.jsp").forward(request, response);
+                    }else{
+                        response.sendRedirect("./Principal");
+                    }
+                    
                     break;
                 }
                 
