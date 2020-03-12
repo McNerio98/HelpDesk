@@ -363,6 +363,8 @@ public class DataList {
         list = receptor.getIncidenciaSolicitada();
         return list;
     }
+    
+    
 
     public static boolean permisosSobreRequisicion(int idReq, HttpSession sesion) {
         boolean grant = false;

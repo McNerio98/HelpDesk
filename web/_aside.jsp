@@ -80,7 +80,7 @@
                         <li class="nav-item has-treeview pb-1">
                             <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion?accion=loadAll" class="nav-link">
                                 <p>
-                                    Aceptadas por otros lideres
+                                    Requisiciones en general
                                      <!--<span class="badge badge-light right">4</span>-->
 <!--                                    <i class="fas fa-arrow-right right"></i>-->
                                     

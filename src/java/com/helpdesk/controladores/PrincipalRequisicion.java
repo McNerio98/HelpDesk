@@ -125,7 +125,7 @@ public class PrincipalRequisicion extends HttpServlet {
                 } else {
                     listData = null;
                 }
-             
+
                 s.setAttribute("ListEmpresas", listData);
                 s.setAttribute("listBaja", (ArrayList<RequisicionPago>) dataobject.get(0));
                 s.setAttribute("listMedia", (ArrayList<RequisicionPago>) dataobject.get(1));
@@ -292,8 +292,8 @@ public class PrincipalRequisicion extends HttpServlet {
                     ArrayList<Departamento> listDepto = DataList.getDeptosByEmpresa(idemp);
                     Departamento depto = new Departamento();
                     Empresa emp = new Empresa();
-                    for(int i=0;i<listemp.size();i++){
-                        if(listemp.get(i).getIdEmpresa() == idemp){
+                    for (int i = 0; i < listemp.size(); i++) {
+                        if (listemp.get(i).getIdEmpresa() == idemp) {
                             emp = listemp.get(i);
                             break;
                         }
@@ -308,12 +308,90 @@ public class PrincipalRequisicion extends HttpServlet {
                     request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
                     break;
                 }
-                
-                case "loadAll":{
-                    out.print("Hello world");
+
+                case "loadAll": {
+                    String op = request.getParameter("opcion");
+
+                    if (rol == Enums.ROL.LIDER_REQ) {
+                        if (op == null) {
+                            request.setAttribute("listRequisiciones", (r.getRequisicionByStatusByEmpresas(0, r.idemp, 2)));
+                            request.setAttribute("processDiv", (r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.REVISION, r.idemp, 1)));
+                            request.setAttribute("pendingDiv", (r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.ACEPTADA, r.idemp, 1)));
+                            request.setAttribute("finishDiv", (r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.FINALIZADA, r.idemp, 1)));
+
+                            request.getRequestDispatcher("allRequisicion.jsp").forward(request, response);
+                        } else {
+                            switch (op) {
+                                case "todas": {
+                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(0, r.idemp, 2);
+                                    ArrayList<DataRequisicion> data = new ArrayList<>();
+                                    if (list != null) {
+                                        for (int i = 0; i < list.size(); i++) {
+                                            data.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
+                                        }
+                                        String json = new Gson().toJson(data);
+                                        out.print(json);
+                                    } else {
+                                        out.print("null");
+                                    }
+
+                                    break;
+                                }
+                                case "revision": {
+                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.REVISION, r.idemp, 1);
+                                    ArrayList<DataRequisicion> data = new ArrayList<>();
+                                    if (list != null) {
+                                        for (int i = 0; i < list.size(); i++) {
+                                            data.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
+                                        }
+                                        String json = new Gson().toJson(data);
+                                        out.print(json);
+                                    } else {
+                                        out.print("null");
+                                    }
+                                    break;
+                                }
+                                case "aceptadas": {
+                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.ACEPTADA, r.idemp, 2);
+                                    ArrayList<DataRequisicion> data = new ArrayList<>();
+                                    if (list != null) {
+                                        for (int i = 0; i < list.size(); i++) {
+                                            data.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
+                                        }
+                                        String json = new Gson().toJson(data);
+                                        out.print(json);
+                                    } else {
+                                        out.print("null");
+                                    }
+                                    break;
+                                }
+                                case "finalizadas": {
+                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.FINALIZADA, r.idemp, 2);
+                                    ArrayList<DataRequisicion> data = new ArrayList<>();
+                                    if (list != null) {
+                                        for (int i = 0; i < list.size(); i++) {
+                                            data.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
+                                        }
+                                        String json = new Gson().toJson(data);
+                                        out.print(json);
+                                    } else {
+                                        out.print("null");
+                                    }
+                                    break;
+                                }
+                                default: {
+                                    out.print("not selected");
+                                    break;
+                                }
+                            }
+                        }
+
+                    } else {
+                        response.sendRedirect("./Principal");
+                    }
                     break;
                 }
-                
+
                 case "priority": {
                     String priority = request.getParameter("id");
                     ArrayList<Object> dataobject = r.getAllRequisicionesByContadorAndPriority();
@@ -436,13 +514,17 @@ public class PrincipalRequisicion extends HttpServlet {
             mainlist.add(listBaja);
             mainlist.add(listMedia);
             mainlist.add(listAlta);
+
         } catch (Exception ex) {
-            Logger.getLogger(PrincipalRequisicion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PrincipalRequisicion.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 Operaciones.cerrarConexion();
+
             } catch (SQLException ex1) {
-                Logger.getLogger(PrincipalRequisicion.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(PrincipalRequisicion.class
+                        .getName()).log(Level.SEVERE, null, ex1);
             }
         }
         return mainlist;
@@ -466,14 +548,18 @@ public class PrincipalRequisicion extends HttpServlet {
                 }
             } else {
                 list = null;
+
             }
         } catch (Exception ex) {
-            Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DataList.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 Operaciones.cerrarConexion();
+
             } catch (SQLException ex1) {
-                Logger.getLogger(DataList.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(DataList.class
+                        .getName()).log(Level.SEVERE, null, ex1);
             }
         }
 

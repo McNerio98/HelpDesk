@@ -58,6 +58,37 @@ function getReq(opc) {
 
 var root = document.getElementById("path");
 
+function load(opc) {
+
+    switch (opc) {
+        case 1:
+        {
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=loadAll&opcion=todas");
+
+            break;
+        }
+        case 2:
+        {
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=loadAll&opcion=revision");
+            break;
+        }
+        case 3:
+        {
+            
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=loadAll&opcion=aceptadas");
+            break;
+        }
+        case 4:
+        {
+
+            displayDataTables(root.value + "/PrincipalRequisicion?accion=loadAll&opcion=finalizadas");
+            break;
+        }
+
+    }
+}
+
+
 function getRequisiciones(opc) {
 
     switch (opc) {

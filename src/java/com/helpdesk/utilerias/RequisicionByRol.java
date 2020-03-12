@@ -28,7 +28,7 @@ public class RequisicionByRol {
     private int iduser;
     private int idrol;
     private int iddepto;
-    private int idemp;
+    public int idemp;
 
     public RequisicionByRol(int id) {
         try {
@@ -49,6 +49,24 @@ public class RequisicionByRol {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex2);
             }
         }
+    }
+    
+    /*Funcion para filtrar los estados de las requisiciones por empresa*/
+    
+    public  ArrayList<RequisicionPago> getRequisicionByStatusByEmpresas(int status, int idemp, int idcase){
+        ArrayList<RequisicionPago> list = new ArrayList<>();
+        String query = "select idrequisicion from requisicionespagos where idempresa = " + idemp + " and estado=" + status;
+        String query2 = "select idrequisicion from requisicionespagos where idempresa = " + idemp;
+        switch(idcase){
+            case 1:{
+                list = this.listRequisicion(query, null);
+                break;
+            }
+            case 2:{
+                list = this.listRequisicion(query2, null);
+            }
+        }
+        return list;
     }
 
     public ArrayList<RequisicionPago> getRequisicionByStatus(int id) {
@@ -78,6 +96,8 @@ public class RequisicionByRol {
         return list;
     }
 
+    
+    
 
     public ArrayList<Object> getAllRequisicionesByContadorAndPriority() {
         ArrayList<Object> mainlist = new ArrayList<>();
