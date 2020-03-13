@@ -238,6 +238,7 @@ public class Login extends HttpServlet {
                 String req = request.getParameter("requisicion");
                 boolean userReq = (req != null && req.equals("true")) ? true : false;
                 String empresa = request.getParameter("empresa");
+                String empresas[] = request.getParameterValues("empresa2");
 
                 Usuario u = new Usuario();
 
@@ -268,6 +269,19 @@ public class Login extends HttpServlet {
                         urb.setIdUsuario(u.getIdUser());
                         urb.setIdEmpresa(Integer.parseInt(empresa));
                         urb = Operaciones.insertar(urb);
+                        
+                        
+                        if (empresas != null) {
+                            for (int i = 0; i < empresas.length; i++) {
+                                if (!empresas[i].equals("0")) {
+                                    UsuarioReqByEmpresa x = new UsuarioReqByEmpresa();
+                                    x.setIdUsuario(u.getIdUser());
+                                    x.setIdEmpresa(Integer.parseInt(empresas[i]));
+                                    x = Operaciones.insertar(x);
+                                }
+                            }
+                            
+                        }
 
                     } else {
                         u = Operaciones.insertar(u);
@@ -304,7 +318,7 @@ public class Login extends HttpServlet {
             case "consultar_usuario": {
                 response.setContentType("text/plain");
                 String userName = request.getParameter("usName");
-                
+
                 if (verificarUsuario(userName.toUpperCase())) {
                     out.print("true");
                 } else {
@@ -315,7 +329,7 @@ public class Login extends HttpServlet {
             case "consultar_correo": {
                 response.setContentType("text/plain");
                 String em = request.getParameter("usEmail");
-                
+
                 if (verificarCorreo(em)) {
                     out.print("true");
                 } else {
