@@ -45,10 +45,6 @@ public class ProcesosReq extends HttpServlet {
         } else {
             boolean seteado = this.setProceso(request, response);
             if (seteado) {
-                if (request.getSession().getAttribute("idReqForPDF") != null) {
-                    request.getRequestDispatcher("viewRequisicionPDF.jsp").forward(request, response);
-                    return;
-                }
                 request.getSession().setAttribute("resultado", 1);
             } else {
                 request.getSession().setAttribute("resultado", 2);
@@ -142,6 +138,7 @@ public class ProcesosReq extends HttpServlet {
     private boolean sendMesagge(HttpServletRequest request, HttpServletResponse response) {
         boolean status = false;
         String contenido = request.getParameter("msg");
+        String tipo = request.getParameter("tipo");
         String idReq = request.getParameter("idReq");
         Integer idHolder = (Integer) request.getSession().getAttribute("idUsuario");
 
@@ -152,13 +149,21 @@ public class ProcesosReq extends HttpServlet {
             Operaciones.iniciarTransaccion();
             RequisicionPago rg = Operaciones.get(Integer.parseInt(idReq), new RequisicionPago());
 
-            if (rg.getIdAutorizador() == idHolder || rg.getIdCreador() == idHolder) { //solo el lider y el receptor pueden comentar 
+            if (rg.getIdAutorizador() == idHolder || rg.getIdCreador() == idHolder || rg.getIdContador() == idHolder) { //solo el lider,receptor y contador pueden comentar 
                 Comentario com = new Comentario();
                 com.setContenido(contenido);
                 com.setIdCreador(idHolder);
                 com.setIdRequisicion(Integer.parseInt(idReq));
                 com.setFecha(new Timestamp(System.currentTimeMillis()));
-
+                
+                
+                int tipoMsg = Integer.parseInt(tipo);
+                if(tipoMsg == Enums.TIPO_COMENTARIO.NOTIFICACION){
+                    com.setTipo(Enums.TIPO_COMENTARIO.NOTIFICACION);
+                }else if(tipoMsg == Enums.TIPO_COMENTARIO.CHAT){
+                    com.setTipo(Enums.TIPO_COMENTARIO.CHAT);
+                    //Aqui se manda la notificacion
+                }
                 com = Operaciones.insertar(com);
                 Operaciones.commit();
                 status = true;
@@ -245,7 +250,6 @@ public class ProcesosReq extends HttpServlet {
                 }
                 case Enums.ESTADO_REQ.ACEPTADA: {
                     if (myRol == 6 && pg.getIdAutorizador() != null && pg.getIdAutorizador() == myIdUsuario && pg.getEstado() == Enums.ESTADO_REQ.REVISION) {
-                        request.getSession().setAttribute("idReqForPDF", pg.getIdRequisicion());
                         pg.setEstado(nuevoEstado);
                         Date dt = new Date();
                         pg.setFechaAprovacion(new Timestamp(dt.getTime()));

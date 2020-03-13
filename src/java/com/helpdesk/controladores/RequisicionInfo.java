@@ -101,11 +101,12 @@ public class RequisicionInfo extends HttpServlet {
         String accion = request.getParameter("accion");
         String idRequisicion = request.getParameter("idReq");
         
+        //Peticiones Ajax 
         if (accion == null || idRequisicion == null) {
             response.sendRedirect("PrincipalRequisicion");
         } else if (accion.equals("getAllMsg")) {
             //Obtener array con mensajes
-            ArrayList<DataComentario> listMessages = getAllComentarios(Integer.parseInt(idRequisicion));
+            ArrayList<DataComentario> listMessages = getAllComentarios(Integer.parseInt(idRequisicion), Enums.TIPO_COMENTARIO.CHAT);
             request.setAttribute("listMessages", listMessages);
             request.getRequestDispatcher("_loadChat.jsp").forward(request, response);
         } else if (accion.equals("loadDetalles")) {
@@ -118,19 +119,32 @@ public class RequisicionInfo extends HttpServlet {
             request.setAttribute("LstEnlaces", LstEnlaces);
             request.getRequestDispatcher("components/_listEnlaces.jsp").forward(request, response);
             
+        } else if(accion.equals("getAllComents")){
+            ArrayList<DataComentario> listComents = getAllComentarios(Integer.parseInt(idRequisicion), Enums.TIPO_COMENTARIO.NOTIFICACION);
+            request.setAttribute("listComents", listComents);
+            request.getRequestDispatcher("components/_loadComentarios.jsp").forward(request, response);
         }
     }
     
-    private ArrayList<DataComentario> getAllComentarios(Integer idReq) {
+    private ArrayList<DataComentario> getAllComentarios(Integer idReq, Integer tipo) {
         ArrayList<DataComentario> ListaMsg = new ArrayList<DataComentario>();
         try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
+            
             String cmd = "select concat(u.firstname,' ',u.lastname) titular,to_char(c.fecha,'dd-MM-yyyy HH:MI AM'), \n"
                     + "c.contenido msg,u2.idrol from comentarios c inner join users u on u.iduser = c.idcreador \n"
                     + "inner join usuariosrequisicion u2 on u2.idusuario = c.idcreador \n"
-                    + "where c.idrequisicion = ? order by c.idcomentario asc ";
+                    + "where c.idrequisicion = ? and c.tipo = 1 order by c.idcomentario asc ";
+            
+            if(tipo == Enums.TIPO_COMENTARIO.NOTIFICACION){
+                 cmd = "select concat(u.firstname,' ',u.lastname) titular,to_char(c.fecha,'dd-MM-yyyy HH:MI AM'), \n"
+                    + "c.contenido msg,u2.idrol from comentarios c inner join users u on u.iduser = c.idcreador \n"
+                    + "inner join usuariosrequisicion u2 on u2.idusuario = c.idcreador \n"
+                    + "where c.idrequisicion = ? and c.tipo = 2 order by c.idcomentario asc ";            
+            }
+            
             List<Object> params = new ArrayList();
             params.add(idReq);
             
@@ -161,6 +175,7 @@ public class RequisicionInfo extends HttpServlet {
         
         return ListaMsg;
     }
+    
     
     private RequisicionPago getRequisicion(Integer idRequisicion) {
         RequisicionPago pg = new RequisicionPago();

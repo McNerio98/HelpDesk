@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:if test="${listMessages != null}">
-    <div id="panelChat" class="direct-chat-messages" style="height: 100% !important; overflow: overflow-y;">
+    <div id="panelChat" class="direct-chat-messages" style="height: 100% !important; overflow-y: auto;">
         <c:forEach var="com" items="${listMessages}">
             <!--Definiendo el estilo-->
             <c:choose>
@@ -15,7 +15,7 @@
             </c:choose>
 
 
-            <div class="direct-chat-msg ${flot}">
+            <div class="direct-chat-msg typeChats ${flot}">
 
                 <div class="direct-chat-infos clearfix">
                     <c:choose>

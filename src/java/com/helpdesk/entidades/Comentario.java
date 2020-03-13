@@ -28,6 +28,8 @@ public class Comentario {
     private int idCreador;
     @NotNull
     private int idRequisicion;
+    @NotNull
+    private int tipo;
 
     public Comentario() {
     }
@@ -71,5 +73,15 @@ public class Comentario {
     public void setIdRequisicion(int idRequisicion) {
         this.idRequisicion = idRequisicion;
     }   
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+    
+    
     
 }

@@ -38,41 +38,9 @@
 
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Informacion</h5>
-                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8 border-right">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <p class="text-center">
-                                        <strong>Datos Generales</strong>
-                                    </p>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> A nombre de: <span class="text-custom1">${pg.aNombre}</span> </label>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha estimada: <span class="text-custom1"><fmt:formatDate value="${pg.fechaEstimada}" pattern="dd/MM/yyyy"/></span> </label>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha creacion: <span class="text-custom1">${generalData.fecha}</span> </label>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Empresa: <span class="text-custom1">${generalData.empresa}</span> </label>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Departamento: <span class="text-custom1">${generalData.depto}</span></label>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Solicitante: <span class="text-custom1">${generalData.solicitante}</span></label>
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Autorizador: <span class="text-custom1">${generalData.superior}</span></label>                      
-                                    <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Contador: <span class="text-custom1">${generalData.contador}</span></label>                                          
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
-                                        <h5 class="description-header text-success">ESTADO</h5>
-                                        <span class="description-text">${generalData.estado}</span>
-                                    </div>                    
-                                    <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
-                                        <h5 class="description-header text-success">Monto Total</h5>
-                                        <span class="description-text">$ ${generalData.montoTotal}</span>
-                                    </div>                    
-                                    <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
-                                        <h5 class="description-header text-success">Prioridad</h5>
-                                        <span class="description-text">${generalData.prioridad}</span>
-                                    </div>                                                            
-                                </div>
-                            </div>
                             <p class="text-center">
                                 <strong>Detalles de Requisicion</strong>
                             </p>                    
@@ -83,178 +51,114 @@
                                 <strong>Seccion de Enlaces / Documentos</strong>
                             </p>                            
                             <div id="pnlEnlaces" style="max-height: 400px; overflow-y: auto;"></div>
-                                        <button class="btn btn-warning" id="reloadDetail">
-                                            <i class="fas fa-sync"></i>
-                                            Recargar
-                                        </button>
-                                        <c:if test="${pg.estado == 3 && (pg.idAutorizador == idUsuario || pg.idContador == idUsuario)}">
-                                            <a href="" class="btn btn-warning" id="openPDFModal" class="openPDFModal">
-                                                <i class="fas fa-file-pdf"></i>
-                                                Generar PDF
-                                            </a>
-                                        </c:if>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card card-sucress cardutline direct-chat direct-chat-success">
-                                <div class="card-header">
-                                    <h3 class="card-title">Chat </h3>
-
-                                    <div class="card-tools">
-                                        <span data-toggle="tooltip" title="Mensajes Nuevos" class="badge bg-success" id="countMessages">0</span>
-
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body" style="height: 400px;" id="bodyMesagges">
-                                    <div class="cnt-loading">
-                                        <div class="spinner-border" role="status" style="width: 4rem !important; height: 4rem !important;">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>                                        
-                                    </div>
-                                </div>
-                                <!-- /.card-body -->
-                                <c:if  test="${(pg.idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
-                                    <div class="card-footer">
-                                        <form action="#" method="post" id="formMesagges">
-                                            <div class="input-group">
-                                                <input type="text" name="message" placeholder="Escribir mensaje..." class="form-control" id="txtContentMsg" maxlength="50">
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-success" id="btnSendMsg">Enviar</button>
-                                                </span>
-                                            </div>
-                                        </form>
-                                    </div>                                    
-                                </c:if>
-                                <!-- /.card-footer-->
-                            </div>
-
-                            <div style="text-align: right;">
-
-                                
+                            <div>
+                                <a class="btn btn-app" id="reloadDetail">
+                                    <i class="fas fa-sync"></i> Recargar
+                                </a>                                
                                 <c:choose>
                                     <c:when test = "${(pg.idCreador == idUsuario) && (pg.estado == 1 || pg.estado == 2)}">
-                                        <a href="${pageContext.servletContext.contextPath}/RequisicionInfo?accion=update&idReq=${idReq}" class="btn btn-warning">Modificar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/RequisicionInfo?accion=update&idReq=${idReq}" class="btn btn-app text-dark">
+                                            <i class="fas fa-edit"></i>
+                                            Modificar
+                                        </a>
                                     </c:when>
                                     <c:when test = "${Rol == 6 && pg.estado == 1}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=revision" class="btn btn-warning">Revision</a>
-                                        <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=revision" class="btn btn-app text-dark">
+                                            <i class="fas fa-eye"></i>
+                                            Revision
+                                        </a>
                                     </c:when>
                                     <c:when test = "${Rol == 6 && pg.estado == 2 && pg.idAutorizador == idUsuario}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=conceder" class="btn btn-warning">Conceder</a>
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=denegar" class="btn btn btn-dark">Denegar</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=conceder" class="btn btn-app text-dark">
+                                            <i class="fas fa-location-arrow"></i>
+                                            Conceder
+                                        </a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=denegar" class="btn btn-app text-dark">
+                                            <i class="far fa-hand-paper"></i>
+                                            Denegar
+                                        </a>
                                     </c:when>
                                     <c:when test = "${Rol == 9 && pg.estado == 3 && pg.idContador == idUsuario}">
-                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=cerrar" class="btn btn-warning">Finalizar</a>
-                                        <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn btn-dark">Volver</a>
+                                        <a href="${pageContext.servletContext.contextPath}/ProcesosReq?idReq=${idReq}&accion=cerrar" class="btn btn-app text-dark">
+                                            <i class="fas fa-calendar-check"></i>
+                                            Finalizar
+                                        </a>
                                     </c:when>                                        
+                                    <c:when test = "${pg.estado == 3 && (pg.idAutorizador == idUsuario || pg.idContador == idUsuario)}">
+                                        <a class="btn btn-app openPDFModal text-dark" id="btnPDFModal">
+                                            <i class="fas fa-file-pdf"></i>
+                                            <span id="txtMotionPDF">Generar PDF</span> 
+                                        </a>
+                                    </c:when>                                                                                
                                 </c:choose>
-                            </div>            
+                                <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion" class="btn btn-app text-dark">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Volver
+                                </a>                                
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+
+                            <div class="col">
+                                <p class="text-center">
+                                    <strong>Datos Generales</strong>
+                                </p>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> A nombre de: <span class="text-custom1">${pg.aNombre}</span> </label>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha estimada: <span class="text-custom1"><fmt:formatDate value="${pg.fechaEstimada}" pattern="dd/MM/yyyy"/></span> </label>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Fecha creacion: <span class="text-custom1">${generalData.fecha}</span> </label>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Empresa: <span class="text-custom1">${generalData.empresa}</span> </label>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Departamento: <span class="text-custom1">${generalData.depto}</span></label>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Solicitante: <span class="text-custom1">${generalData.solicitante}</span></label>
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Autorizador: <span class="text-custom1">${generalData.superior}</span></label>                      
+                                <label class="d-block col-form-label p-0" for="inputSuccess"><i class="fas fa-check"></i> Contador: <span class="text-custom1">${generalData.contador}</span></label>                                          
+                            </div>
+                            <div class="col">
+                                <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
+                                    <h5 class="description-header text-success">ESTADO</h5>
+                                    <span class="description-text">${generalData.estado}</span>
+                                </div>                    
+                                <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
+                                    <h5 class="description-header text-success">Monto Total</h5>
+                                    <span class="description-text">$ ${generalData.montoTotal}</span>
+                                </div>                    
+                                <div class="description-block  border-bottom mb-1 rounded" style="background-color:rgba(0,0,0,.03);">
+                                    <h5 class="description-header text-success">Prioridad</h5>
+                                    <span class="description-text">${generalData.prioridad}</span>
+                                </div>                                                            
+                            </div>
+
 
                         </div>
                     </div>
+                    <%@include file="components/_ChatNnotificacion.jsp"%>
+
+                    <div class="modal fade modalForPDF" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalForPDF">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                   <iframe frameborder="0" width="100%" height="500" id="pnlLoadPDF"></iframe> 
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>  
+
                 </div>
-
-
             </div>          
-        </div>        
+        </div>
 
-
-        <!-- /.No quitar esto, copiar en todos los demas -->          
+        <input type="hidden" value="${pageContext.servletContext.contextPath}" id="contextoApp">
+        <input type="hidden" value="${idReq}" id="idRequisicion">
     </div>
-    <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
 <script src="plugins/jquery/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        function refreshMessages() {
-            $.ajax({
-                type: 'POST',
-                url: '${pageContext.servletContext.contextPath}/RequisicionInfo?accion=getAllMsg' + '&idReq=' + ${idReq},
-                success: function (result) {
-                    $('#bodyMesagges').html(result);
-                    $('#panelChat').scrollTop($('#panelChat').prop('scrollHeight'));
-                    $('#countMessages').text($('.direct-chat-msg').length);
+<script src="js/operacionesDefinicionReq.js"></script>
 
-                }
-            });
-        }
-
-        refreshMessages();
-        setInterval(refreshMessages,30000); //Cada 30 segundos
-
-
-        
-        function refreshDetail() {
-            $.ajax({
-                type: 'POST',
-                url: "${pageContext.servletContext.contextPath}/RequisicionInfo?accion=loadDetalles&idReq=${idReq}",
-                success: function (result) {
-                    $('#pnlRegistros').html(result);
-                }
-            });
-        }
-        
-
-        
-        function refreshLinks() {
-            $.ajax({
-                type: 'POST',
-                url: "${pageContext.servletContext.contextPath}/RequisicionInfo?accion=loadLinks&idReq=${idReq}",
-                success: function (result) {
-                    $('#pnlEnlaces').html(result);
-                }
-            });
-        }
-        
-        refreshDetail();
-        refreshLinks();        
-        
-        $('#reloadDetail').click(function(){
-            refreshDetail();
-            refreshLinks();
-        });
-        
-        function sendMessage() {
-            let contentMsg = $('#txtContentMsg').val();
-            $.ajax({
-                type: 'POST',
-                data: {msg: contentMsg},
-                url: '${pageContext.servletContext.contextPath}/ProcesosReq?accion=newMessage' + '&idReq=' + ${idReq},
-                success: function (result) {
-                    if (result == 'true') {
-                        refreshMessages();
-                        $('#txtContentMsg').val("");
-                    } else {
-                        console.log("ERROR en envio de mensaje");
-                    }
-                }
-            });
-        }
-
-        function enviarNewMesagge() {
-            let contentMsg = $('#txtContentMsg').val();
-            if (contentMsg.length == 0) {
-                alert("No hay mensajes");
-            } else {
-                sendMessage();
-            }
-        }
-
-        $('#btnSendMsg').click(enviarNewMesagge);
-        
-        
-        $('#formMesagges').submit(function(e){
-            e.preventDefault();
-            enviarNewMesagge();
-        });
-
-
-
-    });
-
-
-
-
-</script>
 <%@include file="_endPanel.jsp" %>
