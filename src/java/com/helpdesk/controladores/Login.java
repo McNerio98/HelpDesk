@@ -80,6 +80,7 @@ public class Login extends HttpServlet {
         } else if (accion.equals("recover")) {
             String opc = request.getParameter("opc");
             HttpSession s = request.getSession();
+            PrintWriter out = response.getWriter();
 
             switch (opc) {
 
@@ -92,7 +93,6 @@ public class Login extends HttpServlet {
                 //cuando se capta el correo y se le envia un link con una key hash al mismo
                 case "49381d2042ac93bb15942ecc3b2c1830d29ecdfa": {
                     String email = request.getParameter("email");
-                    PrintWriter out = response.getWriter();
                     if (!email.equals("")) {
                         if (this.verificarCorreo(email)) {
                             String key = this.generateRamdonString();
@@ -269,8 +269,7 @@ public class Login extends HttpServlet {
                         urb.setIdUsuario(u.getIdUser());
                         urb.setIdEmpresa(Integer.parseInt(empresa));
                         urb = Operaciones.insertar(urb);
-                        
-                        
+
                         if (empresas != null) {
                             for (int i = 0; i < empresas.length; i++) {
                                 if (!empresas[i].equals("0")) {
@@ -280,7 +279,7 @@ public class Login extends HttpServlet {
                                     x = Operaciones.insertar(x);
                                 }
                             }
-                            
+
                         }
 
                     } else {
@@ -315,6 +314,26 @@ public class Login extends HttpServlet {
                 iniciarSesion(request, response);
                 break;
             }
+            case "verificarRequisitor": {
+                String cuenta = request.getParameter("cuenta");
+                if (this.verifyUserIsRequisitor(cuenta) != null) {
+                    String json = new Gson().toJson(this.verifyUserIsRequisitor(cuenta));
+                    out.print(json);
+                } else {
+                    out.print("");
+                }
+                break;
+            }
+            case "entrarReq": {
+                String emp = request.getParameter("idempReq");
+                if (emp != null) {
+                    HttpSession s = request.getSession();
+                    s.setAttribute("empReq", Integer.parseInt(emp));
+                }
+
+                iniciarSesion(request, response);
+                break;
+            }
             case "consultar_usuario": {
                 response.setContentType("text/plain");
                 String userName = request.getParameter("usName");
@@ -340,6 +359,51 @@ public class Login extends HttpServlet {
 
         }
 
+    }
+
+    private ArrayList<Empresa> verifyUserIsRequisitor(String cuenta) {
+        ArrayList<Empresa> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        params.add(cuenta);
+        params.add(cuenta);
+        String query = "select a.idusuario\n"
+                + "from usuariosrequisicion a, users b\n"
+                + "where \n"
+                + "a.idusuario=b.iduser and \n"
+                + "(b.username = ?  or b.email = ?) and a.idrol = 7;";
+        String query2 = "select idempresa from usuarioreqbyempresas where idusuario=?";
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+
+            String array[][] = Operaciones.consultar(query, params);
+
+            if (array != null) {
+                List<Object> params2 = new ArrayList<>();
+                params2.add(Integer.parseInt(array[0][0]));
+                String array2[][] = Operaciones.consultar(query2, params2);
+                
+                for(int i = 0; i < array2[0].length; i++){
+                    Empresa emp = new Empresa();
+                    System.out.print(array2[0][i]);
+                    emp = Operaciones.get(Integer.parseInt(array2[0][i]), new Empresa());
+                    list.add(emp);
+                }
+
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+
+        return list;
     }
 
     private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) {

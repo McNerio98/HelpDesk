@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/estilo1.css">
         <link rel="stylesheet" href="css/estilo1.css">
-
+        <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     </head>
     <body>
         <nav class="navbar1 d-none d-md-block">
@@ -60,7 +60,7 @@
                         <span class="text-danger" id="alerEmpresa"></span>
                         <div class="form-row mt-3">
                             <div class="form-group col-md-6" id="pnlSelectEmpresa" style="display:none;">
-                                <label for="exampleFormControlSelect1">Empresa Asignada</label>
+                                <label for="exampleFormControlSelect1" data-toggle="tooltip" data-placement="top" title="Selecciona la empresa y el departamento en el perteneces">Empresa por defecto <i class="far fa-question-circle"></i></label>
                                 <select class="form-control" id="empresa" name="empresa">
                                     <option value="0">-- SELECIONAR EMPRESA --</option>
                                     <c:forEach var="Iterador" items="${EmpresasList}">
@@ -76,10 +76,21 @@
                                         <option value="${Iterador.getIdDepto()}">${Iterador.getDeptoName()}</option>
                                     </c:forEach>   
                                 </select>
-                            </div>                             
+                            </div>
+                            <div class="form-group col-md-12" id="pnlSelectEmpresa2" style="display:none;">
+                                <label for="exampleFormControlSelect1"  data-toggle="tooltip" data-placement="top" title="Puedes agregar mas empresas si necesitas hacer solicitudes de requisiciones para las que selecciones. Para seleccionar usa (CTRL + Clic)">Agregar mas empresas <i class="far fa-question-circle"></i></label>
+                                <select class="form-control" id="empresa2" name="empresa2" multiple size="3">
+                                    <option value="0">-- SELECIONAR EMPRESA --</option>
+                                    <c:forEach var="Iterador" items="${EmpresasList}">
+                                        <option value="${Iterador.getIdEmpresa()}">${Iterador.getNombre()}</option>
+                                    </c:forEach> 
+                                </select>
+
+                            </div>
                         </div>
                         <div class="custom-control custom-checkbox mr-sm-2 mb-3">
-                            <p class="text-danger text-center m-0 p-0"><b>Advertencia</b> la siguiente opcion es para usuarios exclusivamente de Requisicioes de Pago!</p>
+
+
                             <input class="custom-control-input" type="checkbox" name="requisicion" id="ifcheckbox" value="true">
                             <label class="custom-control-label" for="ifcheckbox">Requisicion Cheque</label>  
                         </div>                        
@@ -110,21 +121,49 @@
                 </div>
             </form>
         </div>
-                    
+
+        <!--Modal para informacion-->
+        <div id="modalsmall" class="modal fade bd-example-modal-sm" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Advertencia</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        La siguiente opcion es para registrarse como usuario requisicion,
+                        lo cual implica solicitar unicamente requisiciones de cheque y no
+                        para la gestion de incidencias.
+
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Entendido</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script>
-            var tags;
-            var jsonTags = [];
-            window.onload = function(){
-                 tags = comboboxdep.getElementsByTagName("option");
-                 for(var i=0;i<tags.length;i++){
-                     let jsonTemp = {id:tags[i].value,nombre:tags[i].label}
-                     jsonTags.push(jsonTemp);
-                 }
-            }
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
+                var tags;
+                var jsonTags = [];
+                window.onload = function () {
+                    tags = comboboxdep.getElementsByTagName("option");
+                    for (var i = 0; i < tags.length; i++) {
+                        let jsonTemp = {id: tags[i].value, nombre: tags[i].label}
+                        jsonTags.push(jsonTemp);
+                    }
+                }
                 function validar() {
                     var clave1 = document.getElementById("txtPassword");
                     var clave2 = document.getElementById("txtPassword2");
@@ -141,6 +180,7 @@
                 }
 
                 $(document).ready(function () {
+                    document.getElementById("empresa2").disabled = "true";
                     $('#txtUser').change(function () {
                         $.ajax({
                             type: 'POST',
@@ -177,24 +217,29 @@
 
                     $('#ifcheckbox').on('change', function () {
                         if ($(this).prop('checked')) {
-                            document.getElementById("btnSubmit").setAttribute("disabled","true");
-                            comboboxdep.setAttribute("disabled","true");
+                            $('#modalsmall').modal('show');
+                            document.getElementById("btnSubmit").setAttribute("disabled", "true");
+                            comboboxdep.setAttribute("disabled", "true");
                             $('#pnlSelectEmpresa').css('display', 'block');
+                            $('#pnlSelectEmpresa2').css('display', 'block');
                             $('#pnlSelectDepto').removeClass('col-md-12').addClass('col-md-6');
 
                         } else {
+                            document.getElementById("empresa2").disabled = "true";
+                            document.getElementById("empresa2").value = 0;
                             document.getElementById("btnSubmit").removeAttribute("disabled");
                             comboboxdep.innerHTML = "";
-                            for(var i=0;i<jsonTags.length;i++){
+                            for (var i = 0; i < jsonTags.length; i++) {
                                 comboboxdep.innerHTML += `
-                                    <option value="`+jsonTags[i].id+`">`+jsonTags[i].nombre+`</option>
-                                `; 
+                                    <option value="` + jsonTags[i].id + `">` + jsonTags[i].nombre + `</option>
+                                `;
                             }
-                            
+
                             combobox.getElementsByTagName("option")[0].selected = "selected";
-                            document.getElementById("alerEmpresa").innerHTML ="";
+                            document.getElementById("alerEmpresa").innerHTML = "";
                             comboboxdep.removeAttribute("disabled");
                             $('#pnlSelectEmpresa').css('display', 'none');
+                            $('#pnlSelectEmpresa2').css('display', 'none');
                             $('#pnlSelectDepto').removeClass('col-md-6').addClass('col-md-12');
                         }
                     })
@@ -203,43 +248,52 @@
         <script>
             var combobox = document.getElementById("empresa");
             var comboboxdep = document.getElementById("depto");
-            
-            
+            var comboboxemps = document.getElementById("empresa2");
+            var optionsemps = comboboxemps.getElementsByTagName("option");
 
             combobox.addEventListener("change", function () {
-                
-                
+
+                for (var i = 0; i < optionsemps.length; i++) {
+                    if (combobox.value == optionsemps[i].value) {
+                        optionsemps[i].style.display = "none";
+                    } else {
+                        optionsemps[i].style.display = "block";
+                    }
+                }
+
+                document.getElementById("empresa2").removeAttribute("disabled");
                 comboboxdep.removeAttribute("disabled");
-                document.getElementById("btnSubmit").setAttribute("disabled","true");
-                document.getElementById("alerEmpresa").innerHTML ="";
-                comboboxdep.setAttribute("disabled","true");
-                
-                fetch("${pageContext.servletContext.contextPath}/Login?accion=getDeptosByEmpresa&id="+combobox.value
-                )
+                document.getElementById("btnSubmit").setAttribute("disabled", "true");
+                document.getElementById("alerEmpresa").innerHTML = "";
+                comboboxdep.setAttribute("disabled", "true");
+
+                fetch("${pageContext.servletContext.contextPath}/Login?accion=getDeptosByEmpresa&id=" + combobox.value,{
+                    method: "POST"
+                })
                         .then((response) => response.text())
                         .then((responseText) => {
                             var json = JSON.parse(responseText);
                             console.log(json);
                             comboboxdep.innerHTML = "";
-                            if(json!=null){
+                            if (json != null) {
                                 comboboxdep.removeAttribute("disabled");
                                 document.getElementById("btnSubmit").removeAttribute("disabled");
-                                for(var i=0;i<json.length;i++){
-                                comboboxdep.innerHTML += `
-                                    <option value=`+json[i].idDepto+`>
-                                       `+json[i].deptoName+`
+                                for (var i = 0; i < json.length; i++) {
+                                    comboboxdep.innerHTML += `
+                                    <option value=` + json[i].idDepto + `>
+                                       ` + json[i].deptoName + `
                                     </option>
                                 `;
                                 }
-                            }else{
+                            } else {
                                 comboboxdep.innerHTML = "";
-                                comboboxdep.setAttribute("disabled","true");
-                                document.getElementById("btnSubmit").setAttribute("disabled","true");
-                                document.getElementById("alerEmpresa").innerHTML ="Esta empresa aun no tiene departamentos asignados";
+                                comboboxdep.setAttribute("disabled", "true");
+                                document.getElementById("btnSubmit").setAttribute("disabled", "true");
+                                document.getElementById("alerEmpresa").innerHTML = "Esta empresa aun no tiene departamentos asignados";
                             }
-                            
-                            
-                            
+
+
+
                         })
                         .catch((error) => {
                             console.log(error);

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.DetalleRequisicion;
+import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.Enlace;
 import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.entidades.Usuario;
@@ -77,8 +78,16 @@ public class Requisiciones extends HttpServlet {
                 DataRequisicion dr = new DataRequisicion();
                 dr.setFecha(rs[0][0]);
                 dr.setSolicitante(rs[1][0]);
-                dr.setEmpresa(rs[2][0]);
-                dr.setDepto(rs[3][0]);
+                if (request.getSession().getAttribute("empReq") != null) {
+                    int ide = (int) request.getSession().getAttribute("empReq");
+                    Empresa emx = Operaciones.get(ide, new Empresa());
+                    dr.setEmpresa(emx.getNombre());
+                    dr.setDepto("Requisicion Pago");
+                } else {
+                    dr.setEmpresa(rs[2][0]);
+                    dr.setDepto(rs[3][0]);
+                }
+
                 if (contador.getIdUser() != 0) {
                     dr.setContador(contador.getFirsName() + " " + contador.getLastName());
                 }
@@ -235,20 +244,28 @@ public class Requisiciones extends HttpServlet {
             Date dt = new Date();
             rg.setFecha(new Timestamp(dt.getTime()));
             rg.setEstado(Enums.ESTADO_REQ.SOLICITADA);
-            rg.setIdEmpresa(DataList.getIdEmpresa(idU));
-            rg.setIdDepto(DataList.getIdDepto(idU));
+            if (request.getSession().getAttribute("empReq") != null) {
+                int ide = (int) request.getSession().getAttribute("empReq");
+                
+                rg.setIdEmpresa(ide);
+                rg.setIdDepto(7);//se debe actualizar
+            } else {
+                rg.setIdEmpresa(DataList.getIdEmpresa(idU));
+                rg.setIdDepto(DataList.getIdDepto(idU));
+            }
+
             rg.setTotal(montoTotal);
             rg.setPrioridad(prioridad);
             rg.setIdContador(DataList.getIdContador(DataList.getIdEmpresa(idU)));
             rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
 
             rg = Operaciones.insertar(rg);
-            
+
             if (jsonLinks != null) {//Hay enlaces
                 List<Enlace> listEnlaces = objectMapper.readValue(jsonLinks, new TypeReference<List<Enlace>>() {
                 });
-                
-                for(int i=0;i<listEnlaces.size();i++){
+
+                for (int i = 0; i < listEnlaces.size(); i++) {
                     Enlace e = new Enlace();
                     e.setDescripcion(listEnlaces.get(i).getDescripcion());
                     e.setEnlace(listEnlaces.get(i).getEnlace());
