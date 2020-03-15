@@ -7,36 +7,40 @@
 $(document).ready(function () {
     //VARIABLES GLOBALES
     var contexto = $('#contextoApp').val();
-    var idReq = $('#idRequisicion').val();
+    var idRequisicion = $('#idRequisicion').val();
     var btnPDFModal = $('#btnPDFModal');
     var panelPDFModal = $('#pnlLoadPDF');
     var modalForPDF = $('#modalForPDF');
-    
-    
-    
+
+
+
 
 
     //DECLARACION DE FUNCIONES
-    
-    function PDFModal(){
-        $(panelPDFModal).attr('src',contexto+'/RequisicionPDF?idRequisicion='+idReq);
+
+    function reloadPage() {
+        window.location.reload(true);
+    }
+    ;
+
+    function PDFModal() {
+        $(panelPDFModal).attr('src', contexto + '/RequisicionPDF?idRequisicion=' + idRequisicion);
         $(modalForPDF).modal('show');
         $("#txtMotionPDF").text('Abrir PDF');
         $(btnPDFModal).off("click");
-        
-        $(btnPDFModal).on("click",function(){
+
+        $(btnPDFModal).on("click", function () {
             $(modalForPDF).modal('show');
         });
-        
+
     }
 
     //funciones para comentarios, notificaciones
     function refreshComentarios() {
-        console.log(contexto);
-        console.log(idReq);
         $.ajax({
             type: 'POST',
-            url: contexto + '/RequisicionInfo?accion=getAllComents&idReq=' + idReq,
+            data: {idReq: idRequisicion},
+            url: contexto + '/RequisicionInfo?accion=getAllComents',
             success: function (result) {
                 $('#bodyComentarios').html(result);
                 $('#panelComentarios').scrollTop($('#panelComentarios').prop('scrollHeight'));
@@ -49,14 +53,14 @@ $(document).ready(function () {
         let contentMsg = $('#txtContentComment').val();
         $.ajax({
             type: 'POST',
-            data: {msg: contentMsg, tipo: '2'},
-            url: contexto + '/ProcesosReq?accion=newMessage&idReq=' + idReq,
+            data: {msg: contentMsg, tipo: '2', idReq: idRequisicion},
+            url: contexto + '/ProcesosReq?accion=newMessage',
             success: function (result) {
                 if (result == 'true') {
                     refreshComentarios();
                     $('#txtContentComment').val("");
                 } else {
-                    console.log("ERROR en envio de comentario");
+                    reloadPage();
                 }
             }
         });
@@ -68,7 +72,6 @@ $(document).ready(function () {
             alert("No hay mensajes");
         } else {
             sendComment();
-            console.log("Enviando mensaje");
         }
     }
 
@@ -76,7 +79,8 @@ $(document).ready(function () {
     function refreshMessages() {
         $.ajax({
             type: 'POST',
-            url: contexto + '/RequisicionInfo?accion=getAllMsg&idReq=' + idReq,
+            data: {idReq: idRequisicion},
+            url: contexto + '/RequisicionInfo?accion=getAllMsg',
             success: function (result) {
                 $('#bodyMesagges').html(result);
                 $('#panelChat').scrollTop($('#panelChat').prop('scrollHeight'));
@@ -90,13 +94,14 @@ $(document).ready(function () {
         let contentMsg = $('#txtContentMsg').val();
         $.ajax({
             type: 'POST',
-            data: {msg: contentMsg, tipo: '1'},
-            url: contexto + '/ProcesosReq?accion=newMessage&idReq=' + idReq,
+            data: {msg: contentMsg, tipo: '1', idReq: idRequisicion},
+            url: contexto + '/ProcesosReq?accion=newMessage',
             success: function (result) {
                 if (result == 'true') {
                     refreshMessages();
                     $('#txtContentMsg').val("");
                 } else {
+                    reloadPage();
                     console.log("ERROR en envio de mensaje");
                 }
             }
@@ -119,7 +124,8 @@ $(document).ready(function () {
     function refreshDetail() {
         $.ajax({
             type: 'POST',
-            url: contexto + "/RequisicionInfo?accion=loadDetalles&idReq=" + idReq,
+            data: {idReq: idRequisicion},
+            url: contexto + "/RequisicionInfo?accion=loadDetalles",
             success: function (result) {
                 $('#pnlRegistros').html(result);
             }
@@ -130,7 +136,8 @@ $(document).ready(function () {
     function refreshLinks() {
         $.ajax({
             type: 'POST',
-            url: contexto + "/RequisicionInfo?accion=loadLinks&idReq=" + idReq,
+            data: {idReq: idRequisicion},
+            url: contexto + "/RequisicionInfo?accion=loadLinks",
             success: function (result) {
                 $('#pnlEnlaces').html(result);
             }
@@ -160,9 +167,19 @@ $(document).ready(function () {
         e.preventDefault();
         enviarNewComentario();
     });
-    
+
     $(btnPDFModal).click(PDFModal);
 
+    $('#pnlLoadPDF').on('load', function (e) {
+        $('#spinerLoadPDF').fadeOut("slow", function () {
+            $(e.target).css('display', 'block');
+        });
+    });
+    
+    $('#reloadDetail').click(function () {
+        refreshDetail();
+        refreshLinks();
+    });
 
 });
 

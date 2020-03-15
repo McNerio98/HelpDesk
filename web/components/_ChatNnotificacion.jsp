@@ -21,7 +21,7 @@
                     </div>                                        
                 </div>
             </div>
-            <c:if  test="${(pg.idAutorizador == idUsuario || pg.idCreador == idUsuario)&& pg.estado==2}">
+            <c:if  test="${(pg.idCreador == idUsuario || pg.idContador == idUsuario)&& pg.estado==3}">
                 <div class="card-footer">
                     <form action="#" method="post" id="formComment">
                         <div class="input-group">

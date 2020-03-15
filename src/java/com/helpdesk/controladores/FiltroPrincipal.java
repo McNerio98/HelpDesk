@@ -40,6 +40,18 @@ public class FiltroPrincipal implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        //Rutas de solicitudes ajax 
+        String routesAjax[]
+                = {
+                    "/RequisicionInfo?accion=getAllComents",
+                    "/ProcesosReq?accion=newMessage",
+                    "/RequisicionInfo?accion=getAllMsg",
+                    "/ProcesosReq?accion=newMessage",
+                    "/RequisicionInfo?accion=loadDetalles",
+                    "/RequisicionInfo?accion=loadLinks"
+                };
+        
+        
         ///BORRAR CACHE 
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Cache-Control", "no-store");
@@ -52,35 +64,32 @@ public class FiltroPrincipal implements Filter {
             return;
         }
 
-        if ((request.getSession().getAttribute("Usuario") !=null && request.getSession().getAttribute("idUsuario")!=null) || request.getRequestURI().equals(request.getContextPath() + "/Login")) {
+        if ((request.getSession().getAttribute("Usuario") != null && request.getSession().getAttribute("idUsuario") != null) || request.getRequestURI().equals(request.getContextPath() + "/Login")) {
             boolean encontrado = true;
             String url = request.getRequestURI().toString();
             String context = request.getContextPath();
 
-            
             String panelPrincipal = "";
-            
-            //Hasta aqui hay ya estan los datos en la sesion 
-            String tipoSesion = (String)request.getSession().getAttribute("typeSession");
-            panelPrincipal = (tipoSesion!=null && tipoSesion.equals("HD"))?"Principal":"PrincipalRequisicion";
 
-            if (request.getParameter("accion") == null && !url.equals("/"+panelPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Perfil") && !url.equals(context + "/RequisicionPDF")) {
-                
-               
+            //Hasta aqui hay ya estan los datos en la sesion 
+            String tipoSesion = (String) request.getSession().getAttribute("typeSession");
+            panelPrincipal = (tipoSesion != null && tipoSesion.equals("HD")) ? "Principal" : "PrincipalRequisicion";
+
+            if (request.getParameter("accion") == null && !url.equals("/" + panelPrincipal) && !url.equals(context + "/Login") && !url.equals(context + "/Perfil") && !url.equals(context + "/RequisicionPDF")) {
+
                 //Manejando controller unicos y que no estan en los menus a partir del tipo de sesion 
                 List<Menu> permisos = (List<Menu>) request.getSession().getAttribute("MenuPrincipal");
-                
+
                 encontrado = false;
-                
-                if(tipoSesion.equals("HD") && url.equals(context + "/Informacion")){
-                   encontrado = true;
-                }else if(tipoSesion.equals("REQ") && url.equals(context + "/RequisicionInfo")){
-                   encontrado = true; 
+
+                if (tipoSesion.equals("HD") && url.equals(context + "/Informacion")) {
+                    encontrado = true;
+                } else if (tipoSesion.equals("REQ") && url.equals(context + "/RequisicionInfo")) {
+                    encontrado = true;
                 }
-                
-                
+
                 int cont = 0;
-                
+
                 while (cont < permisos.size() && !encontrado) {
                     String menu = context + permisos.get(cont).getController();
                     if (url.equals(menu)) {
@@ -97,7 +106,25 @@ public class FiltroPrincipal implements Filter {
             }
 
         } else {
-            response.sendRedirect("Login");
+            boolean isRequestAjax = false;
+            int contador = 0;
+            //Aqui valido todas las peticiones ajax para que no le devuelva el login             
+            while(contador < routesAjax.length && !isRequestAjax){
+                String acceso = request.getRequestURI();
+                if(acceso.equals(routesAjax[contador])){
+                    isRequestAjax = true;
+                }else{
+                    contador++;
+                }            
+            };
+            
+            if(isRequestAjax){
+                response.setContentType("text/plain");
+                response.getWriter().print("SessionIsOut");
+            }else{
+                response.sendRedirect("Login");
+            }
+
         }
 
     }

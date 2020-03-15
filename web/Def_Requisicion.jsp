@@ -143,7 +143,16 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                   <iframe frameborder="0" width="100%" height="500" id="pnlLoadPDF"></iframe> 
+                                    <div class="cnt-loading2" id="spinerLoadPDF">
+                                        <div class="spinner-border" role="status" style="width: 4rem !important; height: 4rem !important;">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-file-pdf"></i> <span>Cargando PDF...</span>
+                                        </div>
+                                    </div>
+
+                                    <iframe frameborder="0" width="100%" height="500" id="pnlLoadPDF" style="display:none;"></iframe> 
                                 </div>                                
                             </div>
                         </div>
@@ -160,5 +169,12 @@
 <!-- /.content -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <script src="js/operacionesDefinicionReq.js"></script>
+<script>
+    function showFramePDF(e) {
+        $(e).css('display', )
+    }
+    ;
+</script>
+
 
 <%@include file="_endPanel.jsp" %>
