@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073874d4-0576-43c2-beba-2a0b98a40d06">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="15"/>
-	<property name="ireport.y" value="297"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="361"/>
 	<parameter name="ID_Req" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["E:/Varios/Para Pasantias/Helpdesk/web/reportes/"]]></defaultValueExpression>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select to_char(rq.fecha,'dd-MM-yy HH:MI AM') fecha, e.nombre empresa, d.deptoname depto,
+		<![CDATA[select rq.anombre,to_char(rq.fecha,'dd-MM-yy HH:MI AM') fecha, e.nombre empresa, d.deptoname depto,
 concat(u1.firstname,' ',u1.lastname) solicitante, concat(u2.firstname,' ',u2.lastname) autorizador,
-to_char(rq.fechaaprovacion,'dd-MM-yy HH:MI AM') fechaAprov
+to_char(rq.fechaaprovacion,'dd-MM-yy HH:MI AM') fechaAprov, 
+concat(u3.firstname,' ',u3.lastname) contador
 , concat('$ ',rq.total) total 
 from requisicionespagos rq
 inner join empresas e on e.idempresa = rq.idempresa
 inner join departments d on d.iddepto = rq.iddepto
 inner join users u1 on u1.iduser = rq.idcreador
 inner join users u2 on u2.iduser = rq.idautorizador
-where idrequisicion = $P{ID_Req}::Integer;
-]]>
+inner join users u3 on u3.iduser = rq.idcontador 
+where idrequisicion = $P{ID_Req}::Integer;]]>
 	</queryString>
+	<field name="anombre" class="java.lang.String"/>
 	<field name="fecha" class="java.lang.String"/>
 	<field name="empresa" class="java.lang.String"/>
 	<field name="depto" class="java.lang.String"/>
 	<field name="solicitante" class="java.lang.String"/>
 	<field name="autorizador" class="java.lang.String"/>
 	<field name="fechaaprov" class="java.lang.String"/>
+	<field name="contador" class="java.lang.String"/>
 	<field name="total" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -110,25 +113,32 @@ where idrequisicion = $P{ID_Req}::Integer;
 				<reportElement x="130" y="97" width="423" height="1" uuid="b35b6535-3878-46c2-80e1-d243d8e107ec"/>
 			</line>
 			<textField>
-				<reportElement x="139" y="13" width="100" height="20" uuid="526a0408-7078-4e61-a5c5-3a158a3dcd34"/>
+				<reportElement x="139" y="13" width="407" height="20" uuid="526a0408-7078-4e61-a5c5-3a158a3dcd34"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="139" y="35" width="100" height="20" uuid="b867cdf1-e74c-497f-b384-4d9b54565364"/>
+				<reportElement x="139" y="35" width="407" height="20" uuid="b867cdf1-e74c-497f-b384-4d9b54565364"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{empresa}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="139" y="57" width="100" height="20" uuid="b8296c04-5649-456a-89db-44ac71966010"/>
+				<reportElement x="139" y="58" width="407" height="20" uuid="b8296c04-5649-456a-89db-44ac71966010"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{depto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="139" y="80" width="407" height="22" uuid="81a52ac1-1b8a-4cc4-b0de-387ebb58b2c2"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anombre}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="50">
@@ -171,56 +181,57 @@ where idrequisicion = $P{ID_Req}::Integer;
 	<summary>
 		<band height="58">
 			<line>
-				<reportElement x="19" y="21" width="129" height="1" uuid="388c372f-ba1a-4c7e-b972-50c4f116d0ee"/>
-			</line>
-			<line>
-				<reportElement x="205" y="20" width="153" height="1" uuid="a2dcc523-0af1-48fc-a8d5-5f379a837794"/>
-			</line>
-			<line>
 				<reportElement x="407" y="19" width="129" height="1" uuid="62e821c7-d31d-439b-83fc-f7020144c4a2"/>
 			</line>
 			<staticText>
-				<reportElement x="33" y="22" width="100" height="20" uuid="d98a1555-8fbb-4163-965d-058298fdc986"/>
+				<reportElement x="40" y="18" width="100" height="20" uuid="d98a1555-8fbb-4163-965d-058298fdc986"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Solicitado por]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="199" y="21" width="165" height="20" uuid="bdcf935a-4bbb-4fbc-b025-2281de66dec0"/>
+				<reportElement x="205" y="18" width="165" height="20" uuid="bdcf935a-4bbb-4fbc-b025-2281de66dec0"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Autorización Director/Jefe Supeior]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="421" y="20" width="100" height="20" uuid="6013e385-3d84-4f60-a5f9-d296683af6fd"/>
+				<reportElement x="421" y="18" width="100" height="20" uuid="6013e385-3d84-4f60-a5f9-d296683af6fd"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Contabilizado]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="9" y="3" width="149" height="18" uuid="0fb72562-0ea5-45f0-addb-72f1283cb197"/>
+				<reportElement x="16" y="4" width="149" height="18" uuid="0fb72562-0ea5-45f0-addb-72f1283cb197"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{solicitante}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="9" y="38" width="149" height="20" uuid="a85111ab-84ee-409a-80d6-4f612c740cf5"/>
+				<reportElement x="16" y="33" width="149" height="20" uuid="a85111ab-84ee-409a-80d6-4f612c740cf5"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="199" y="0" width="165" height="20" uuid="82e76792-78ea-4295-8241-fa0489c72cc1"/>
-				<textElement textAlignment="Center">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{autorizador}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="199" y="38" width="165" height="20" uuid="35d40dec-b9b8-4363-82b4-aabfc3daa35c"/>
+				<reportElement x="205" y="33" width="165" height="20" uuid="35d40dec-b9b8-4363-82b4-aabfc3daa35c"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fechaaprov}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="396" y="33" width="150" height="20" uuid="9121e7a7-581b-4c8b-b67d-8c33b744a9a2"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contador}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="205" y="3" width="165" height="20" uuid="82e76792-78ea-4295-8241-fa0489c72cc1"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{autorizador}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

@@ -67,7 +67,7 @@
                                 <div class="icon">
                                     <i class="fas fa-bell"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa, por sus diferentes estados" onclick="getRequisiciones(1)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa, por sus diferentes estados" onclick="load(1)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -84,7 +84,7 @@
                                 <div class="icon">
                                     <i class="fas fa-cogs"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado revision tomadas por los lideres" onclick="getRequisiciones(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado revision tomadas por los lideres" onclick="load(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -101,7 +101,7 @@
                                 <div class="icon">
                                     <i class="fas fa-cogs"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado revision tomadas por los lideres" onclick="getRequisiciones(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado revision tomadas por los lideres" onclick="load(2)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -118,7 +118,7 @@
                                 <div class="icon">
                                     <i class="fas fa-toolbox"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado aceptada tomadas por los lideres" onclick="getRequisiciones(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado aceptada tomadas por los lideres" onclick="load(3)"  href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -135,7 +135,7 @@
                                 <div class="icon">
                                     <i class="fas fa-toolbox"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado revision tomadas por los lideres" onclick="getRequisiciones(3)"    href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado revision tomadas por los lideres" onclick="load(3)"    href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -152,7 +152,7 @@
                                 <div class="icon">
                                     <i class="fas fa-check-double"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado finalizada tomadas por los lideres" onclick="getRequisiciones(4)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado finalizada tomadas por los lideres" onclick="load(4)" href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        
@@ -169,7 +169,7 @@
                                 <div class="icon">
                                     <i class="fas fa-check-double"></i>
                                 </div>
-                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado finalizada tomadas por los lideres" onclick="getRequisiciones(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
+                                <a data-toggle="tooltip" data-placement="top" title="Se muestra todas las requisiciones de la empresa en estado finalizada tomadas por los lideres" onclick="load(4)"   href="#Requisiciones" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->        

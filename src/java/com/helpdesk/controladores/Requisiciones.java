@@ -143,17 +143,17 @@ public class Requisiciones extends HttpServlet {
     private boolean updateRequisicion(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = false;
         String jsonReq = request.getParameter("JsonReq");
+        String jsonLinks = request.getParameter("JsonLinks");
         String idRequisicion = request.getParameter("idReq");
+        String prioridad = request.getParameter("slcPrioridad");
+        String finalDate = request.getParameter("finalDate");
+        String anombre = request.getParameter("anombre");
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
             List<DetalleAux> listDetallesAux = objectMapper.readValue(jsonReq, new TypeReference<List<DetalleAux>>() {
             });
-
-            if (listDetallesAux != null && listDetallesAux.size() == 0) {
-                throw new Exception("Alteracion en el Json");
-            }
 
             BigDecimal montoTotal = new BigDecimal(0);
 
@@ -166,8 +166,12 @@ public class Requisiciones extends HttpServlet {
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
 
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             RequisicionPago rg = Operaciones.get(Integer.parseInt(idRequisicion), new RequisicionPago());
             rg.setTotal(montoTotal);
+            rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
+            rg.setPrioridad(Integer.parseInt(prioridad));
+            rg.setaNombre(anombre);
             rg = Operaciones.actualizar(rg.getIdRequisicion(), rg);
 
             //Actualizando detalles 
@@ -187,11 +191,37 @@ public class Requisiciones extends HttpServlet {
                 }
             }
 
+            //Actualizando enlaces si hay nuevos cabios
+            if (jsonLinks != null && !"".equals(jsonLinks)) {
+                List<Enlace> listEnlaces = objectMapper.readValue(jsonLinks, new TypeReference<List<Enlace>>() {
+                });
+                for(int j=0; j < listEnlaces.size(); j++){
+                    Enlace e = new Enlace();
+                    int id = listEnlaces.get(j).getIdEnlace();
+                    if(id!=0){ //Es una actualizacion
+                        e = Operaciones.get(id, new Enlace());
+                        e.setDescripcion(listEnlaces.get(j).getDescripcion());
+                        e.setEnlace(listEnlaces.get(j).getEnlace());
+                        e = Operaciones.actualizar(e.getIdEnlace(), e);
+                    }else{ //Es una nuevo
+                        e.setDescripcion(listEnlaces.get(j).getDescripcion());
+                        e.setEnlace(listEnlaces.get(j).getEnlace());
+                        e.setIdRequisicion(Integer.parseInt(idRequisicion));
+                        e = Operaciones.insertar(e);
+                    }
+                }
+            }
+
             Operaciones.commit();
             estado = true;
 
         } catch (Exception e) {
             Logger.getLogger(Incidencias.class.getName()).log(Level.SEVERE, null, e);
+            try {
+                Operaciones.rollback();
+            } catch (SQLException ex) {
+                Logger.getLogger(Requisiciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } finally {
             try {
                 Operaciones.cerrarConexion();
@@ -210,6 +240,7 @@ public class Requisiciones extends HttpServlet {
         Integer idU = (Integer) request.getSession().getAttribute("idUsuario");
         Integer prioridad = Integer.parseInt(request.getParameter("slcPrioridad"));
         String finalDate = request.getParameter("finalDate");
+        String anombre = request.getParameter("anombre");
 
         int idReqs = 0;
         ArrayList<Usuario> listLiders = new ArrayList<>();
@@ -258,10 +289,11 @@ public class Requisiciones extends HttpServlet {
             rg.setPrioridad(prioridad);
             rg.setIdContador(DataList.getIdContador(DataList.getIdEmpresa(idU)));
             rg.setFechaEstimada(new Timestamp(simpleDateFormat.parse(finalDate).getTime()));
+            rg.setaNombre(anombre);
 
             rg = Operaciones.insertar(rg);
 
-            if (jsonLinks != null) {//Hay enlaces
+            if (jsonLinks != null && !"".equals(jsonLinks)) {//Hay enlaces
                 List<Enlace> listEnlaces = objectMapper.readValue(jsonLinks, new TypeReference<List<Enlace>>() {
                 });
 

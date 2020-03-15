@@ -338,7 +338,7 @@ public class PrincipalRequisicion extends HttpServlet {
                                     break;
                                 }
                                 case "revision": {
-                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.REVISION, r.idemp, 1);
+                                    ArrayList<RequisicionPago> list = (r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.REVISION, r.idemp, 1));
                                     ArrayList<DataRequisicion> data = new ArrayList<>();
                                     if (list != null) {
                                         for (int i = 0; i < list.size(); i++) {
@@ -352,7 +352,7 @@ public class PrincipalRequisicion extends HttpServlet {
                                     break;
                                 }
                                 case "aceptadas": {
-                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.ACEPTADA, r.idemp, 2);
+                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.ACEPTADA, r.idemp, 1);
                                     ArrayList<DataRequisicion> data = new ArrayList<>();
                                     if (list != null) {
                                         for (int i = 0; i < list.size(); i++) {
@@ -366,7 +366,7 @@ public class PrincipalRequisicion extends HttpServlet {
                                     break;
                                 }
                                 case "finalizadas": {
-                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.FINALIZADA, r.idemp, 2);
+                                    ArrayList<RequisicionPago> list = r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.FINALIZADA, r.idemp, 1);
                                     ArrayList<DataRequisicion> data = new ArrayList<>();
                                     if (list != null) {
                                         for (int i = 0; i < list.size(); i++) {

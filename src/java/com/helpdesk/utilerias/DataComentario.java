@@ -10,10 +10,12 @@ package com.helpdesk.utilerias;
  * @author ZEUS
  */
 public class DataComentario {
+
     private String titular;
     private String fecha;
     private String mensaje;
     private int rol;
+    private String rolName;
 
     public DataComentario() {
     }
@@ -48,7 +50,34 @@ public class DataComentario {
 
     public void setRol(int rol) {
         this.rol = rol;
+        switch (rol) {
+            case Enums.ROL.CONTADOR_REQ:
+                this.rolName = "Contador";
+                break;
+
+            case Enums.ROL.GERENTE_REQ:
+                this.rolName = "Gerente";
+                break;
+
+            case Enums.ROL.LIDER_REQ:
+                this.rolName = "Lider";
+                break;
+
+            case Enums.ROL.RECEPTOR_REQ:
+                this.rolName = "Requisitor";
+                break;
+            default:
+                this.rolName = "NONE";
+                break;
+        }
     }
-    
-    
+
+    public String getRolName() {
+        return rolName;
+    }
+
+    public void setRolName(String rolName) {
+        this.rolName = rolName;
+    }
+
 }

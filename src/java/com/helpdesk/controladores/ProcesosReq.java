@@ -9,6 +9,7 @@ import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Comentario;
 import com.helpdesk.entidades.DetalleRequisicion;
+import com.helpdesk.entidades.Enlace;
 import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.entidades.Usuario;
 import com.helpdesk.operaciones.Operaciones;
@@ -36,20 +37,20 @@ public class ProcesosReq extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            String idReq = request.getParameter("idReq");
-            String accion = request.getParameter("accion");
+        String idReq = request.getParameter("idReq");
+        String accion = request.getParameter("accion");
 
-        if (accion == null ||  idReq == null) {
+        if (accion == null || idReq == null) {
             response.sendRedirect("PrincipalRequisicion");
         } else {
             boolean seteado = this.setProceso(request, response);
-            if(seteado){
+            if (seteado) {
                 request.getSession().setAttribute("resultado", 1);
-            }else{
+            } else {
                 request.getSession().setAttribute("resultado", 2);
             }
-            response.sendRedirect("RequisicionInfo?idReq="+idReq);
-            
+            response.sendRedirect("RequisicionInfo?idReq=" + idReq);
+
         }
 
     }
@@ -59,30 +60,32 @@ public class ProcesosReq extends HttpServlet {
             throws ServletException, IOException {
         //Comentarios 
         String accion = request.getParameter("accion");
-        if(accion.equals("newMessage")){
-            boolean status = sendMesagge(request,response);
-            if(status){
-                response.getWriter().print("true");
-            }else{
-                response.getWriter().print("false");
-            }
-        }else if(accion.equals("deleteDetalle")){
-            boolean estado = deleteDetalleFromDB(request,response);
-            if(estado){
-                response.getWriter().print("true");
-            }else{
-                response.getWriter().print("false");
-            }            
+        boolean estado = false;
+        switch(accion){
+            case "newMessage":
+                estado = sendMesagge(request, response);
+                break;
+            case "deleteDetalle":
+                estado = deleteDetalleFromDB(request, response);
+                break;
+            case "deleteEnlace":
+                estado = deleteLink(request, response);
+                break;
         }
 
+        if (estado) {
+            response.getWriter().print("true");
+        } else {
+            response.getWriter().print("false");
+        }
     }
-    
-    private boolean deleteDetalleFromDB(HttpServletRequest request, HttpServletResponse response){
+
+    private boolean deleteDetalleFromDB(HttpServletRequest request, HttpServletResponse response) {
         boolean estado = false;
         String idDetalle = request.getParameter("idenDetalle");
         String idReq = request.getParameter("idReq");
-        
-        try{
+
+        try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
@@ -90,12 +93,12 @@ public class ProcesosReq extends HttpServlet {
             RequisicionPago pg = Operaciones.get(Integer.parseInt(idReq), new RequisicionPago());
             pg.setTotal(pg.getTotal().subtract(dt.getMonto()));
             pg = Operaciones.actualizar(pg.getIdRequisicion(), pg);
-            if(dt.getIdDetalle()!=0 && pg.getIdRequisicion()!=0){
+            if (dt.getIdDetalle() != 0 && pg.getIdRequisicion() != 0) {
                 estado = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, e);
-        }finally{
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex) {
@@ -104,48 +107,82 @@ public class ProcesosReq extends HttpServlet {
         }
         return estado;
     }
-    
-    
-    private boolean sendMesagge(HttpServletRequest request, HttpServletResponse response){
+
+    private boolean deleteLink(HttpServletRequest request, HttpServletResponse response) {
+        boolean estado = false;
+        String idLink = request.getParameter("ideLink");
+
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            Operaciones.iniciarTransaccion();
+            Enlace e = Operaciones.eliminar(Integer.parseInt(idLink), new Enlace());
+            if (e.getIdEnlace() != 0) {
+                Operaciones.commit();
+                estado = true;
+            }
+
+        } catch (Exception e) {
+            Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return estado;
+    }
+
+    private boolean sendMesagge(HttpServletRequest request, HttpServletResponse response) {
         boolean status = false;
         String contenido = request.getParameter("msg");
+        String tipo = request.getParameter("tipo");
         String idReq = request.getParameter("idReq");
-        Integer idHolder = (Integer)request.getSession().getAttribute("idUsuario");
-        
-        try{
+        Integer idHolder = (Integer) request.getSession().getAttribute("idUsuario");
+
+        try {
             Conexion conn = new ConexionPool();
             conn.conectar();
             Operaciones.abrirConexion(conn);
             Operaciones.iniciarTransaccion();
             RequisicionPago rg = Operaciones.get(Integer.parseInt(idReq), new RequisicionPago());
-            
-            if(rg.getIdAutorizador() == idHolder || rg.getIdCreador() == idHolder){ //solo el lider y el receptor pueden comentar 
+
+            if (rg.getIdAutorizador() == idHolder || rg.getIdCreador() == idHolder || rg.getIdContador() == idHolder) { //solo el lider,receptor y contador pueden comentar 
                 Comentario com = new Comentario();
                 com.setContenido(contenido);
                 com.setIdCreador(idHolder);
                 com.setIdRequisicion(Integer.parseInt(idReq));
                 com.setFecha(new Timestamp(System.currentTimeMillis()));
                 
+                
+                int tipoMsg = Integer.parseInt(tipo);
+                if(tipoMsg == Enums.TIPO_COMENTARIO.NOTIFICACION){
+                    com.setTipo(Enums.TIPO_COMENTARIO.NOTIFICACION);
+                }else if(tipoMsg == Enums.TIPO_COMENTARIO.CHAT){
+                    com.setTipo(Enums.TIPO_COMENTARIO.CHAT);
+                    //Aqui se manda la notificacion
+                }
                 com = Operaciones.insertar(com);
                 Operaciones.commit();
                 status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, e);
             try {
                 Operaciones.rollback();
             } catch (SQLException ex) {
                 Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }finally{
+        } finally {
             try {
                 Operaciones.cerrarConexion();
             } catch (SQLException ex2) {
                 Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex2);
             }
         }
-        
-        
+
         return status;
     }
 
@@ -192,7 +229,6 @@ public class ProcesosReq extends HttpServlet {
                 Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
             }
         }*/
-        
 
         try {
             Conexion conn = new ConexionPool();
@@ -203,9 +239,9 @@ public class ProcesosReq extends HttpServlet {
             RequisicionPago pg = Operaciones.get(idReq, new RequisicionPago());
             listUsers.add(Operaciones.get(pg.getIdContador(), new Usuario()));
             listUsers.add(Operaciones.get(pg.getIdCreador(), new Usuario()));
-            switch(nuevoEstado){
-                case Enums.ESTADO_REQ.REVISION:{
-                    if(myRol == 6 && pg.getEstado()==Enums.ESTADO_REQ.SOLICITADA){
+            switch (nuevoEstado) {
+                case Enums.ESTADO_REQ.REVISION: {
+                    if (myRol == 6 && pg.getEstado() == Enums.ESTADO_REQ.SOLICITADA) {
                         pg.setEstado(nuevoEstado);
                         pg.setIdAutorizador(myIdUsuario);
                         seteado = true;
@@ -213,33 +249,32 @@ public class ProcesosReq extends HttpServlet {
                     break;
                 }
                 case Enums.ESTADO_REQ.ACEPTADA: {
-                    if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
-                        request.getSession().setAttribute("idReqForPDF", pg.getIdRequisicion());
+                    if (myRol == 6 && pg.getIdAutorizador() != null && pg.getIdAutorizador() == myIdUsuario && pg.getEstado() == Enums.ESTADO_REQ.REVISION) {
                         pg.setEstado(nuevoEstado);
                         Date dt = new Date();
                         pg.setFechaAprovacion(new Timestamp(dt.getTime()));
                         seteado = true;
                     }
-                    
+
                     break;
                 }
                 case Enums.ESTADO_REQ.RECHAZADA: {
-                    if(myRol ==6 && pg.getIdAutorizador()!=null && pg.getIdAutorizador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.REVISION){
+                    if (myRol == 6 && pg.getIdAutorizador() != null && pg.getIdAutorizador() == myIdUsuario && pg.getEstado() == Enums.ESTADO_REQ.REVISION) {
                         pg.setEstado(nuevoEstado);
                         seteado = true;
                     }
-                    break;                    
+                    break;
                 }
                 case Enums.ESTADO_REQ.FINALIZADA: {
-                    if(myRol ==9 && pg.getIdContador()==myIdUsuario && pg.getEstado()==Enums.ESTADO_REQ.ACEPTADA){
+                    if (myRol == 9 && pg.getIdContador() == myIdUsuario && pg.getEstado() == Enums.ESTADO_REQ.ACEPTADA) {
                         pg.setEstado(nuevoEstado);
                         seteado = true;
                     }
-                    break;                    
-                }                
+                    break;
+                }
             }
-            
-            if(seteado){
+
+            if (seteado) {
                 pg = Operaciones.actualizar(pg.getIdRequisicion(), pg);
                 Operaciones.commit();;
             }
@@ -259,11 +294,11 @@ public class ProcesosReq extends HttpServlet {
                 Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        if(nuevoEstado == Enums.ESTADO_REQ.ACEPTADA && seteado == true && myRol == 6){
+
+        if (nuevoEstado == Enums.ESTADO_REQ.ACEPTADA && seteado == true && myRol == 6) {
             DataList.sendNotificationToContador(listUsers.get(0), idReq);
         }
-        if(nuevoEstado == Enums.ESTADO_REQ.FINALIZADA && seteado == true && myRol == 9){
+        if (nuevoEstado == Enums.ESTADO_REQ.FINALIZADA && seteado == true && myRol == 9) {
             DataList.sendNotificationToSolicitante(listUsers.get(1), idReq);
         }
         return seteado;

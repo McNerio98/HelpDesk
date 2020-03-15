@@ -64,5 +64,10 @@ public class Enums {
         public static final int RECHAZADA = 4;
         public static final int FINALIZADA = 5;
     }
-
+    
+    public static final class TIPO_COMENTARIO{
+        public static final int CHAT = 1;
+        public static final int NOTIFICACION = 2;
+    }
+    
 }

@@ -125,6 +125,7 @@ public class DataList {
             params.add(idReq);
             params.add(idReq);
 
+            
             String cmd = "select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd-MM-yyyy HH:MI') fecha, \n"
                     + "to_char(rg.fechaestimada,'dd-MM-yyyy HH:MI') fechaestimada,  \n"
                     + "rg.anombre, \n"

@@ -81,3 +81,32 @@
 
 }
 
+
+.pnlComentarios{
+    background-image: url("../img/12.png");
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    background-size: 300px;
+}
+.pnlComentarios .header{
+    background-color: #f1f0ef;
+    padding: 0px 10px;
+}
+
+.pnlComentarios .card-body{
+    padding: 0 !important;
+}
+
+.pnlComentarios .title{
+    margin: 0px;
+    color: #d2504d;
+    font-size: 1.2rem;
+}
+
+.pnlComentarios .icon{
+    margin-right: 5px;
+}
+
+
+

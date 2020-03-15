@@ -40,9 +40,11 @@ public class RequisicionPDF extends HttpServlet {
         String pathSource = rutaAbs + "reportes/Requisicion.jasper";
         String pathSubSource = rutaAbs + "reportes/";
         String nameFile = generarNombre(2);
-        Integer idRequisicion = (Integer)request.getSession().getAttribute("idReqForPDF");
+        String idReqParam = request.getParameter("idRequisicion");
+        Integer idRequisicion = Integer.parseInt(idReqParam);
         
-        if(idRequisicion == null){
+        
+        if(idRequisicion == null){ //Aqui tambien se valida los privilegios 
             response.sendRedirect("PrincipalRequisicion");
             return;
         }
@@ -74,8 +76,6 @@ public class RequisicionPDF extends HttpServlet {
             ServletOutputStream ouputStream = response.getOutputStream();
             ouputStream.write(bytes, 0, bytes.length);
             ouputStream.flush();
-            
-            request.getSession().removeAttribute("idReqForPDF");
 
         } catch (Exception e) {
             Logger.getLogger(ReportGerente.class.getName()).log(Level.SEVERE, null, e);
