@@ -60,7 +60,7 @@
                     </br>
                 </div>
 
-                <button class="btn btn-lg btn-dark btn-block" type="submit">Entrar <span id="empSelected"></span></button>
+                <button id="entrarBtn" class="btn btn-lg btn-dark btn-block" type="submit"><span id="empSelected">Entrar</span></button>
                 <p class="mt-4 mb-2 text-muted text-center">&copy; 2019-2020</p>
             </form>
         </div>  
@@ -71,7 +71,7 @@
         <div class="modal fade" id="modalemp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header bg-color1 text-white">
+                    <div class="modal-header bg-color1 text-white"> 
                         <span style="font-size: 20px;
                               line-height: 28px;
                               font-weight: 500;
@@ -86,7 +86,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                        <button onclick="closeMd()" type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
                         <button id="selectBtn" type="button" class="btn bg-color1 text-white" data-dismiss="modal">Seleccionar</button>
                     </div>
                 </div>
@@ -96,6 +96,12 @@
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script>
+            
+            function closeMd(){
+                document.getElementById('entrarBtn').removeAttribute("disabled");
+                document.getElementById('empSelected').innerHTML = `Entrar
+                        `;
+            }
             var cuenta = document.getElementById('inputEmail');
             var pass = document.getElementById('inputPassword');
             var selectBtn = document.getElementById('selectBtn');
@@ -106,16 +112,17 @@
                     if (radios[i].checked && i == 0) {
                         document.getElementById("loginForm").action = "${pageContext.servletContext.contextPath}/Login?accion=entrar";
                         document.getElementById('nextValue').innerHTML = ``;
-                        document.getElementById('empSelected').innerHTML = "(" + radios[i].getAttribute("empresa") + ")";
+                        document.getElementById('empSelected').innerHTML = "Entrar (" + radios[i].getAttribute("empresa") + ")";
                     } else {
                         if (radios[i].checked) {
                             document.getElementById('nextValue').innerHTML = `
                             <input type="hidden"  name="idempReq"  value="` + radios[i].value + `" >
                             `;
-                            document.getElementById('empSelected').innerHTML = "(" + radios[i].getAttribute("empresa") + ")";
+                            document.getElementById('empSelected').innerHTML = " Entrar (" + radios[i].getAttribute("empresa") + ")";
                         }
 
                     }
+                    document.getElementById('entrarBtn').removeAttribute("disabled");
                 }
             });
 
@@ -173,7 +180,15 @@
             checkbox.addEventListener("change", function () {
                 if (checkbox.checked) {
                     if (cuenta.value.length > 0 && pass.value.length > 0) {
+                        document.getElementById('entrarBtn').disabled = "true";
+                        document.getElementById('empSelected').innerHTML = `Cargando
+                            <div class="spinner-grow text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        `;
+                
                         verifyData();
+
                     }
                 }
 
