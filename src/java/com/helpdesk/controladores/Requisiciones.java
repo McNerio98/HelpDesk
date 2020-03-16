@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.helpdesk.conexion.Conexion;
 import com.helpdesk.conexion.ConexionPool;
+import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.DetalleRequisicion;
 import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.Enlace;
@@ -276,10 +277,13 @@ public class Requisiciones extends HttpServlet {
             rg.setFecha(new Timestamp(dt.getTime()));
             rg.setEstado(Enums.ESTADO_REQ.SOLICITADA);
             if (request.getSession().getAttribute("empReq") != null) {
+                String query = "select iddepto from departments where deptoname = 'Requisicion Pago'";
+                String array[][] = Operaciones.consultar(anombre, null);
+                Departamento dep = Operaciones.get(Integer.parseInt(array[0][0]), new Departamento());
                 int ide = (int) request.getSession().getAttribute("empReq");
                 
                 rg.setIdEmpresa(ide);
-                rg.setIdDepto(7);//se debe actualizar
+                rg.setIdDepto(dep.getIdDepto());//se debe actualizar
             } else {
                 rg.setIdEmpresa(DataList.getIdEmpresa(idU));
                 rg.setIdDepto(DataList.getIdDepto(idU));

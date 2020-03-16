@@ -12,9 +12,12 @@ import com.helpdesk.entidades.DetalleRequisicion;
 import com.helpdesk.entidades.Enlace;
 import com.helpdesk.entidades.RequisicionPago;
 import com.helpdesk.entidades.Usuario;
+import com.helpdesk.entidades.UsuarioRequisicion;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataList;
+import com.helpdesk.utilerias.DataRequisicion;
 import com.helpdesk.utilerias.Enums;
+import com.helpdesk.utilerias.htmlTemplate;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -61,7 +64,7 @@ public class ProcesosReq extends HttpServlet {
         //Comentarios 
         String accion = request.getParameter("accion");
         boolean estado = false;
-        switch(accion){
+        switch (accion) {
             case "newMessage":
                 estado = sendMesagge(request, response);
                 break;
@@ -141,7 +144,10 @@ public class ProcesosReq extends HttpServlet {
         String tipo = request.getParameter("tipo");
         String idReq = request.getParameter("idReq");
         Integer idHolder = (Integer) request.getSession().getAttribute("idUsuario");
-
+        boolean existComment = false;
+        DataRequisicion dr = new DataRequisicion();
+        Usuario receptor = new Usuario();
+        int caseEmisor = 0;
         try {
             Conexion conn = new ConexionPool();
             conn.conectar();
@@ -155,14 +161,27 @@ public class ProcesosReq extends HttpServlet {
                 com.setIdCreador(idHolder);
                 com.setIdRequisicion(Integer.parseInt(idReq));
                 com.setFecha(new Timestamp(System.currentTimeMillis()));
-                
-                
+
                 int tipoMsg = Integer.parseInt(tipo);
-                if(tipoMsg == Enums.TIPO_COMENTARIO.NOTIFICACION){
+                if (tipoMsg == Enums.TIPO_COMENTARIO.NOTIFICACION) {
                     com.setTipo(Enums.TIPO_COMENTARIO.NOTIFICACION);
-                }else if(tipoMsg == Enums.TIPO_COMENTARIO.CHAT){
+                } else if (tipoMsg == Enums.TIPO_COMENTARIO.CHAT) {
                     com.setTipo(Enums.TIPO_COMENTARIO.CHAT);
                     //Aqui se manda la notificacion
+                    //La notificacion debe hacer entre el contador y receptor
+                    UsuarioRequisicion ur = Operaciones.get(idHolder, new UsuarioRequisicion());
+                    ///Si lo envia un contador
+                    if (ur.getIdRol() == Enums.ROL.CONTADOR_REQ) {
+                        caseEmisor = 1;
+                        receptor = Operaciones.get(rg.getIdCreador(), new Usuario());
+                    }
+                    //Si lo envia un Requisitor
+                    if (ur.getIdRol() == Enums.ROL.CONTADOR_REQ) {
+                        caseEmisor = 2;
+                        receptor = Operaciones.get(rg.getIdContador(), new Usuario());
+                    }
+                    existComment = true;
+                    dr = DataList.getGeneralData(com.getIdRequisicion());
                 }
                 com = Operaciones.insertar(com);
                 Operaciones.commit();
@@ -183,7 +202,45 @@ public class ProcesosReq extends HttpServlet {
             }
         }
 
+        if (existComment) {
+
+            //Si lo envio un contador
+            if (caseEmisor == 1) {
+                String content = this.getCorreoContent(dr, 1);
+                JavaMail.SendMessage(receptor.getEmail(), "Comentario Sobre Requisicion", content);
+            }
+
+            //Si lo envio un Emisor
+            if (caseEmisor == 2) {
+                String content = this.getCorreoContent(dr, 2);
+                JavaMail.SendMessage(receptor.getEmail(), "Comentario Sobre Requisicion", content);
+            } 
+        }
+
         return status;
+    }
+
+    private String getCorreoContent(DataRequisicion dr, int casei) {
+        htmlTemplate html = new htmlTemplate();
+        html.difineTag(
+                "<h1>Hola, " + ((casei == 1) ? dr.getSolicitante() : dr.getContador())
+                + "</h1>"
+        );
+        html.difineTag(
+                "<strong>" + ((casei != 1) ? dr.getSolicitante() : dr.getContador()) + "</strong>"
+                + " ha hecho un comentario sobre la siguiente requisicion: \n"
+                + "A nombre de: " + dr.getaNombre() + "<br />"
+                + "Fecha estimada: " + dr.getFechaEstimada() + "<br />"
+                + "Empresa: " + dr.getEmpresa()
+                + "Departamento: " + dr.getDepto()
+                + "Solicitante: " + dr.getSolicitante()
+                + "Autorizador: " + dr.getSuperior()
+                + "Contador: " + dr.getContador()
+                + "Prioridad: " + dr.getPrioridad()
+                + "Monto: " + dr.getMontoTotal()
+        );
+
+        return html.RenderHTML();
     }
 
     private boolean setProceso(HttpServletRequest request, HttpServletResponse response) {
