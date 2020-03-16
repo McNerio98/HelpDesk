@@ -263,7 +263,7 @@
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Empresa:
                                         <span class="text-custom1">${DataGeneral.empresa}</span> </label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
-                                        Departamento: <span class="text-custom1">${DataGeneral.depto}</span></label>
+                                        Departamento: <span class="text-custom1" id="currentDate">${DataGeneral.depto}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>
                                         Solicitante: <span class="text-custom1" id="SolicitanteName">${DataGeneral.solicitante}</span></label>
                                     <label class="d-block col-form-label" for="inputSuccess"><i class="fas fa-check"></i>

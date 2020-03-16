@@ -63,7 +63,7 @@ public class Requisiciones extends HttpServlet {
                 Conexion conn = new ConexionPool();
                 conn.conectar();
                 Operaciones.abrirConexion(conn);
-                String cmd = "select to_char(current_date,'dd-MM-yyyy') actual,concat(u.firstname, ' ',u.lastname) sol, \n"
+                String cmd = "select to_char(current_date,'dd/MM/yyyy') actual,concat(u.firstname, ' ',u.lastname) sol, \n"
                         + "e.nombre, d.deptoname from empresas e, users u, usuarioreqbyempresas uem, deptobyusers du, departments d \n"
                         + "where u.iduser = uem.idusuario and uem.idempresa = e.idempresa and d.iddepto = du.iddepto and u.iduser = du.iduser \n"
                         + "and u.iduser = ? ";
