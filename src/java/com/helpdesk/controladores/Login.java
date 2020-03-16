@@ -383,8 +383,8 @@ public class Login extends HttpServlet {
                 List<Object> params2 = new ArrayList<>();
                 params2.add(Integer.parseInt(array[0][0]));
                 String array2[][] = Operaciones.consultar(query2, params2);
-                
-                for(int i = 0; i < array2[0].length; i++){
+
+                for (int i = 0; i < array2[0].length; i++) {
                     Empresa emp = new Empresa();
                     System.out.print(array2[0][i]);
                     emp = Operaciones.get(Integer.parseInt(array2[0][i]), new Empresa());
@@ -477,7 +477,7 @@ public class Login extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);  
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             response.sendRedirect("Login");
         } finally {
             try {
@@ -561,5 +561,10 @@ public class Login extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    @Override
+    public void destroy() {
+        System.out.print("Me mori xD");
+    }
 
 }

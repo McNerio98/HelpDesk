@@ -13,9 +13,6 @@ $(document).ready(function () {
     var modalForPDF = $('#modalForPDF');
 
 
-
-
-
     //DECLARACION DE FUNCIONES
 
     function reloadPage() {
@@ -42,8 +39,12 @@ $(document).ready(function () {
             data: {idReq: idRequisicion},
             url: contexto + '/RequisicionInfo?accion=getAllComents',
             success: function (result) {
-                $('#bodyComentarios').html(result);
-                $('#panelComentarios').scrollTop($('#panelComentarios').prop('scrollHeight'));
+                if (result == 'SessionIsOut') {
+                    reloadPage();
+                } else {
+                    $('#bodyComentarios').html(result);
+                    $('#panelComentarios').scrollTop($('#panelComentarios').prop('scrollHeight'));
+                }
             }
         });
     }
@@ -82,10 +83,13 @@ $(document).ready(function () {
             data: {idReq: idRequisicion},
             url: contexto + '/RequisicionInfo?accion=getAllMsg',
             success: function (result) {
-                $('#bodyMesagges').html(result);
-                $('#panelChat').scrollTop($('#panelChat').prop('scrollHeight'));
-                $('#countMessages').text($('.typeChats').length);
-
+                if (result == 'SessionIsOut') {
+                    reloadPage();
+                } else {
+                    $('#bodyMesagges').html(result);
+                    $('#panelChat').scrollTop($('#panelChat').prop('scrollHeight'));
+                    $('#countMessages').text($('.typeChats').length);
+                }
             }
         });
     }
@@ -127,7 +131,11 @@ $(document).ready(function () {
             data: {idReq: idRequisicion},
             url: contexto + "/RequisicionInfo?accion=loadDetalles",
             success: function (result) {
-                $('#pnlRegistros').html(result);
+                if (result == 'SessionIsOut') {
+                    reloadPage();
+                } else {
+                    $('#pnlRegistros').html(result);
+                }
             }
         });
     }
@@ -139,7 +147,11 @@ $(document).ready(function () {
             data: {idReq: idRequisicion},
             url: contexto + "/RequisicionInfo?accion=loadLinks",
             success: function (result) {
-                $('#pnlEnlaces').html(result);
+                if (result == 'SessionIsOut') {
+                    reloadPage();
+                } else {
+                    $('#pnlEnlaces').html(result);
+                }
             }
         });
     }
@@ -175,7 +187,7 @@ $(document).ready(function () {
             $(e.target).css('display', 'block');
         });
     });
-    
+
     $('#reloadDetail').click(function () {
         refreshDetail();
         refreshLinks();
