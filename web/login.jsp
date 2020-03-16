@@ -128,6 +128,7 @@
 
 
             function verifyData() {
+                
 
                 fetch("${pageContext.servletContext.contextPath}/Login?accion=verificarRequisitor&cuenta=" + cuenta.value, {
                     method: 'post',
@@ -172,6 +173,7 @@
                         })
                         .catch((error) => {
                             console.log(error);
+                            
                         });
             }
 
@@ -180,13 +182,6 @@
             checkbox.addEventListener("change", function () {
                 if (checkbox.checked) {
                     if (cuenta.value.length > 0 && pass.value.length > 0) {
-                        document.getElementById('entrarBtn').disabled = "true";
-                        document.getElementById('empSelected').innerHTML = `Cargando
-                            <div class="spinner-grow text-primary" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        `;
-                
                         verifyData();
 
                     }

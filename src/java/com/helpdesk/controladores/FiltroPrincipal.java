@@ -41,14 +41,12 @@ public class FiltroPrincipal implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         //Rutas de solicitudes ajax 
-        String routesAjax[]
+        String actionAjax[]
                 = {
-                    "/RequisicionInfo?accion=getAllComents",
-                    "/ProcesosReq?accion=newMessage",
-                    "/RequisicionInfo?accion=getAllMsg",
-                    "/ProcesosReq?accion=newMessage",
-                    "/RequisicionInfo?accion=loadDetalles",
-                    "/RequisicionInfo?accion=loadLinks"
+                    "getAllComents",
+                    "getAllMsg",
+                    "loadDetalles",
+                    "loadLinks"
                 };
         
         
@@ -108,10 +106,11 @@ public class FiltroPrincipal implements Filter {
         } else {
             boolean isRequestAjax = false;
             int contador = 0;
-            //Aqui valido todas las peticiones ajax para que no le devuelva el login             
-            while(contador < routesAjax.length && !isRequestAjax){
+            //Aqui valido todas las peticiones ajax para que no le devuelva el login
+            String PathReqInfo = "RequisicionInfo";
+            while(contador < actionAjax.length && !isRequestAjax){
                 String acceso = request.getRequestURI();
-                if(acceso.equals(routesAjax[contador])){
+                if(acceso.equals(actionAjax[contador])){
                     isRequestAjax = true;
                 }else{
                     contador++;

@@ -406,7 +406,7 @@ public class Login extends HttpServlet {
         return list;
     }
 
-    private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) {
+    private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String cuenta = request.getParameter("txtCuenta");
         String clave = request.getParameter("txtClave");
@@ -477,7 +477,8 @@ public class Login extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);  
+            response.sendRedirect("Login");
         } finally {
             try {
                 Operaciones.cerrarConexion();

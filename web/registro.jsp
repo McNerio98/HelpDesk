@@ -263,9 +263,9 @@
 
                 document.getElementById("empresa2").removeAttribute("disabled");
                 comboboxdep.removeAttribute("disabled");
-                document.getElementById("btnSubmit").setAttribute("disabled", "true");
+                document.getElementById("btnSubmit").removeAttribute("disabled");
                 document.getElementById("alerEmpresa").innerHTML = "";
-                comboboxdep.setAttribute("disabled", "true");
+               
 
                 fetch("${pageContext.servletContext.contextPath}/Login?accion=getDeptosByEmpresa&id=" + combobox.value,{
                     method: "POST"

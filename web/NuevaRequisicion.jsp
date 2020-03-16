@@ -404,7 +404,8 @@
             format: "dd/mm/yyyy",
             todayHighlight: true,
             autoclose: true,
-            clearBtn: true
+            clearBtn: true,
+            startDate: "+1d"
         });        
     });
 
