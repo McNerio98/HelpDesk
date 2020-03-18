@@ -171,6 +171,20 @@
 <%@include file="_endPanel.jsp" %>
 
 <script>
+    var ok = false;
+    window.onload = function () {
+        var url = new URL(location.href);
+        var c = url.searchParams.get("empleado");
+        if (c == "top") {
+            ok = true;
+//            var input = document.getElementById('table_empleados_filter').getElementsByTagName('input');
+//            input[0].setAttribute("id", "searchEmpB");
+//            document.getElementById("searchEmpB").value = "Empleado";
+//            document.getElementById("searchEmpB").focus();
+        }
+    }
+
+
     var sesion = '${typeSession}';
     console.log(sesion);
     var idCaseSesion = 0;
@@ -179,7 +193,7 @@
     }
     console.log("CASE: " + idCaseSesion);
     $(document).ready(function () {
-        $('#table_empleados').DataTable({
+        var datatables = $('#table_empleados').DataTable({
             responsive: true,
             ajax: {
                 url: '${pageContext.servletContext.contextPath}/Empleados?accion=getAll&idcase=' + idCaseSesion,
@@ -246,7 +260,12 @@
                         }
                     }
 
+
+
         });
+        if (ok) {
+            datatables.search("Empleado").draw();
+        }
     });
 
 </script>

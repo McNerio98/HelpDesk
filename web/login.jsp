@@ -72,12 +72,14 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header bg-color1 text-white"> 
-                        <span style="font-size: 20px;
+                        <span style="font-size: 18px;
                               line-height: 28px;
                               font-weight: 500;
                               flex: 1 1 auto;
                               font-family: 'Google Sans',sans-serif;" class="modal-title" id="exampleModalCenterTitle">
-                            Elige la empresa para iniciar sesion</span>
+                            Elige la empresa para iniciar sesion
+                        </span>
+
 
                     </div>
                     <div class="modal-body">
@@ -92,60 +94,61 @@
                 </div>
             </div>
         </div>
+
+
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script>
-            
-            function closeMd(){
-                document.getElementById('entrarBtn').removeAttribute("disabled");
-                document.getElementById('empSelected').innerHTML = `Entrar
+            function closeMd() {
+                                document.getElementById('entrarBtn').removeAttribute("disabled");
+                                document.getElementById('empSelected').innerHTML = `Entrar
                         `;
-            }
-            var cuenta = document.getElementById('inputEmail');
-            var pass = document.getElementById('inputPassword');
-            var selectBtn = document.getElementById('selectBtn');
+                            }
+                            var cuenta = document.getElementById('inputEmail');
+                            var pass = document.getElementById('inputPassword');
+                            var selectBtn = document.getElementById('selectBtn');
 
-            selectBtn.addEventListener('click', function () {
-                var radios = document.getElementsByClassName("radios");
-                for (var i = 0; i < radios.length; i++) {
-                    if (radios[i].checked && i == 0) {
-                        document.getElementById("loginForm").action = "${pageContext.servletContext.contextPath}/Login?accion=entrar";
-                        document.getElementById('nextValue').innerHTML = ``;
-                        document.getElementById('empSelected').innerHTML = "Entrar (" + radios[i].getAttribute("empresa") + ")";
-                    } else {
-                        if (radios[i].checked) {
-                            document.getElementById('nextValue').innerHTML = `
+                            selectBtn.addEventListener('click', function () {
+                                var radios = document.getElementsByClassName("radios");
+                                for (var i = 0; i < radios.length; i++) {
+                                    if (radios[i].checked && i == 0) {
+                                        document.getElementById("loginForm").action = "${pageContext.servletContext.contextPath}/Login?accion=entrar";
+                                        document.getElementById('nextValue').innerHTML = ``;
+                                        document.getElementById('empSelected').innerHTML = "Entrar (" + radios[i].getAttribute("empresa") + ")";
+                                    } else {
+                                        if (radios[i].checked) {
+                                            document.getElementById('nextValue').innerHTML = `
                             <input type="hidden"  name="idempReq"  value="` + radios[i].value + `" >
                             `;
-                            document.getElementById('empSelected').innerHTML = " Entrar (" + radios[i].getAttribute("empresa") + ")";
-                        }
+                                            document.getElementById('empSelected').innerHTML = " Entrar (" + radios[i].getAttribute("empresa") + ")";
+                                        }
 
-                    }
-                    document.getElementById('entrarBtn').removeAttribute("disabled");
-                }
-            });
+                                    }
+                                    document.getElementById('entrarBtn').removeAttribute("disabled");
+                                }
+                            });
 
 
-            function verifyData() {
-                
+                            function verifyData() {
 
-                fetch("${pageContext.servletContext.contextPath}/Login?accion=verificarRequisitor&cuenta=" + cuenta.value, {
-                    method: 'post',
-                    body: 'cuenta=' + cuenta.value,
-                    headers: {'Content-type': 'application/x-www-form-urlencoded'}
-                })
-                        .then((response) => response.text())
-                        .then((responseText) => {
 
-                            console.log("Server:" + responseText);
-                            var empresas = JSON.parse(responseText);
-                            console.log(empresas);
-                            if (responseText != "[]") {
-                                document.getElementById('listEmps').innerHTML = "";
-                                for (var i = 0; i < empresas.length; i++) {
-                                    if (i == 0) {
-                                        document.getElementById('listEmps').innerHTML += `
+                                fetch("${pageContext.servletContext.contextPath}/Login?accion=verificarRequisitor&cuenta=" + cuenta.value, {
+                                    method: 'post',
+                                    body: 'cuenta=' + cuenta.value,
+                                    headers: {'Content-type': 'application/x-www-form-urlencoded'}
+                                })
+                                        .then((response) => response.text())
+                                        .then((responseText) => {
+
+                                            console.log("Server:" + responseText);
+                                            var empresas = JSON.parse(responseText);
+                                            console.log(empresas);
+                                            if (responseText != "[]") {
+                                                document.getElementById('listEmps').innerHTML = "";
+                                                for (var i = 0; i < empresas.length; i++) {
+                                                    if (i == 0) {
+                                                        document.getElementById('listEmps').innerHTML += `
                                             <li class="list-group-item">
                                                 <div class="custom-control custom-radio">
                                                     <input checked empresa="` + empresas[i].Nombre + `" value="` + empresas[i].idEmpresa + `" type="radio" id="customRadio` + i + `" name="radioemp" class="radios custom-control-input">
@@ -153,8 +156,8 @@
                                                 </div>
                                             </li>
                                         `;
-                                    } else {
-                                        document.getElementById('listEmps').innerHTML += `
+                                                    } else {
+                                                        document.getElementById('listEmps').innerHTML += `
                                             <li class="list-group-item">
                                                 <div class="custom-control custom-radio">
                                                     <input empresa="` + empresas[i].Nombre + `" value="` + empresas[i].idEmpresa + `" type="radio" id="customRadio` + i + `" name="radioemp" class="radios custom-control-input">
@@ -162,33 +165,33 @@
                                                 </div>
                                             </li>
                                         `;
-                                    }
+                                                    }
 
-                                }
-                                document.getElementById("loginForm").action = "${pageContext.servletContext.contextPath}/Login?accion=entrarReq";
-                                $('#modalemp').modal('show');
+                                                }
+                                                document.getElementById("loginForm").action = "${pageContext.servletContext.contextPath}/Login?accion=entrarReq";
+                                                $('#modalemp').modal('show');
+                                            }
+
+
+                                        })
+                                        .catch((error) => {
+                                            console.log(error);
+
+                                        });
                             }
 
 
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                            
-                        });
-            }
+                            var checkbox = document.getElementById("ifcheckbox");
+                            checkbox.addEventListener("change", function () {
+                                if (checkbox.checked) {
+                                    if (cuenta.value.length > 0 && pass.value.length > 0) {
+                                        verifyData();
+
+                                    }
+                                }
 
 
-            var checkbox = document.getElementById("ifcheckbox");
-            checkbox.addEventListener("change", function () {
-                if (checkbox.checked) {
-                    if (cuenta.value.length > 0 && pass.value.length > 0) {
-                        verifyData();
-
-                    }
-                }
-
-
-            });
+                            });
         </script>
     </body>
 </html>

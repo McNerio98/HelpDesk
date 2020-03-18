@@ -30,7 +30,7 @@
                     <span class="dropdown-item dropdown-header">${fn:length(requestEmpleado)} Solicitudes de Empleado</span>
                     <div class="dropdown-divider"></div>
                     <ul class="list-group">
-                        <c:forEach var="listUser" items="${requestEmpleado}">
+                        <c:forEach begin="0" end="5" var="listUser" items="${requestEmpleado}">
 
 
                             <li id="${listUser.getUsuario().getIdUser()}" class="list-group-item d-flex justify-content-between align-items-center">
@@ -55,7 +55,7 @@
                     </ul>
 
                     <div class="dropdown-divider"></div>
-                    <a href="${pageContext.servletContext.contextPath}/Empleados" class="dropdown-item dropdown-footer">Ver todas</a>
+                    <a href="${pageContext.servletContext.contextPath}/Empleados?empleado=top" class="dropdown-item dropdown-footer">Ver todas</a>
                 </div>
             </li>
         </c:if>
@@ -70,7 +70,7 @@
                     <span class="dropdown-item dropdown-header">${fn:length(requestIncidencia)} Solicitudes de Incidencia</span>
                     <div class="dropdown-divider"></div>
                     <ul class="list-group">
-                        <c:forEach var="listIncidencia" items="${requestIncidencia}">
+                        <c:forEach begin="0" end="5" var="listIncidencia" items="${requestIncidencia}">
 
 
                             <div class="dropdown-divider"></div>

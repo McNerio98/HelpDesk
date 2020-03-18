@@ -90,7 +90,7 @@ public class PrincipalRequisicion extends HttpServlet {
                 } else {
                     s.setAttribute("listRequisiciones", null);
                 }
-
+                request.setAttribute("selected", "Panel Principal");
                 request.getRequestDispatcher("pnlRequisicion.jsp").forward(request, response);
             }
             if (rol == Enums.ROL.GERENTE_REQ) {
@@ -311,9 +311,10 @@ public class PrincipalRequisicion extends HttpServlet {
 
                 case "loadAll": {
                     String op = request.getParameter("opcion");
-
+                    
                     if (rol == Enums.ROL.LIDER_REQ) {
                         if (op == null) {
+                            request.setAttribute("selected", "Requisiciones Generales");
                             request.setAttribute("listRequisiciones", (r.getRequisicionByStatusByEmpresas(0, r.idemp, 2)));
                             request.setAttribute("processDiv", (r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.REVISION, r.idemp, 1)));
                             request.setAttribute("pendingDiv", (r.getRequisicionByStatusByEmpresas(Enums.ESTADO_REQ.ACEPTADA, r.idemp, 1)));

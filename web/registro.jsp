@@ -36,7 +36,7 @@
             </div>
         </nav>
         <div class="container">
-            <form action="${pageContext.servletContext.contextPath}/Login?accion=nuevo" class="mt-5" method="post" onsubmit="return validar();">
+            <form id="registroForm" action="${pageContext.servletContext.contextPath}/Login?accion=nuevo" class="mt-5" method="post" onsubmit="return validar();">
                 <div class="row">
                     <div class="col-md-6">
                         <h1>Registrarse</h1>
@@ -132,13 +132,10 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="info">
 
-                        La siguiente opcion es para registrarse como usuario requisicion,
-                        lo cual implica solicitar unicamente requisiciones de cheque y no
-                        para la gestion de incidencias.
 
-                        </p>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Entendido</button>
@@ -152,6 +149,25 @@
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script>
+                var btnAcept = document.getElementById("btnSubmit");
+                var combobox = document.getElementById("empresa");
+                var comboboxdep = document.getElementById("depto");
+                var comboboxemps = document.getElementById("empresa2");
+                var optionsemps = comboboxemps.getElementsByTagName("option");
+                var registroF = document.getElementById('registroForm');
+
+                comboboxemps.addEventListener('blur', function () {
+                    if (comboboxemps.value != 0) {
+                        $('#modalsmall').modal('show');
+                        document.getElementById('info').innerHTML = `
+                                
+                                ¿Estas seguro de agregar estas empresas?
+                                Puedes revisar para confirmar tus empresas agregadas.
+    
+                            `;
+                    }
+                });
+
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip()
                 })
@@ -175,6 +191,7 @@
                         alert("No ha Seleciona el Departamento");
                         return false;
                     }
+
 
                     return true;
                 }
@@ -218,6 +235,13 @@
                     $('#ifcheckbox').on('change', function () {
                         if ($(this).prop('checked')) {
                             $('#modalsmall').modal('show');
+                            document.getElementById('info').innerHTML = `
+                                
+                                La siguiente opcion es para registrarse como usuario requisicion,
+                                lo cual implica solicitar unicamente requisiciones de cheque y no
+                                para la gestion de incidencias.
+    
+                            `;
                             document.getElementById("btnSubmit").setAttribute("disabled", "true");
                             comboboxdep.setAttribute("disabled", "true");
                             $('#pnlSelectEmpresa').css('display', 'block');
@@ -246,10 +270,9 @@
                 });
         </script>
         <script>
-            var combobox = document.getElementById("empresa");
-            var comboboxdep = document.getElementById("depto");
-            var comboboxemps = document.getElementById("empresa2");
-            var optionsemps = comboboxemps.getElementsByTagName("option");
+
+
+
 
             combobox.addEventListener("change", function () {
 
@@ -265,9 +288,9 @@
                 comboboxdep.removeAttribute("disabled");
                 document.getElementById("btnSubmit").removeAttribute("disabled");
                 document.getElementById("alerEmpresa").innerHTML = "";
-               
 
-                fetch("${pageContext.servletContext.contextPath}/Login?accion=getDeptosByEmpresa&id=" + combobox.value,{
+
+                fetch("${pageContext.servletContext.contextPath}/Login?accion=getDeptosByEmpresa&id=" + combobox.value, {
                     method: "POST"
                 })
                         .then((response) => response.text())

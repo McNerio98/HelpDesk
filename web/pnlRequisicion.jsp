@@ -1,7 +1,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@include file="_startPanel.jsp" %>
 <script src="./js/momentjs.min.js"></script>
-
+<script>
+    moment.locale('es');
+</script>
 
 <!-- Content Header (Page header) Esto dependera de cada pagina-->
 <div class="content-header">
