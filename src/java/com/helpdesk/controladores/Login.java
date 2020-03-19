@@ -361,7 +361,7 @@ public class Login extends HttpServlet {
 
     }
 
-    private ArrayList<Empresa> verifyUserIsRequisitor(String cuenta) {
+    public ArrayList<Empresa> verifyUserIsRequisitor(String cuenta) {
         ArrayList<Empresa> list = new ArrayList<>();
         List<Object> params = new ArrayList<>();
         params.add(cuenta);

@@ -11,6 +11,7 @@ import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.Empresa;
 import com.helpdesk.entidades.RequisicionPago;
+import com.helpdesk.entidades.UsuarioReqByEmpresa;
 import com.helpdesk.operaciones.Operaciones;
 import com.helpdesk.utilerias.DataEmpresa;
 import com.helpdesk.utilerias.DataList;
@@ -311,7 +312,7 @@ public class PrincipalRequisicion extends HttpServlet {
 
                 case "loadAll": {
                     String op = request.getParameter("opcion");
-                    
+
                     if (rol == Enums.ROL.LIDER_REQ) {
                         if (op == null) {
                             request.setAttribute("selected", "Requisiciones Generales");
@@ -442,6 +443,25 @@ public class PrincipalRequisicion extends HttpServlet {
                             break;
                         }
                     }
+                    break;
+                }
+                case "addemp": {
+                    String id = request.getParameter("id");
+
+                    if (rol == Enums.ROL.RECEPTOR_REQ) {
+                        if (id == null) {
+                            ArrayList<Empresa> list = DataList.getmyEmpresas(idUserSession);
+                            request.setAttribute("myListEmps", list);
+                            request.setAttribute("EmpresasList", DataList.getAllEmpresas());
+                            request.getRequestDispatcher("addempresas.jsp").forward(request, response);
+                        } else {
+                            out.print("Agregando empresa..");
+                        }
+
+                    } else {
+                        response.sendRedirect("./PrincipalRequisicion");
+                    }
+
                     break;
                 }
 
@@ -578,7 +598,79 @@ public class PrincipalRequisicion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession s = request.getSession();
+        String accion = request.getParameter("accion");
+        int idUserSession = (int) s.getAttribute("idUsuario");
+        int rol = (int) s.getAttribute("Rol");
+        PrintWriter out = response.getWriter();
+
+        switch (accion) {
+            case "addmyemp": {
+                String id = request.getParameter("id");
+
+                ArrayList<Empresa> currentList = DataList.getmyEmpresas(idUserSession);
+                boolean exist = false;
+                for (int i = 0; i < currentList.size(); i++) {
+                    if (currentList.get(i).getIdEmpresa() == Integer.parseInt(id)) {
+                        exist = true;
+                        break;
+                    }
+                }
+
+                ArrayList<Empresa> list = DataList.getmyEmpresas(idUserSession);
+                ArrayList<Empresa> listEmp = DataList.getAllEmpresas();
+
+                if (rol == Enums.ROL.RECEPTOR_REQ) {
+                    if (id == null) {
+                        request.setAttribute("myListEmps", list);
+                        request.setAttribute("EmpresasList", listEmp);
+                        request.getRequestDispatcher("addempresas.jsp").forward(request, response);
+                    } else {
+                        try {
+                            Conexion conn = new ConexionPool();
+                            conn.conectar();
+                            Operaciones.abrirConexion(conn);
+                            Operaciones.iniciarTransaccion();
+                            UsuarioReqByEmpresa ur = new UsuarioReqByEmpresa();
+                            ur.setIdEmpresa(Integer.parseInt(id));
+                            ur.setIdUsuario(idUserSession);
+
+                            if (exist) {
+                                request.setAttribute("myListEmps", list);
+                                request.setAttribute("EmpresasList", listEmp);
+                                request.setAttribute("error", "Esta empresa ya esta agregada.");
+                                request.getRequestDispatcher("addempresas.jsp").forward(request, response);
+
+                            } else {
+                                Operaciones.insertar(ur);
+                                request.setAttribute("myListEmps", list);
+                                request.setAttribute("EmpresasList", listEmp);
+                                request.getRequestDispatcher("addempresas.jsp").forward(request, response);
+                            }
+
+                        } catch (Exception ex) {
+
+                            try {
+                                Operaciones.rollback();
+                            } catch (SQLException ex1) {
+                                Logger.getLogger(PrincipalRequisicion.class.getName()).log(Level.SEVERE, null, ex1);
+                            }
+                        } finally {
+                            try {
+                                Operaciones.cerrarConexion();
+                            } catch (SQLException ex) {
+                                Logger.getLogger(PrincipalRequisicion.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+
+                } else {
+                    response.sendRedirect("./PrincipalRequisicion");
+                }
+
+                break;
+            }
+        }
     }
 
     /**

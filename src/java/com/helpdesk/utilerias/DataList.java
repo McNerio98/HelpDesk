@@ -10,6 +10,7 @@ import com.helpdesk.conexion.ConexionPool;
 import com.helpdesk.controladores.Informacion;
 import com.helpdesk.controladores.JavaMail;
 import com.helpdesk.controladores.Login;
+import com.helpdesk.controladores.PrincipalRequisicion;
 import com.helpdesk.entidades.Clasificacion;
 import com.helpdesk.entidades.Departamento;
 import com.helpdesk.entidades.Empresa;
@@ -49,42 +50,71 @@ public class DataList {
         }
         return clasf;
     }
-    
-    public static void sendNotificationToSolicitante(Usuario users, int idReq){
+
+    public static void sendNotificationToSolicitante(Usuario users, int idReq) {
         htmlTemplate html = new htmlTemplate();
         DataRequisicion data = getGeneralData(idReq);
         //Correo para el solicitante
-        
-             html.difineTag(
-                    "<h1>En hora buena! Tu solicitud ha sido autorizada y finalizada.</h1>"
-                     +"<p>Se ha autorizado tu requisicion por: " + data.getSuperior()
-                     +", entra a helpdesk para verificar tu requisicion.</p>"
-            ); 
-            html.difineTag(" \n \n"
-                    + "© 2019-2020 HelpDesk McNerio & CnkBlanco USO. All Rights Reserved.\n");
-            
-            JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
-   
+
+        html.difineTag(
+                "<h1>En hora buena! Tu solicitud ha sido autorizada y finalizada.</h1>"
+                + "<p>Se ha autorizado tu requisicion por: " + data.getSuperior()
+                + ", entra a helpdesk para verificar tu requisicion.</p>"
+        );
+        html.difineTag(" \n \n"
+                + "© 2019-2020 HelpDesk McNerio & CnkBlanco USO. All Rights Reserved.\n");
+
+        JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
+
     }
-    public static void sendNotificationToContador(Usuario users, int idReq){
+    /*Funcion para traer las empresas de los requisitores*/
+    public static ArrayList<Empresa> getmyEmpresas(int iduser) {
+        ArrayList<Empresa> list = new ArrayList<>();
+        String query2 = "select idempresa from usuarioreqbyempresas where idusuario=" + iduser;
+        try {
+            Conexion conn = new ConexionPool();
+            conn.conectar();
+            Operaciones.abrirConexion(conn);
+            String array2[][] = Operaciones.consultar(query2, null);
+
+            for (int i = 0; i < array2[0].length; i++) {
+                Empresa emp = new Empresa();
+                System.out.print(array2[0][i]);
+                emp = Operaciones.get(Integer.parseInt(array2[0][i]), new Empresa());
+                list.add(emp);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(DataList.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                Operaciones.cerrarConexion();
+
+            } catch (SQLException ex1) {
+                Logger.getLogger(DataList.class
+                        .getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return list;
+    }
+
+    public static void sendNotificationToContador(Usuario users, int idReq) {
         htmlTemplate html = new htmlTemplate();
         DataRequisicion data = getGeneralData(idReq);
         //Correo para el contador
         html.difineTag(
-                    "<h1>Hola, " + users.getFirsName()
-                    + " " + users.getLastName() + "</h1>"
-            );
-            html.difineTag(
-                    "<strong>" + data.getSolicitante() + "</strong>"
-                    + " de la empresa " + data.getEmpresa()
-                    + " del departamento de " + data.getDepto()
-                    + " se le ha autorizado la requisicion por <strong>"+data.getSuperior()+".</strong><br>"
-            );
-            html.difineTag("<h3>Monto: $" + data.getMontoTotal() + " - Prioridad: "+data.getPrioridad()+"</h3>");
-            
-            
-            
-            JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
+                "<h1>Hola, " + users.getFirsName()
+                + " " + users.getLastName() + "</h1>"
+        );
+        html.difineTag(
+                "<strong>" + data.getSolicitante() + "</strong>"
+                + " de la empresa " + data.getEmpresa()
+                + " del departamento de " + data.getDepto()
+                + " se le ha autorizado la requisicion por <strong>" + data.getSuperior() + ".</strong><br>"
+        );
+        html.difineTag("<h3>Monto: $" + data.getMontoTotal() + " - Prioridad: " + data.getPrioridad() + "</h3>");
+
+        JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
     }
 
     public static void SendNotificationsToLiders(ArrayList<Usuario> listLideres, int idReq) {
@@ -101,7 +131,7 @@ public class DataList {
                     + " del departamento de " + data.getDepto()
                     + " ha solicitado una nueva requisicion.<br>"
             );
-            html.difineTag("<h3>Monto: $" + data.getMontoTotal() + " - Prioridad: "+data.getPrioridad()+"</h3>");
+            html.difineTag("<h3>Monto: $" + data.getMontoTotal() + " - Prioridad: " + data.getPrioridad() + "</h3>");
             html.difineTag("<p style='text-align:justify'>Entra a Helpdesk y decide tomar la requisicion.</p>");
             if (JavaMail.SendMessage(listLideres.get(i).getEmail(), "Solicitud de Requisicion", html.RenderHTML())) {
                 System.out.print("Notificacion Enviada");
@@ -125,7 +155,6 @@ public class DataList {
             params.add(idReq);
             params.add(idReq);
 
-            
             String cmd = "select concat(u1.firstname,' ',u1.lastname) creador, to_char(rg.fecha,'dd-MM-yyyy HH:MI') fecha, \n"
                     + "to_char(rg.fechaestimada,'dd-MM-yyyy HH:MI') fechaestimada,  \n"
                     + "rg.anombre, \n"
@@ -364,8 +393,6 @@ public class DataList {
         list = receptor.getIncidenciaSolicitada();
         return list;
     }
-    
-    
 
     public static boolean permisosSobreRequisicion(int idReq, HttpSession sesion) {
         boolean grant = false;

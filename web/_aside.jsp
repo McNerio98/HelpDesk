@@ -89,6 +89,19 @@
                             </a>
                         </li>
                     </c:if>
+                    <c:if test="${Rol == 7}">
+                        <li class="rounded-sm nav-item has-treeview pb-1">
+                            <a href="${pageContext.servletContext.contextPath}/PrincipalRequisicion?accion=addemp" class="nav-link">
+                                <p>
+                                    <i class="far fa-file-alt"></i>
+                                    Agregar empresas
+                                     <!--<span class="badge badge-light right">4</span>-->
+<!--                                    <i class="fas fa-arrow-right right"></i>-->
+                                    
+                                </p>
+                            </a>
+                        </li>
+                    </c:if>    
                 </c:if>
             </ul>
         </nav>
