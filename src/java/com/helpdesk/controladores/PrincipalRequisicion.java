@@ -643,10 +643,12 @@ public class PrincipalRequisicion extends HttpServlet {
 
                             } else {
                                 Operaciones.insertar(ur);
-                                request.setAttribute("myListEmps", list);
-                                request.setAttribute("EmpresasList", listEmp);
-                                request.getRequestDispatcher("addempresas.jsp").forward(request, response);
+//                                request.setAttribute("myListEmps", list);
+//                                request.setAttribute("EmpresasList", listEmp);
+//                                request.getRequestDispatcher("addempresas.jsp").forward(request, response);
+                                  response.sendRedirect("./PrincipalRequisicion?accion=addemp");
                             }
+                            
 
                         } catch (Exception ex) {
 

@@ -27,6 +27,7 @@
         <div class="row mb-2">
             <div class="col-sm-9">
                 <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
                     Cada solicitud de requisicion que hagas para la empresa que agregues,
                     sera revisada y aprobada por el lider de esa empresa.
                 </div>
