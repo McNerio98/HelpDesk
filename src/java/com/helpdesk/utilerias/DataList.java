@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -139,6 +140,15 @@ public class DataList {
                 System.out.print("Notificacion no enviada");
             }
         }
+    }
+    
+    public static boolean checkIfExistsSesssion(HttpServletRequest request){
+        boolean ok = false;
+        HttpSession s = request.getSession();
+        if((s.getAttribute("idUsuario") == null)){
+            ok = true; 
+        }   
+        return ok;  
     }
 
     public static DataRequisicion getGeneralData(Integer idReq) {

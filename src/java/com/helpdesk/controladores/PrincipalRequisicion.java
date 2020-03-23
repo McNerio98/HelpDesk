@@ -332,7 +332,12 @@ public class PrincipalRequisicion extends HttpServlet {
                                             data.add(DataList.getGeneralData(list.get(i).getIdRequisicion()));
                                         }
                                         String json = new Gson().toJson(data);
-                                        out.print(json);
+                                        if(DataList.checkIfExistsSesssion(request)){
+                                            out.print("timeout");
+                                        }else{
+                                           out.print(json); 
+                                        }
+                                        
                                     } else {
                                         out.print("null");
                                     }
@@ -638,7 +643,7 @@ public class PrincipalRequisicion extends HttpServlet {
                             if (exist) {
                                 request.setAttribute("myListEmps", list);
                                 request.setAttribute("EmpresasList", listEmp);
-                                request.setAttribute("error", "Esta empresa ya esta agregada.");
+                                request.setAttribute("error", "La empresa que desea agregar ya esta registrada.");
                                 request.getRequestDispatcher("addempresas.jsp").forward(request, response);
 
                             } else {

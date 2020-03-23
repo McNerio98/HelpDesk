@@ -93,6 +93,9 @@ function displayDataTables(url) {
     $('#table_incidences').DataTable({
         ajax: {
             url: url,
+            error: function (jqXHR, textStatus, errorThrown) {
+                location.href = root.value;
+            },
             dataSrc: ''
         },
         

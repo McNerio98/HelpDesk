@@ -26,8 +26,9 @@ function getPriority(opc) {
             displayDataTables("./PrincipalRequisicion?accion=priority&id=3");
             break;
         }
-        case 4:{
-            displayDataTables("./PrincipalRequisicion?accion=priority&id=4");    
+        case 4:
+        {
+            displayDataTables("./PrincipalRequisicion?accion=priority&id=4");
             break;
         }
     }
@@ -74,7 +75,7 @@ function load(opc) {
         }
         case 3:
         {
-            
+
             displayDataTables(root.value + "/PrincipalRequisicion?accion=loadAll&opcion=aceptadas");
             break;
         }
@@ -197,6 +198,9 @@ function displayDataTables(url) {
         "paging": false,
         ajax: {
             url: url,
+            error: function (jqXHR, textStatus, errorThrown) {
+                location.href = root.value;
+            },
             dataSrc: ''
         },
 
@@ -204,14 +208,18 @@ function displayDataTables(url) {
             {
                 data: null,
                 render: function (data, type, row) {
-                    var f = "";
-                    if(moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL") == 'Invalid date'){
-                        f = "No definida";
-                    }else{
-                        f = "Para el " + moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL");
-                    }
-                    // Combine the first and last names into a single table field
-                    return `
+                    console.log($.ajax.data);
+                    if (data == "timeout") {
+                        location.href = root.value;
+                    } else { 
+                        var f = "";
+                        if (moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL") == 'Invalid date') {
+                            f = "No definida";
+                        } else {
+                            f = "Para el " + moment(data.fechaEstimada, "DD-MM-YYYYHH:mm").format("LL");
+                        }
+                        // Combine the first and last names into a single table field
+                        return `
                         <a href="` + root.value + `/RequisicionInfo?idReq=` + data.id + `" class="list-group-item list-group-item-action">
                                                         <div class="d-flex w-100 justify-content-between">
                                                             <p style="font-size: 15px;font-weight:bold" class="mb-1">
@@ -222,16 +230,17 @@ function displayDataTables(url) {
                                                         
                                                             <p class="mb-1 text-muted">
                                                              <i>
-                                                                <small style="font-size: 12px;font-weight:normal">A nombre de: `+ data.aNombre+`</small>
+                                                                <small style="font-size: 12px;font-weight:normal">A nombre de: ` + data.aNombre + `</small>
                                                              <i>
                                                              <span class="text-wrap badge badge-primary float-right">
-                                                                $`+data.montoTotal+`</p>
+                                                                $` + data.montoTotal + `</p>
                                                             </span>
                                                         
-                                                            <p class="mb-1">`+ data.empresa + "-" +  data.depto + `</p>
+                                                            <p class="mb-1">` + data.empresa + "-" + data.depto + `</p>
                                                     </a>
                         
                         `;
+                    }
                 }
 
             }
