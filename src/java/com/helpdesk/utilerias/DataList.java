@@ -62,8 +62,7 @@ public class DataList {
                 + "<p>Se ha autorizado tu requisicion por: " + data.getSuperior()
                 + ", entra a helpdesk para verificar tu requisicion.</p>"
         );
-        html.difineTag(" \n \n"
-                + "© 2019-2020 HelpDesk McNerio & CnkBlanco USO. All Rights Reserved.\n");
+        
 
         JavaMail.SendMessage(users.getEmail(), "Tienes una nueva requisicion por finalizar", html.RenderHTML());
 

@@ -24,7 +24,7 @@ public class htmlTemplate {
                     "<body>";
         
         this.footer = " \n \n"
-                    + "© 2019-2020 HelpDesk McNerio & CnkBlanco USO. All Rights Reserved.\n</body>\n" + "</html>";
+                    + "© 2019-2020 HelpDesk.\n</body>\n" + "</html>";
     }
     
     public void difineTag(String tag){

@@ -91,10 +91,15 @@ function displayDataTables(url) {
     $.fn.dataTable.ext.errMode = 'throw';
     $("#table_incidences").dataTable().fnDestroy()
     $('#table_incidences').DataTable({
+        "order": [[0,"desc" ]],
         ajax: {
             url: url,
             error: function (jqXHR, textStatus, errorThrown) {
-                location.href = root.value;
+                if(textStatus == "parsererror"){
+                    location.href = root.value;
+                }else{
+                    location.href = location.hostname + ":"+ location.port + "/" + (location.pathname+location.search).substr(1);
+                }
             },
             dataSrc: ''
         },

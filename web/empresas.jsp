@@ -298,6 +298,7 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 
+    var root = "${pageContext.servletContext.contextPath}";
     var btnSaveChanges = document.getElementById("btnnSaveChanges");
     var searchDepto = document.getElementById("searchDepto");
     var html = document.getElementById("contentResult");
@@ -333,7 +334,7 @@
 
                 })
                 .catch((error) => {
-
+                    
                     console.log(error);
                 });
     }
@@ -359,7 +360,8 @@
 
                                 })
                                 .catch((error) => {
-
+                                    
+                                    location.href = root;
                                     console.log(error);
                                 });
                     }
@@ -367,7 +369,7 @@
 
                 })
                 .catch((error) => {
-
+                    location.href = root;
                     console.log(error);
                 });
 
@@ -413,7 +415,7 @@
                         showResults(matches);
                     })
                     .catch((error) => {
-
+                        location.href = root;
                         console.log(error);
                     });
         }

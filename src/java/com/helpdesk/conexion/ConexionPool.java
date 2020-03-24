@@ -14,8 +14,8 @@ public class ConexionPool implements Conexion {
 
     public ConexionPool() {
         conn = null;
-    }
-
+    } 
+ 
     @Override
     public synchronized void conectar() {
         try {
@@ -26,13 +26,13 @@ public class ConexionPool implements Conexion {
         } catch (NamingException | SQLException e) {
             System.out.println("db: " + e.getMessage());
         }
-    }
-
+    }                
+  
     @Override
     public Connection getConexion() {
         return conn;
     }
-
+  
     @Override
     public synchronized void desconectar() {
         try {

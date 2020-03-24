@@ -34,6 +34,13 @@ function displayDatatables(url,idCase){
         
         ajax: {
             url: url + "/Empleados?accion=userbyfilter&idRol="+idRol+"&idDepto="+idDepto+"&idCase="+idCase,
+            error: function (jqXHR, textStatus, errorThrown) {
+                if(textStatus == "parsererror"){
+                    location.href = path.value;
+                }else{
+                    location.href = location.hostname + ":"+ location.port + "/" + (location.pathname+location.search).substr(1);
+                }
+            },
             dataSrc: '' 
         },
         "createdRow": function (row, data, index) {

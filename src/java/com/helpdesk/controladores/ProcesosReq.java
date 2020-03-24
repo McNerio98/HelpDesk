@@ -148,6 +148,7 @@ public class ProcesosReq extends HttpServlet {
         DataRequisicion dr = new DataRequisicion();
         Usuario receptor = new Usuario();
         int caseEmisor = 0;
+        Comentario com = new Comentario();
         try {
             Conexion conn = new ConexionPool();
             conn.conectar();
@@ -156,32 +157,35 @@ public class ProcesosReq extends HttpServlet {
             RequisicionPago rg = Operaciones.get(Integer.parseInt(idReq), new RequisicionPago());
 
             if (rg.getIdAutorizador() == idHolder || rg.getIdCreador() == idHolder || rg.getIdContador() == idHolder) { //solo el lider,receptor y contador pueden comentar 
-                Comentario com = new Comentario();
+                
                 com.setContenido(contenido);
                 com.setIdCreador(idHolder);
                 com.setIdRequisicion(Integer.parseInt(idReq));
                 com.setFecha(new Timestamp(System.currentTimeMillis()));
 
                 int tipoMsg = Integer.parseInt(tipo);
-                if (tipoMsg == Enums.TIPO_COMENTARIO.NOTIFICACION) {
-                    com.setTipo(Enums.TIPO_COMENTARIO.NOTIFICACION);
-                } else if (tipoMsg == Enums.TIPO_COMENTARIO.CHAT) {
+                if (tipoMsg == Enums.TIPO_COMENTARIO.CHAT) {
                     com.setTipo(Enums.TIPO_COMENTARIO.CHAT);
+                } else if (tipoMsg == Enums.TIPO_COMENTARIO.NOTIFICACION) {
+                    com.setTipo(Enums.TIPO_COMENTARIO.NOTIFICACION);
                     //Aqui se manda la notificacion
                     //La notificacion debe hacer entre el contador y receptor
+                    System.out.print("Preparandose para enviar");
                     UsuarioRequisicion ur = Operaciones.get(idHolder, new UsuarioRequisicion());
                     ///Si lo envia un contador
                     if (ur.getIdRol() == Enums.ROL.CONTADOR_REQ) {
+                        System.out.print("Lo envio el contador");
                         caseEmisor = 1;
                         receptor = Operaciones.get(rg.getIdCreador(), new Usuario());
                     }
                     //Si lo envia un Requisitor
-                    if (ur.getIdRol() == Enums.ROL.CONTADOR_REQ) {
+                    if (ur.getIdRol() == Enums.ROL.RECEPTOR_REQ) {
+                        System.out.print("Lo envio el receptor");
                         caseEmisor = 2;
                         receptor = Operaciones.get(rg.getIdContador(), new Usuario());
                     }
                     existComment = true;
-                    dr = DataList.getGeneralData(com.getIdRequisicion());
+                    
                 }
                 com = Operaciones.insertar(com);
                 Operaciones.commit();
@@ -201,18 +205,22 @@ public class ProcesosReq extends HttpServlet {
                 Logger.getLogger(ProcesosReq.class.getName()).log(Level.SEVERE, null, ex2);
             }
         }
-
+        
+        dr = DataList.getGeneralData(com.getIdRequisicion());
+        
         if (existComment) {
 
             //Si lo envio un contador
             if (caseEmisor == 1) {
-                String content = this.getCorreoContent(dr, 1);
+                System.out.print("Lo envio el contador");
+                String content = this.getCorreoContent(dr, 1,com.getContenido());
                 JavaMail.SendMessage(receptor.getEmail(), "Comentario Sobre Requisicion", content);
             }
 
             //Si lo envio un Emisor
             if (caseEmisor == 2) {
-                String content = this.getCorreoContent(dr, 2);
+                System.out.print("Lo envio el receptor");
+                String content = this.getCorreoContent(dr, 2,com.getContenido());
                 JavaMail.SendMessage(receptor.getEmail(), "Comentario Sobre Requisicion", content);
             } 
         }
@@ -220,7 +228,7 @@ public class ProcesosReq extends HttpServlet {
         return status;
     }
 
-    private String getCorreoContent(DataRequisicion dr, int casei) {
+    private String getCorreoContent(DataRequisicion dr, int casei, String con) {
         htmlTemplate html = new htmlTemplate();
         html.difineTag(
                 "<h1>Hola, " + ((casei == 1) ? dr.getSolicitante() : dr.getContador())
@@ -228,16 +236,18 @@ public class ProcesosReq extends HttpServlet {
         );
         html.difineTag(
                 "<strong>" + ((casei != 1) ? dr.getSolicitante() : dr.getContador()) + "</strong>"
-                + " ha hecho un comentario sobre la siguiente requisicion: \n"
-                + "A nombre de: " + dr.getaNombre() + "<br />"
-                + "Fecha estimada: " + dr.getFechaEstimada() + "<br />"
-                + "Empresa: " + dr.getEmpresa()
-                + "Departamento: " + dr.getDepto()
-                + "Solicitante: " + dr.getSolicitante()
-                + "Autorizador: " + dr.getSuperior()
-                + "Contador: " + dr.getContador()
-                + "Prioridad: " + dr.getPrioridad()
-                + "Monto: " + dr.getMontoTotal()
+                + " ha hecho un comentario: <br/><br/>\n"
+                + "<strong><i>"+con+"</i></strong><br/><br/>\n"
+                + " Sobre la siguiente requisicion: <br/>\n"
+                + "<strong>A nombre de</strong>: " + dr.getaNombre() + "<br />"
+                + "<strong>Fecha estimada</strong>: " + dr.getFechaEstimada() + "<br />"
+                + "<strong>Empresa</strong>: " + dr.getEmpresa() + "<br />"
+                + "<strong>Departamento</strong>: " + dr.getDepto() + "<br />"
+                + "<strong>Solicitante</strong>: " + dr.getSolicitante() + "<br />"
+                + "<strong>Autorizador</strong>: " + dr.getSuperior() + "<br />"
+                + "<strong>Contador</strong>: " + dr.getContador() + "<br />"
+                + "<strong>Prioridad</strong>: " + dr.getPrioridad() + "<br />"
+                + "<strong>Monto</strong>: $" + dr.getMontoTotal() + "<br /><br/>"
         );
 
         return html.RenderHTML();

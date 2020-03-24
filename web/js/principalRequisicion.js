@@ -138,6 +138,7 @@ function displayData(url) {
     $.fn.dataTable.ext.errMode = 'throw';
     $("#table-requisicion").dataTable().fnDestroy()
     $('#table-requisicion').DataTable({
+        "order": [[ 1, "desc" ]],
         ajax: {
             url: url,
             dataSrc: ''
@@ -193,13 +194,19 @@ function displayDataTables(url) {
     $.fn.dataTable.ext.errMode = 'throw';
     $("#table-requisicion").dataTable().fnDestroy()
     $('#table-requisicion').DataTable({
+        "order": [[0,"desc" ]],
         "scrollY": "200px",
         "scrollCollapse": true,
         "paging": false,
         ajax: {
             url: url,
             error: function (jqXHR, textStatus, errorThrown) {
-                location.href = root.value;
+                if(textStatus == "parsererror"){
+                    location.href = root.value;
+                }else{
+                    location.href = location.hostname + ":"+ location.port + "/" + (location.pathname+location.search).substr(1);
+                }
+                
             },
             dataSrc: ''
         },
