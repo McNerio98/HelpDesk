@@ -106,11 +106,9 @@ public class FiltroPrincipal implements Filter {
         } else {
             boolean isRequestAjax = false;
             int contador = 0;
-            //Aqui valido todas las peticiones ajax para que no le devuelva el login
-            String PathReqInfo = "RequisicionInfo";
             while(contador < actionAjax.length && !isRequestAjax){
                 String acceso = request.getRequestURI();
-                if(acceso.equals(actionAjax[contador])){
+                if(request.getParameter("accion")!=null && request.getParameter("accion").equals(actionAjax[contador]) && acceso.equals(request.getContextPath() + "/RequisicionInfo")){
                     isRequestAjax = true;
                 }else{
                     contador++;

@@ -375,5 +375,10 @@ public class ProcesosReq extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    @Override
+    public void destroy(){
+        System.out.print("Me mori xD");
+    }
 
 }
